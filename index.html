@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suede Docs live on GitHub | Suede Labs AI</title>
-<meta name="description" content="Suede Labs AI developer documentation lives on GitHub at Suede-AI/suede-docs. This page redirects you there.">
+<title>Suede Docs — Programmable IP & Creator Ownership Documentation | Suede Labs AI</title>
+<meta name="description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready (x402/ACP) media commerce. Canonical source lives on GitHub.">
 <link rel="canonical" href="https://docs.suedeai.ai/">
-<meta property="og:title" content="Suede Docs live on GitHub">
-<meta property="og:description" content="Developer documentation for Suede Labs AI lives on GitHub. This page redirects you there.">
+<meta property="og:title" content="Suede Docs — Programmable IP & Creator Ownership Documentation">
+<meta property="og:description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready media commerce.">
 <meta property="og:url" content="https://docs.suedeai.ai/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Suede Labs AI">
@@ -15,9 +15,9 @@
 <meta name="theme-color" content="#1b1b1e">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@AISUEDE">
-<meta name="twitter:title" content="Suede Docs live on GitHub">
-<meta name="twitter:description" content="Developer documentation for Suede Labs AI lives on GitHub. This page redirects you there.">
-<meta http-equiv="refresh" content="3;url=https://github.com/Suede-AI/suede-docs">
+<meta name="twitter:creator" content="@johnnysuede">
+<meta name="twitter:title" content="Suede Docs — Programmable IP & Creator Ownership Documentation">
+<meta name="twitter:description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready media commerce.">
 <link rel="icon" type="image/png" href="https://map.suedeai.ai/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,27 +28,44 @@
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://suedeai.ai/#org",
+      "@id": "https://suedeai.ai/#organization",
       "name": "Suede Labs AI",
       "url": "https://suedeai.ai",
-      "founder": {
-        "@type": "Person",
-        "name": "Jason Colapietro",
-        "alternateName": "Johnny Suede",
-        "url": "https://jasoncolapietro.com"
-      },
+      "founder": { "@id": "https://suedeai.ai/founder#person" },
       "sameAs": [
         "https://x.com/AISUEDE",
         "https://github.com/Suede-AI",
+        "https://www.youtube.com/@aisuede",
+        "https://www.linkedin.com/in/jasoncolapietro",
         "https://suedeai.org"
       ]
     },
     {
-      "@type": "WebPage",
+      "@type": "Person",
+      "@id": "https://suedeai.ai/founder#person",
+      "name": "Jason Colapietro",
+      "alternateName": "Johnny Suede",
+      "url": "https://suedeai.ai/founder",
+      "jobTitle": "Founder and CEO of Suede Labs AI",
+      "sameAs": [
+        "https://x.com/johnnysuede",
+        "https://github.com/JasonColapietro",
+        "https://www.linkedin.com/in/jasoncolapietro",
+        "https://jasoncolapietro.com"
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://docs.suedeai.ai/#article",
+      "headline": "Suede Docs — Programmable IP & Creator Ownership Documentation",
+      "description": "Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready (x402/ACP) media commerce.",
       "url": "https://docs.suedeai.ai/",
-      "name": "Suede Docs live on GitHub",
-      "description": "Developer documentation for Suede Labs AI lives on GitHub at Suede-AI/suede-docs.",
-      "isPartOf": { "@id": "https://suedeai.ai/#org" }
+      "author": { "@id": "https://suedeai.ai/founder#person" },
+      "publisher": { "@id": "https://suedeai.ai/#organization" },
+      "datePublished": "2026-07-04",
+      "dateModified": "2026-07-14",
+      "isPartOf": { "@id": "https://suedeai.ai/#organization" },
+      "mainEntityOfPage": "https://docs.suedeai.ai/"
     }
   ]
 }
@@ -73,32 +90,17 @@
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-ui);
     font-size: 17px;
-    line-height: 1.55;
+    line-height: 1.6;
   }
   a { color: var(--green-ink); text-decoration: none; }
   a:hover { color: var(--green-ink-hover); }
   a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
 
-  .wrap {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 48px clamp(20px, 5vw, 44px);
-    text-align: center;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--hairline);
-    border-radius: 14px;
-    padding: clamp(28px, 5vw, 48px);
-  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(20px, 5vw, 44px) 64px; }
   .mono {
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -108,14 +110,32 @@
   h1 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-size: clamp(2rem, 4vw, 2.8rem);
     margin: 14px 0 12px;
     color: var(--ink-deep);
+    line-height: 1.1;
   }
   p.lede {
     color: var(--muted);
-    font-size: 1rem;
-    margin: 0 0 28px;
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  section p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(24px, 5vw, 40px);
+    margin-bottom: 8px;
   }
   .btn {
     display: inline-flex;
@@ -129,33 +149,76 @@
     padding: 12px 22px;
     border-radius: var(--radius);
     transition: background 0.15s ease;
+    margin: 12px 0 4px;
   }
-  .btn:hover {
-    background: #000;
-    color: var(--green);
-  }
+  .btn:hover { background: #000; color: var(--green); }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .fine {
     margin-top: 22px;
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
   .fine a { color: var(--muted); text-decoration: underline; }
   .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card">
     <span class="mono">docs.suedeai.ai</span>
-    <h1>Suede Docs live on GitHub.</h1>
-    <p class="lede">Developer documentation for Suede Labs AI is maintained in the open. You're being redirected there now.</p>
-    <p class="fine"><a href="https://suedeai.ai">Suede Labs AI</a> builds creator-ownership and AI-visibility tools.</p>
-    <a class="btn" href="https://github.com/Suede-AI/suede-docs">
-      Go to Suede-AI/suede-docs <span aria-hidden="true">&#8594;</span>
-    </a>
-    <p class="fine">Not redirecting? <a href="https://github.com/Suede-AI/suede-docs">Click here</a>. Part of the <a href="https://map.suedeai.ai">Suede Universe Map</a>.</p>
-    <p class="fine">Looking for the product? <a href="https://scan.suedeai.ai?utm_source=docs">Check your AI visibility with Suede Scan &#8594;</a></p>
+    <h1>Suede Docs: programmable IP &amp; creator ownership</h1>
+    <p class="lede">Public documentation for Suede Labs AI: how the company registers ownership, tracks provenance, and connects creative work to licensing and agent commerce.</p>
+
+    <section>
+      <h2>What is Suede Labs AI?</h2>
+      <p>Suede Labs AI builds programmable IP and creator-ownership infrastructure for AI-native media. As media becomes easier to generate, remix, license, and distribute through AI agents, creators need a clearer ownership layer. Suede connects creative assets to provenance, rights metadata, licensing workflows, token-enabled access, and agent-accessible commerce. AI music is a core, high-signal use case for proving the system, but Suede is not only a music-generation product.</p>
+    </section>
+
+    <section>
+      <h2>What are Suede's core pillars?</h2>
+      <ul>
+        <li><strong>Programmable IP:</strong> making rights easier to register, verify, license, route, and monetize across product surfaces, chains, and agent workflows.</li>
+        <li><strong>Creator ownership:</strong> a durable record of what a creator made and how it can be used, treated as infrastructure rather than a profile or file upload.</li>
+        <li><strong>Provenance:</strong> connecting a media asset to its creator, metadata, and source context, which AI-native media requires for trust, attribution, and payment.</li>
+        <li><strong>Licensing and monetization:</strong> paths from registered media and rights metadata to licensing actions and creator-aligned revenue.</li>
+        <li><strong>Agent commerce:</strong> public x402 and ACP-ready surfaces so AI agents can discover, pay for, and use media services directly.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Who founded Suede Labs AI?</h2>
+      <p>Suede Labs AI is led by <a href="https://suedeai.ai/founder">Jason Colapietro</a> (also known as Johnny Suede), Founder and CEO. Jason is a published author and Forbes contributor focused on creator ownership infrastructure, programmable IP, proof of creation, and AI-era rights for creators.</p>
+    </section>
+
+    <section>
+      <h2>Where do the full developer docs live?</h2>
+      <p>The canonical, most current public documentation is maintained on GitHub at <a href="https://github.com/Suede-AI/suede-docs">Suede-AI/suede-docs</a>: full product directory, x402/ACP endpoint table, token references, and language guide. This page mirrors the core facts; the GitHub README is the source of truth.</p>
+      <a class="btn" href="https://github.com/Suede-AI/suede-docs">
+        Read the full docs on GitHub <span aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+    <section>
+      <h2>What does Suede expose for AI agents (x402/ACP)?</h2>
+      <p>Suede exposes 20 paid x402 endpoints on Base mainnet USDC: full-length music generation, video, image, 12 musician tools (stems, mastering, lyrics, vocal isolation, and more), rights lookup, prompt/audio analysis, and on-chain Q&amp;A, plus a 3-tier credit-purchase route. Prices range $0.003–$1.50 per call. Full endpoint table and live verification log: <a href="https://github.com/Suede-AI/suede-x402-acp">suede-x402-acp</a>.</p>
+    </section>
+
+    <section>
+      <h2>Where can I see every Suede site and app?</h2>
+      <p>The <a href="https://map.suedeai.ai">Suede Universe Map</a> is the full, live-verified inventory of every Suede site, app, and endpoint, organized as a plain-English directory. For a technical overview of what Suede does today, check your own AI visibility with <a href="https://scan.suedeai.ai?utm_source=docs">Suede Scan</a>.</p>
+    </section>
+
+    <p class="fine">Not what you were looking for? <a href="https://github.com/Suede-AI/suede-docs">Go straight to the GitHub repo</a>. Part of the <a href="https://map.suedeai.ai">Suede Universe Map</a>.</p>
   </div>
 </div>
+<footer class="page">
+  <p>Suede Labs AI · <a href="https://suedeai.ai">suedeai.ai</a> · Documentation maintained by <a href="https://suedeai.ai/founder">Jason Colapietro</a>, Founder &amp; CEO. Page last updated 2026-07-14.</p>
+</footer>
 </body>
 </html>

@@ -1,0 +1,25 @@
+# Suede Docs
+
+> Public documentation for Suede Labs AI — programmable IP, creator ownership, and agent-ready media commerce for the AI era. The canonical, most current source is the GitHub README at github.com/Suede-AI/suede-docs; this page (docs.suedeai.ai) mirrors its key facts.
+
+Suede Labs AI (https://suedeai.ai), founded by Jason Colapietro (also known as Johnny Suede), builds programmable IP and creator-ownership infrastructure for AI-native media: provenance, rights metadata, licensing workflows, token-enabled access, and agent-accessible (x402/ACP) commerce. AI music is a core, high-signal use case — not the whole product.
+
+## Docs
+
+- [Suede Docs — canonical README](https://github.com/Suede-AI/suede-docs): Full public doc set — core pillars, complete product directory, x402/ACP endpoint table, token references, founder profile, language guide.
+- [suede-x402-acp](https://github.com/Suede-AI/suede-x402-acp): Full x402 endpoint table, live pricing, verification log for Suede's paid agent-commerce endpoints.
+- [suede-sdk-python](https://github.com/Suede-AI/suede-sdk-python): Python SDK (`pip install suede-ai`) wrapping Suede's x402 endpoints as typed client methods.
+- [suede-token](https://github.com/Suede-AI/suede-token): $SUEDE token contracts and chain references.
+- [suede-creator-skills](https://github.com/JasonColapietro/suede-creator-skills): Free public agent-workflow skills for creators.
+
+## Ecosystem
+
+- [Suede Labs AI](https://suedeai.ai): Flagship product site — signup, blog, founder page.
+- [Suede Universe Map](https://map.suedeai.ai): Full verified inventory of every live Suede site, app, and endpoint.
+- [Suede founder profile](https://suedeai.ai/founder): Jason Colapietro / Johnny Suede, Founder & CEO of Suede Labs AI.
+- [suedeai.org](https://suedeai.org): Thesis, books, and investor information.
+
+## Optional
+
+- [Suede IP Registry](https://ip.suedeai.ai): Register creative work and receive a verifiable Rights Passport.
+- [Suede Scan](https://scan.suedeai.ai): AI-visibility audit — checks whether ChatGPT, Perplexity, and Google AI Overviews can find and cite a given business.
