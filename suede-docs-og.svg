@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Suede Developer Docs</title>
+  <desc id="description">Social preview for Suede programmable IP and x402 API documentation.</desc>
+  <rect width="1200" height="630" fill="#1b1b1e"/>
+  <rect x="72" y="72" width="1056" height="486" rx="22" fill="#232326" stroke="#94f27f" stroke-width="2"/>
+  <circle cx="112" cy="116" r="8" fill="#94f27f"/>
+  <text x="138" y="124" fill="#94f27f" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" letter-spacing="2">DOCS.SUEDEAI.AI</text>
+  <text x="112" y="292" fill="#f7f7f2" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Suede Developer Docs</text>
+  <text x="112" y="366" fill="#d5d5d2" font-family="Arial, Helvetica, sans-serif" font-size="34">Programmable IP · x402 APIs · Creator ownership</text>
+  <line x1="112" y1="444" x2="1088" y2="444" stroke="#50504d" stroke-width="2"/>
+  <text x="112" y="504" fill="#94f27f" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24">Canonical source: github.com/Suede-AI/suede-docs</text>
+</svg>
