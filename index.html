@@ -3,21 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suede Docs — Programmable IP & Creator Ownership Documentation | Suede Labs AI</title>
-<meta name="description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready (x402/ACP) media commerce. Canonical source lives on GitHub.">
+<title>Suede Developer Docs | x402 APIs and Creator IP</title>
+<meta name="description" content="Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.">
 <link rel="canonical" href="https://docs.suedeai.ai/">
-<meta property="og:title" content="Suede Docs — Programmable IP & Creator Ownership Documentation">
-<meta property="og:description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready media commerce.">
+<meta property="og:title" content="Suede Developer Docs: Programmable IP and x402 APIs">
+<meta property="og:description" content="Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.">
 <meta property="og:url" content="https://docs.suedeai.ai/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Suede Labs AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede Developer Docs for programmable IP and x402 APIs">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1b1b1e">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@AISUEDE">
-<meta name="twitter:creator" content="@johnnysuede">
-<meta name="twitter:title" content="Suede Docs — Programmable IP & Creator Ownership Documentation">
-<meta name="twitter:description" content="Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready media commerce.">
+<meta name="twitter:title" content="Suede Developer Docs: Programmable IP and x402 APIs">
+<meta name="twitter:description" content="Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede Developer Docs for programmable IP and x402 APIs">
 <link rel="icon" type="image/png" href="https://map.suedeai.ai/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,41 +37,47 @@
       "@id": "https://suedeai.ai/#organization",
       "name": "Suede Labs AI",
       "url": "https://suedeai.ai",
-      "founder": { "@id": "https://suedeai.ai/founder#person" },
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://app.suedeai.ai/SuedeLogo2.png"
+      },
       "sameAs": [
         "https://x.com/AISUEDE",
         "https://github.com/Suede-AI",
         "https://www.youtube.com/@aisuede",
-        "https://www.linkedin.com/in/jasoncolapietro",
+        "https://www.linkedin.com/company/suede-labs-ai",
         "https://suedeai.org"
       ]
     },
     {
-      "@type": "Person",
-      "@id": "https://suedeai.ai/founder#person",
-      "name": "Jason Colapietro",
-      "alternateName": "Johnny Suede",
-      "url": "https://suedeai.ai/founder",
-      "jobTitle": "Founder and CEO of Suede Labs AI",
-      "sameAs": [
-        "https://x.com/johnnysuede",
-        "https://github.com/JasonColapietro",
-        "https://www.linkedin.com/in/jasoncolapietro",
-        "https://jasoncolapietro.com"
-      ]
+      "@type": "WebSite",
+      "@id": "https://docs.suedeai.ai/#website",
+      "url": "https://docs.suedeai.ai/",
+      "name": "Suede Developer Docs",
+      "description": "Public developer documentation for Suede programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs.",
+      "publisher": { "@id": "https://suedeai.ai/#organization" }
     },
     {
-      "@type": "TechArticle",
-      "@id": "https://docs.suedeai.ai/#article",
-      "headline": "Suede Docs — Programmable IP & Creator Ownership Documentation",
-      "description": "Public documentation for Suede Labs AI: programmable IP, creator ownership, provenance, licensing, and agent-ready (x402/ACP) media commerce.",
+      "@type": "ImageObject",
+      "@id": "https://docs.suedeai.ai/#primaryimage",
+      "url": "https://docs.suedeai.ai/suede-docs-og.png",
+      "contentUrl": "https://docs.suedeai.ai/suede-docs-og.png",
+      "width": 1200,
+      "height": 630,
+      "caption": "Suede Developer Docs for programmable IP and x402 APIs"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://docs.suedeai.ai/#webpage",
       "url": "https://docs.suedeai.ai/",
-      "author": { "@id": "https://suedeai.ai/founder#person" },
+      "name": "Suede Developer Docs | x402 APIs and Creator IP",
+      "description": "Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
+      "isPartOf": { "@id": "https://docs.suedeai.ai/#website" },
+      "about": { "@id": "https://suedeai.ai/#organization" },
       "publisher": { "@id": "https://suedeai.ai/#organization" },
+      "primaryImageOfPage": { "@id": "https://docs.suedeai.ai/#primaryimage" },
       "datePublished": "2026-07-04",
-      "dateModified": "2026-07-14",
-      "isPartOf": { "@id": "https://suedeai.ai/#organization" },
-      "mainEntityOfPage": "https://docs.suedeai.ai/"
+      "dateModified": "2026-07-15"
     }
   ]
 }
@@ -172,28 +184,28 @@
 <div class="wrap">
   <div class="card">
     <span class="mono">docs.suedeai.ai</span>
-    <h1>Suede Docs: programmable IP &amp; creator ownership</h1>
-    <p class="lede">Public documentation for Suede Labs AI: how the company registers ownership, tracks provenance, and connects creative work to licensing and agent commerce.</p>
+    <h1>Suede developer docs for programmable IP</h1>
+    <p class="lede">Suede developer docs explain the public interfaces, rights concepts, and agent-commerce discovery surfaces in the Suede ecosystem. The canonical documentation is maintained in the <a href="https://github.com/Suede-AI/suede-docs">Suede-AI/suede-docs repository</a> on GitHub.</p>
 
     <section>
       <h2>What is Suede Labs AI?</h2>
-      <p>Suede Labs AI builds programmable IP and creator-ownership infrastructure for AI-native media. As media becomes easier to generate, remix, license, and distribute through AI agents, creators need a clearer ownership layer. Suede connects creative assets to provenance, rights metadata, licensing workflows, token-enabled access, and agent-accessible commerce. AI music is a core, high-signal use case for proving the system, but Suede is not only a music-generation product.</p>
+      <p>Suede Labs AI builds creator-ownership infrastructure for AI-native media. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.</p>
     </section>
 
     <section>
       <h2>What are Suede's core pillars?</h2>
       <ul>
-        <li><strong>Programmable IP:</strong> making rights easier to register, verify, license, route, and monetize across product surfaces, chains, and agent workflows.</li>
-        <li><strong>Creator ownership:</strong> a durable record of what a creator made and how it can be used, treated as infrastructure rather than a profile or file upload.</li>
-        <li><strong>Provenance:</strong> connecting a media asset to its creator, metadata, and source context, which AI-native media requires for trust, attribution, and payment.</li>
-        <li><strong>Licensing and monetization:</strong> paths from registered media and rights metadata to licensing actions and creator-aligned revenue.</li>
-        <li><strong>Agent commerce:</strong> public x402 and ACP-ready surfaces so AI agents can discover, pay for, and use media services directly.</li>
+        <li><strong>Programmable IP:</strong> interfaces for recording provenance, rights metadata, and machine-readable usage terms.</li>
+        <li><strong>Creator ownership:</strong> documentation for connecting creative work to creator-supplied identity and rights context.</li>
+        <li><strong>Provenance:</strong> source and metadata records that help people and software inspect where a media asset came from.</li>
+        <li><strong>Licensing:</strong> documented workflows for publishing terms and reviewing license activity.</li>
+        <li><strong>Agent commerce:</strong> public x402 and ACP discovery files that describe available services and current prices.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Who founded Suede Labs AI?</h2>
-      <p>Suede Labs AI is led by <a href="https://suedeai.ai/founder">Jason Colapietro</a> (also known as Johnny Suede), Founder and CEO. Jason is a published author and Forbes contributor focused on creator ownership infrastructure, programmable IP, proof of creation, and AI-era rights for creators.</p>
+      <h2>Who maintains the public docs?</h2>
+      <p>Suede Labs AI maintains this index and the canonical docs repository. For current leadership background, see <a href="https://suedeai.ai/founder">Jason Colapietro's public profile</a>.</p>
     </section>
 
     <section>
@@ -206,19 +218,19 @@
 
     <section>
       <h2>What does Suede expose for AI agents (x402/ACP)?</h2>
-      <p>Suede exposes 20 paid x402 endpoints on Base mainnet USDC: full-length music generation, video, image, 12 musician tools (stems, mastering, lyrics, vocal isolation, and more), rights lookup, prompt/audio analysis, and on-chain Q&amp;A, plus a 3-tier credit-purchase route. Prices range $0.003–$1.50 per call. Full endpoint table and live verification log: <a href="https://github.com/Suede-AI/suede-x402-acp">suede-x402-acp</a>.</p>
+      <p>Suede publishes public x402 and ACP discovery surfaces for agent-callable media and rights services. Use the <a href="https://app.suedeai.ai/api/v1/catalog">live agent-commerce catalog</a> for current availability and prices, and the <a href="https://app.suedeai.ai/.well-known/x402">x402 discovery document</a> for machine-readable routes.</p>
     </section>
 
     <section>
-      <h2>Where can I see every Suede site and app?</h2>
-      <p>The <a href="https://map.suedeai.ai">Suede Universe Map</a> is the full, live-verified inventory of every Suede site, app, and endpoint, organized as a plain-English directory. For a technical overview of what Suede does today, check your own AI visibility with <a href="https://scan.suedeai.ai?utm_source=docs">Suede Scan</a>.</p>
+      <h2>Where can I browse Suede sites and apps?</h2>
+      <p>The <a href="https://map.suedeai.ai">Suede Universe Map</a> is a plain-English directory of public Suede sites, apps, and endpoints. For a technical overview of Suede's AI visibility tooling, run a site check with <a href="https://scan.suedeai.ai?utm_source=docs">Suede Scan</a>.</p>
     </section>
 
     <p class="fine">Not what you were looking for? <a href="https://github.com/Suede-AI/suede-docs">Go straight to the GitHub repo</a>. Part of the <a href="https://map.suedeai.ai">Suede Universe Map</a>.</p>
   </div>
 </div>
 <footer class="page">
-  <p>Suede Labs AI · <a href="https://suedeai.ai">suedeai.ai</a> · Documentation maintained by <a href="https://suedeai.ai/founder">Jason Colapietro</a>, Founder &amp; CEO. Page last updated 2026-07-14.</p>
+  <p>Suede Labs AI · <a href="https://suedeai.ai">suedeai.ai</a> · Documentation maintained by Suede Labs AI. Page last updated 2026-07-15.</p>
 </footer>
 </body>
 </html>
