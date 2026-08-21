@@ -23,4 +23,4 @@ Suede Labs AI (https://suedeai.ai) builds creator-ownership infrastructure for A
 ## Optional
 
 - [Suede IP Registry](https://ip.suedeai.ai): Public interface for provenance records and rights metadata.
-- [Suede Scan](https://scan.suedeai.ai): Product page for checking a site's visibility across AI answer and search surfaces.
+- [Suede SEO](https://seo.suedeai.ai): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
