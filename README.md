@@ -13,3 +13,20 @@ node scripts/verify-site.mjs
 ## Deploy
 
 Deployed on Vercel from `index.html` + `vercel.json`.
+
+**Pushing to `main` deploys production.** The Vercel project `suede-docs-site`
+(team `suede-ai-64d39175`) was connected to this repo on 2026-08-23; Root
+Directory is the repo root, and the `ignoreCommand` in `vercel.json` skips
+preview builds only. Before that it was CLI-deploy only, which is why merged
+PRs used to change nothing live — production once sat 37 days stale behind
+`main`.
+
+Manual deploy is now a fallback, and needs an explicit link first because this
+repo has no committed `.vercel/` (and worktrees never inherit one). Without the
+link step, `vercel --prod` silently creates a **new** project named after the
+directory and leaves `docs.suedeai.ai` untouched:
+
+```bash
+vercel link --yes --project suede-docs-site --scope suede-ai-64d39175
+vercel --prod --yes --scope suede-ai-64d39175   # expect: Aliased docs.suedeai.ai
+```
