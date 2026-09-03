@@ -106,13 +106,35 @@ for (const unsafe of [
   assert.ok(!unsafe.test(publicCopy), `unsafe or unverifiable public claim remains: ${unsafe}`);
 }
 
+// Icons must be local files, not a cross-host reference, and /favicon.ico must
+// exist: browsers and Google fall back to that path regardless of <link>.
+for (const [file, magic] of [
+  ["icon.png", [137, 80, 78, 71]],
+  ["apple-touch-icon.png", [137, 80, 78, 71]],
+  ["favicon.ico", [0, 0, 1, 0]],
+]) {
+  const path = join(root, file);
+  assert.ok(existsSync(path), `${file} is missing`);
+  assert.deepEqual([...readFileSync(path).subarray(0, 4)], magic, `${file} has the wrong file header`);
+}
+assert.match(html, /<link rel="icon" href="\/favicon\.ico"/);
+assert.ok(!/href="https:\/\/[^"]*icon\.png"/.test(html), "icons must be served from this host, not cross-host");
+
 assert.match(html, /https:\/\/app\.suedeai\.ai\/api\/v1\/catalog/);
 assert.match(llms, /https:\/\/app\.suedeai\.ai\/api\/v1\/catalog/);
 assert.match(robots, /User-agent: GPTBot\s+Allow: \//);
 assert.match(robots, /User-agent: \*\s+Allow: \//);
 assert.match(robots, /Sitemap: https:\/\/docs\.suedeai\.ai\/sitemap\.xml/);
 assert.match(sitemap, /<loc>https:\/\/docs\.suedeai\.ai\/<\/loc>/);
-assert.match(sitemap, /<lastmod>2026-07-15<\/lastmod>/);
+// The three freshness signals must agree. Pinning one date here is what let
+// them drift apart last time: schema said 2026-07-15 while the page had
+// changed 2026-08-20. Assert they match each other instead of a literal.
+const schemaDate = html.match(/"dateModified":\s*"(\d{4}-\d{2}-\d{2})"/)?.[1];
+const footerDate = html.match(/Page last updated (\d{4}-\d{2}-\d{2})\./)?.[1];
+const sitemapDate = sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/)?.[1];
+assert.ok(schemaDate, "schema dateModified is missing");
+assert.equal(footerDate, schemaDate, "footer date must match schema dateModified");
+assert.equal(sitemapDate, schemaDate, "sitemap lastmod must match schema dateModified");
 assert.match(llms, /github\.com\/Suede-AI\/suede-docs/);
 
 console.log("Site verification passed: metadata, social image, schema graph, claims, robots, sitemap, and docs links.");
