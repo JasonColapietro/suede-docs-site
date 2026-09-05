@@ -135,6 +135,17 @@ const sitemapDate = sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/)?.[1
 assert.ok(schemaDate, "schema dateModified is missing");
 assert.equal(footerDate, schemaDate, "footer date must match schema dateModified");
 assert.equal(sitemapDate, schemaDate, "sitemap lastmod must match schema dateModified");
+
+// A date is a material claim, so the schema publish date needs a prose
+// counterpart on the page rather than living in JSON-LD alone.
+const schemaPublished = html.match(/"datePublished":\s*"(\d{4}-\d{2}-\d{2})"/)?.[1];
+const footerPublished = html.match(/Published (\d{4}-\d{2}-\d{2})\./)?.[1];
+assert.ok(schemaPublished, "schema datePublished is missing");
+assert.equal(footerPublished, schemaPublished, "footer prose must state the schema datePublished");
+
+// Trust signals: the surface links to a privacy policy and a contact route.
+assert.match(html, /href="https:\/\/suedeai\.ai\/privacy"/, "footer must link to the privacy policy");
+assert.match(html, /href="https:\/\/suedeai\.ai\/contact"/, "footer must link to a contact page");
 assert.match(llms, /github\.com\/Suede-AI\/suede-docs/);
 
 console.log("Site verification passed: metadata, social image, schema graph, claims, robots, sitemap, and docs links.");
