@@ -120,6 +120,31 @@ for (const [file, magic] of [
 assert.match(html, /<link rel="icon" href="\/favicon\.ico"/);
 assert.ok(!/href="https:\/\/[^"]*icon\.png"/.test(html), "icons must be served from this host, not cross-host");
 
+// The primary content block must be a <main> landmark. Lighthouse mobile
+// scored landmark-one-main 0 while it was a bare <div class="wrap">, which
+// leaves screen-reader users with no way to skip to the content.
+const mainOpeners = [...html.matchAll(/<main\b[^>]*>/gi)].map((match) => match[0]);
+assert.equal(mainOpeners.length, 1, "page must have exactly one <main> landmark");
+assert.match(mainOpeners[0], /class="wrap"/, "the <main> landmark must be the page content wrapper");
+assert.equal([...html.matchAll(/<\/main>/gi)].length, 1, "the <main> landmark must be closed once");
+assert.ok(!/<div class="wrap"/.test(html), "the content wrapper must not fall back to a bare <div>");
+
+// The Google Fonts stylesheet must not block the first paint. It is fetched
+// with preload and promoted to a stylesheet on load, with a <noscript> copy so
+// scripting-off browsers still get the faces.
+const withoutNoscript = html.replace(/<noscript>[\s\S]*?<\/noscript>/gi, "");
+const fontLinks = [...withoutNoscript.matchAll(/<link\b[^>]*fonts\.googleapis\.com\/css2[^>]*>/gi)].map(
+  (match) => match[0],
+);
+assert.equal(fontLinks.length, 1, "expected one Google Fonts stylesheet reference outside <noscript>");
+assert.match(fontLinks[0], /rel="preload"/, "the Google Fonts stylesheet must load asynchronously, not render-blocking");
+assert.match(fontLinks[0], /\bas="style"/, "the font preload must declare as=\"style\"");
+assert.match(
+  html,
+  /<noscript><link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2/,
+  "scripting-off browsers need a plain stylesheet fallback",
+);
+
 assert.match(html, /https:\/\/app\.suedeai\.ai\/api\/v1\/catalog/);
 assert.match(llms, /https:\/\/app\.suedeai\.ai\/api\/v1\/catalog/);
 assert.match(robots, /User-agent: GPTBot\s+Allow: \//);
@@ -148,4 +173,4 @@ assert.match(html, /href="https:\/\/suedeai\.ai\/privacy"/, "footer must link to
 assert.match(html, /href="https:\/\/suedeai\.ai\/contact"/, "footer must link to a contact page");
 assert.match(llms, /github\.com\/Suede-AI\/suede-docs/);
 
-console.log("Site verification passed: metadata, social image, schema graph, claims, robots, sitemap, and docs links.");
+console.log("Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, and docs links.");
