@@ -80,7 +80,16 @@ const image = byId.get("https://docs.suedeai.ai/#primaryimage");
 
 assert.equal(organization?.["@type"], "Organization");
 assert.ok(organization?.logo, "Organization schema must expose a verified logo");
-assert.equal(organization?.founder, undefined, "docs schema must not assert an unsupported founder relationship");
+// The founder edge and its Person node were stripped in #2 along with the
+// unverifiable claims they carried (a "Founder and CEO" jobTitle, a Forbes
+// line, a personal sameAs list, an author byline). The edge itself is estate
+// canon -- suede-brand-domains/lib/canon.ts defines both @ids -- so it is back,
+// but only in the minimal form. These assertions keep the claims out.
+assert.deepEqual(
+  organization?.founder,
+  { "@id": "https://suedeai.ai/founder#person" },
+  "Organization must point at the canonical estate Person @id",
+);
 assert.ok(!organization?.sameAs?.some((url) => url.includes("linkedin.com/in/")));
 assert.equal(website?.["@type"], "WebSite");
 assert.deepEqual(website?.publisher, { "@id": "https://suedeai.ai/#organization" });
@@ -91,7 +100,18 @@ assert.deepEqual(webpage?.primaryImageOfPage, { "@id": "https://docs.suedeai.ai/
 assert.equal(image?.["@type"], "ImageObject");
 assert.equal(image?.width, 1200);
 assert.equal(image?.height, 630);
-assert.ok(!schema["@graph"].some((node) => node["@type"] === "Person"));
+const people = schema["@graph"].filter((node) => node["@type"] === "Person");
+assert.equal(people.length, 1, "graph must carry exactly one Person node");
+assert.deepEqual(
+  people[0],
+  {
+    "@type": "Person",
+    "@id": "https://suedeai.ai/founder#person",
+    name: "Jason Colapietro",
+    url: "https://suedeai.ai/founder",
+  },
+  "the Person node must stay minimal: no jobTitle, bio, alternateName, or sameAs",
+);
 assert.ok(!schema["@graph"].some((node) => node["@type"] === "TechArticle"));
 
 const publicCopy = `${html}\n${llms}`;
