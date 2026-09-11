@@ -1,0 +1,9 @@
+# Never a page: agent config and build scripts. Both answered 200 as static
+# assets on 2026-09-11 (record-audit.py in suede-seo). This project runs no
+# build command, so excluding scripts/ changes only what is served.
+.claude/
+.codex/
+.github/
+scripts/
+tests/
+*.md
