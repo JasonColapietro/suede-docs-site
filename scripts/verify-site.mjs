@@ -11,10 +11,10 @@ const llms = readFileSync(join(root, "llms.txt"), "utf8");
 
 const expected = {
   canonical: "https://docs.suedeai.ai/",
-  title: "Suede Developer Docs | x402 APIs and Creator IP",
+  title: "Suede AI Developer Docs | x402 APIs and Creator IP",
   description:
-    "Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
-  h1: "Suede developer docs for programmable IP",
+    "Read Suede AI developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
+  h1: "Suede AI developer docs for programmable IP",
   image: "https://docs.suedeai.ai/suede-docs-og.png",
   imagePath: join(root, "suede-docs-og.png"),
 };
@@ -48,7 +48,7 @@ assert.equal(canonical, expected.canonical);
 assert.deepEqual(h1s, [expected.h1], "page must have one intent-matched H1");
 assert.equal(metaContent("robots"), "index, follow");
 
-assert.equal(metaContent("og:title", "property"), "Suede Developer Docs: Programmable IP and x402 APIs");
+assert.equal(metaContent("og:title", "property"), "Suede AI Developer Docs: Programmable IP and x402 APIs");
 assert.equal(metaContent("og:description", "property"), expected.description);
 assert.equal(metaContent("og:url", "property"), expected.canonical);
 assert.equal(metaContent("og:type", "property"), "website");
@@ -57,7 +57,7 @@ assert.equal(metaContent("og:image:width", "property"), "1200");
 assert.equal(metaContent("og:image:height", "property"), "630");
 assert.equal(metaContent("og:image:type", "property"), "image/png");
 assert.equal(metaContent("twitter:card"), "summary_large_image");
-assert.equal(metaContent("twitter:title"), "Suede Developer Docs: Programmable IP and x402 APIs");
+assert.equal(metaContent("twitter:title"), "Suede AI Developer Docs: Programmable IP and x402 APIs");
 assert.equal(metaContent("twitter:image"), expected.image);
 
 assert.ok(existsSync(expected.imagePath), "local social-card PNG is missing");
