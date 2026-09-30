@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { SEO_KEYWORDS } from "./seo-keywords.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -192,5 +193,18 @@ assert.equal(footerPublished, schemaPublished, "footer prose must state the sche
 assert.match(html, /href="https:\/\/suedeai\.ai\/privacy"/, "footer must link to the privacy policy");
 assert.match(html, /href="https:\/\/suedeai\.ai\/contact"/, "footer must link to a contact page");
 assert.match(llms, /github\.com\/Suede-AI\/suede-docs/);
+
+// Meta keywords: every indexable page carries exactly one tag matching the
+// central map in scripts/seo-keywords.mjs.
+for (const [page, keywords] of Object.entries(SEO_KEYWORDS)) {
+  const source = readFileSync(join(root, page), "utf8");
+  const pageRobots = source.match(/<meta\s+name="robots"\s+content="([^"]*)"/i)?.[1] ?? "";
+  assert.ok(!/noindex/i.test(pageRobots), `${page} is noindex and should not be in the keywords map`);
+  const tags = [...source.matchAll(/<meta\s+name="keywords"\s+content="([^"]*)"\s*\/?>/gi)];
+  assert.equal(tags.length, 1, `${page} must carry exactly one <meta name="keywords">`);
+  assert.equal(tags[0][1].replace(/&amp;/g, "&"), keywords.join(", "), `${page} keywords must match scripts/seo-keywords.mjs`);
+  assert.ok(keywords.length >= 4, `${page} needs at least four keywords`);
+}
+assert.ok(SEO_KEYWORDS["index.html"], "index.html must have a keywords map entry");
 
 console.log("Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, and docs links.");
