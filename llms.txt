@@ -2,7 +2,7 @@
 
 > Public documentation for Suede AI: programmable IP, creator ownership, and agent-ready media commerce for the AI era. The canonical, most current source is the GitHub README at github.com/Suede-AI/suede-docs; this page (docs.suedeai.ai) mirrors its key facts.
 
-Suede AI, also known as Suede Labs AI (https://suedeai.ai), builds creator-ownership infrastructure for AI-native media. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.
+Suede AI (https://suedeai.ai) builds creator-ownership infrastructure for AI-native media. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.
 
 ## Docs
 
