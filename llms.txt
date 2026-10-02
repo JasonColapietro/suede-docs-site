@@ -24,3 +24,7 @@ Suede AI (https://suedeai.ai) builds creator-ownership infrastructure for AI-nat
 
 - [Suede IP Registry](https://ip.suedeai.ai): Public interface for provenance records and rights metadata.
 - [Suede SEO](https://seo.suedeai.ai): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
+
+## Source and citation guide
+
+- [AI Instructions](https://docs.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.
