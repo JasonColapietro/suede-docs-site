@@ -88,7 +88,7 @@
       "publisher": { "@id": "https://suedeai.ai/#organization" },
       "primaryImageOfPage": { "@id": "https://docs.suedeai.ai/#primaryimage" },
       "datePublished": "2026-07-04",
-      "dateModified": "2026-09-15"
+      "dateModified": "2026-10-11"
     }
   ]
 }
@@ -105,6 +105,7 @@
     --green: #94f27f;
     --green-ink: #0d7916;
     --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
     --radius: 5px;
     --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
     --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -123,13 +124,15 @@
   a:hover { color: var(--green-ink-hover); }
   a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
 
-  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(20px, 5vw, 44px) 64px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
   .mono {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: var(--muted);
     letter-spacing: 0.01em;
   }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
   h1 {
     font-family: var(--font-display);
     font-weight: 400;
@@ -150,14 +153,21 @@
     color: var(--ink-deep);
     margin: 40px 0 10px;
   }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
   section p { margin: 0 0 14px; }
-  ul { margin: 0 0 14px; padding-left: 22px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
   li { margin-bottom: 6px; }
   .card {
     background: var(--card);
     border: 1px solid var(--hairline);
     border-radius: 14px;
-    padding: clamp(24px, 5vw, 40px);
+    padding: clamp(20px, 5vw, 40px);
     margin-bottom: 8px;
   }
   .btn {
@@ -175,9 +185,46 @@
     margin: 12px 0 4px;
   }
   .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
   table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
   th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .fine {
     margin-top: 22px;
     color: var(--muted);
@@ -186,9 +233,11 @@
   .fine a { color: var(--muted); text-decoration: underline; }
   .fine a:hover { color: var(--green-ink); }
   footer.page {
-    max-width: 720px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 44px) 40px;
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
     color: var(--muted); font-size: 0.85rem;
   }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
 </style>
 </head>
 <body>
@@ -197,6 +246,21 @@
     <span class="mono">docs.suedeai.ai</span>
     <h1>Suede AI developer docs for programmable IP</h1>
     <p class="lede">Suede AI developer docs explain the public interfaces, rights concepts, and agent-commerce discovery surfaces in the Suede ecosystem. The canonical documentation is maintained in the <a href="https://github.com/Suede-AI/suede-docs">Suede-AI/suede-docs repository</a> on GitHub.</p>
+
+    <section>
+      <h2>API guides: pay-per-call endpoints</h2>
+      <p>Suede sells music, video and image generation per call over x402, paid in USDC on Base with no account or API key. These guides cover the full integration, checked against the live API on 2026-10-11. For prices and request fields, the live discovery documents on <code>app.suedeai.ai</code> are the source of truth, and each guide links the documents it was checked against.</p>
+      <ol class="docs-index">
+        <li><a href="/quickstart">Quickstart</a>: send a request, read the 402 challenge, sign an EIP-3009 USDC authorization, retry with <code>PAYMENT-SIGNATURE</code>, and poll for the result.</li>
+        <li><a href="/endpoints">Endpoints</a>: the three paid endpoints, their prices, shared payment terms, request headers and asynchronous mode.</li>
+        <li><a href="/endpoints/create-music">Create Music</a>: <code>POST /create-music</code>, a full original song from a prompt, $0.50.</li>
+        <li><a href="/endpoints/agent-video">Agent Video</a>: <code>POST /agent/video</code>, an 8-second 720p clip with native audio, $4.99.</li>
+        <li><a href="/endpoints/agent-image">Agent Image</a>: <code>POST /agent/image</code>, one PNG or JPEG, $0.15.</li>
+        <li><a href="/errors">Errors and limits</a>: status codes, error bodies, rate limits, idempotency and versioning.</li>
+        <li><a href="/python-sdk">Python SDK</a>: <code>pip install suede-ai</code>, a client that signs and retries the payment for you.</li>
+        <li><a href="/discovery">Discovery and MCP</a>: the x402 manifest, OpenAPI spec, catalog, A2A agent card and MCP server.</li>
+      </ol>
+    </section>
 
     <section>
       <h2>What is Suede AI?</h2>
@@ -230,18 +294,33 @@
     <section>
       <h2>What does Suede expose for AI agents (x402/ACP)?</h2>
       <p>Suede publishes public x402 and ACP discovery surfaces for agent-callable media and rights services. Use the <a href="https://app.suedeai.ai/api/v1/catalog">live agent-commerce catalog</a> for current availability and prices, and the <a href="https://app.suedeai.ai/.well-known/x402">x402 discovery document</a> for machine-readable routes.</p>
+      <p>On 2026-10-11 the catalog held three endpoints, each paid per call in USDC on Base: <a href="/endpoints/create-music">Create Music</a> at $0.50, <a href="/endpoints/agent-video">Agent Video</a> at $4.99 and <a href="/endpoints/agent-image">Agent Image</a> at $0.15. The same offerings are published as an OpenAPI spec, an A2A agent card and an MCP server; the <a href="/discovery">discovery guide</a> lists every format.</p>
     </section>
 
     <section>
       <h2>Where can I browse Suede sites and apps?</h2>
-      <p>The <a href="https://map.suedeai.ai">Suede Universe Map</a> is a plain-English directory of public Suede sites, apps, and endpoints. For the practice behind Suede's AI visibility work, and the method published in full, see <a href="https://seo.suedeai.ai?utm_source=docs">Suede SEO</a>.</p>
+      <p>The <a href="https://map.suedeai.ai">Suede Universe Map</a> is a plain-English directory of public Suede sites, apps, and endpoints. For the practice behind Suede's AI visibility work, and the method published in full, see <a href="https://seo.suedeai.ai">Suede SEO</a>.</p>
+    </section>
+
+    <section>
+      <h2>Related Suede tools for x402 sellers</h2>
+      <ul>
+        <li><a href="https://agents.suedeai.ai">AI Agent Builder &amp; Workflow Automation</a>: build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.</li>
+        <li><a href="https://perform.suedeai.ai">Suede ACP/x402 Performance Engine</a>: score your ACP/x402 readiness in 60 seconds. Free, no account required.</li>
+        <li><a href="https://agentix.suedeai.ai">Agentix: x402 AI Agent Earnings Tracker for USDC on Base</a>: the portfolio tracker for the x402 agents you've launched, with total USDC earned on Base, calls, per-agent performance, status, and trend.</li>
+      </ul>
     </section>
 
     <p class="fine">Not what you were looking for? <a href="https://github.com/Suede-AI/suede-docs">Go straight to the GitHub repo</a>. Part of the <a href="https://map.suedeai.ai">Suede Universe Map</a>.</p>
+
+    <nav class="pager" aria-label="Next page">
+      <a class="next" rel="next" href="/quickstart"><span>Next</span>Quickstart</a>
+    </nav>
   </div>
 </main>
 <footer class="page">
-  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-07-04. Page last updated 2026-09-15.</p>
-<p><a href="/ai-instructions">AI Instructions</a></p></footer>
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-07-04. Page last updated 2026-10-11.</p>
+</footer>
 </body>
 </html>

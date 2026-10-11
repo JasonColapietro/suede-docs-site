@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>x402 Quickstart: Pay a Suede API Call | Suede AI Docs</title>
+<meta name="description" content="Pay a Suede AI endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.">
+<meta name="keywords" content="x402 quickstart, x402 payment flow, 402 payment required, PAYMENT-SIGNATURE header, EIP-3009 transferWithAuthorization, USDC on Base, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/quickstart">
+<meta property="og:title" content="x402 Quickstart: Pay a Suede API Call | Suede AI Docs">
+<meta property="og:description" content="Pay a Suede AI endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.">
+<meta property="og:url" content="https://docs.suedeai.ai/quickstart">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="x402 Quickstart: Pay a Suede API Call | Suede AI Docs">
+<meta name="twitter:description" content="Pay a Suede AI endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="prev" href="https://docs.suedeai.ai/">
+<link rel="next" href="https://docs.suedeai.ai/endpoints">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <span aria-current="page">Quickstart</span></nav>
+    <h1>Pay a Suede x402 endpoint in five steps</h1>
+
+    <p class="lede">Suede AI sells music, video and image generation per call over x402. There is no account and no API key: your wallet signs a USDC payment on Base, and the same HTTP request carries it. This guide follows the flow the live endpoints at <code>app.suedeai.ai</code> run, checked on 2026-10-11.</p>
+
+    <section>
+      <h2>What you need</h2>
+      <ul>
+        <li><strong>USDC on Base mainnet</strong> in a wallet you control. The lowest-priced call, <a href="/endpoints/agent-image">Agent Image</a>, costs $0.15.</li>
+        <li><strong>A way to sign EIP-712 typed data</strong>, such as viem, ethers or eth-account. The <a href="/python-sdk">suede-ai Python SDK</a> does the signing for you.</li>
+        <li><strong>No ETH for gas.</strong> Under the x402 <code>exact</code> scheme the facilitator submits the transfer and pays the gas. Your signature fixes the amount and the recipient, and the facilitator cannot change either.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>1. Read the price from the discovery document</h2>
+      <p>Prices are enforced on the server, so read them before you sign. The x402 discovery document lists every paid resource:</p>
+<pre><code>curl -s https://app.suedeai.ai/.well-known/x402 \
+  | jq -r '.resources[] | "\(.method) \(.resource) \(.priceUsd)"'</code></pre>
+      <p>On 2026-10-11 it returned three resources:</p>
+<pre><code>POST https://app.suedeai.ai/create-music $0.50
+POST https://app.suedeai.ai/agent/video $4.99
+POST https://app.suedeai.ai/agent/image $0.15</code></pre>
+      <p>The <a href="/discovery">discovery page</a> covers the other machine-readable formats, including OpenAPI, the product catalog and the MCP server.</p>
+    </section>
+
+    <section>
+      <h2>2. Send the request and read the 402 challenge</h2>
+      <p>Send the request you want to buy, with no payment attached:</p>
+<pre><code>curl -i -X POST https://app.suedeai.ai/agent/image \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Album cover, neon city at night, rain on glass","aspectRatio":"1:1","outputFormat":"png"}'</code></pre>
+      <p>The server answers <code>402 Payment Required</code>. The challenge comes twice: as base64-encoded JSON in the <code>PAYMENT-REQUIRED</code> header, and as the same JSON in the body. Trimmed to the fields you sign against:</p>
+<pre><code>HTTP/2 402
+content-type: application/json
+payment-required: eyJ4NDAyVmVyc2lvbiI6IDIs...
+suede-api-version: 1
+
+{
+  "x402Version": 2,
+  "error": "PAYMENT-SIGNATURE header is required",
+  "resource": { "url": "https://app.suedeai.ai/agent/image" },
+  "accepts": [{
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "maxAmountRequired": "150000",
+    "amount": "150000",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "payTo": "0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F",
+    "maxTimeoutSeconds": 300,
+    "extra": { "name": "USD Coin", "version": "2", "decimals": 6, "priceUsd": "$0.15" }
+  }]
+}</code></pre>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>What it tells you</th></tr></thead>
+          <tbody>
+            <tr><td><code>network</code></td><td><code>eip155:8453</code> is Base mainnet.</td></tr>
+            <tr><td><code>asset</code></td><td>The USDC contract on Base. It is also the EIP-712 <code>verifyingContract</code>.</td></tr>
+            <tr><td><code>amount</code></td><td>The price in USDC base units. USDC has 6 decimals, so <code>150000</code> is $0.15.</td></tr>
+            <tr><td><code>payTo</code></td><td>The address that receives the payment.</td></tr>
+            <tr><td><code>maxTimeoutSeconds</code></td><td>300 seconds on all three endpoints.</td></tr>
+            <tr><td><code>extra.name</code>, <code>extra.version</code></td><td>The EIP-712 domain name and version: <code>"USD Coin"</code> and <code>"2"</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>To read the header copy instead of the body, decode it:</p>
+<pre><code>curl -s -o /dev/null -D - -X POST https://app.suedeai.ai/agent/image \
+  -H 'Content-Type: application/json' -d '{"prompt":"test"}' \
+  | grep -i '^payment-required:' | cut -d' ' -f2 | tr -d '\r' \
+  | base64 -d | jq '.accepts[0]'</code></pre>
+      <p>An unpaid request gets the 402 even when the body is empty, so the challenge does not mean your body is valid. Check it against the <a href="/endpoints">endpoint reference</a> before you sign.</p>
+    </section>
+
+    <section>
+      <h2>3. Sign an EIP-3009 authorization</h2>
+      <p>USDC supports EIP-3009 <code>transferWithAuthorization</code>, so paying is a signature over EIP-712 typed data. You do not send a transaction yourself. Fill the typed data from the <code>accepts</code> entry:</p>
+<pre><code>domain
+  name               "USD Coin"            accepts[0].extra.name
+  version            "2"                   accepts[0].extra.version
+  chainId            8453
+  verifyingContract  0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913   accepts[0].asset
+
+primaryType  TransferWithAuthorization
+  from         address   your wallet
+  to           address   0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F   accepts[0].payTo
+  value        uint256   150000                                       accepts[0].amount
+  validAfter   uint256   a Unix time slightly in the past
+  validBefore  uint256   a Unix time later than now + maxTimeoutSeconds
+  nonce        bytes32   32 random bytes</code></pre>
+      <p>For reference, the suede-ai SDK sets <code>validAfter</code> to 60 seconds before now and <code>validBefore</code> to now plus the larger of 600 seconds and <code>maxTimeoutSeconds</code> plus 60.</p>
+    </section>
+
+    <section>
+      <h2>4. Retry with the PAYMENT-SIGNATURE header</h2>
+      <p>Wrap the signature in an x402 version 2 <code>PaymentPayload</code>. The <code>accepted</code> field repeats the <code>accepts</code> entry you chose:</p>
+<pre><code>{
+  "x402Version": 2,
+  "resource": { "url": "https://app.suedeai.ai/agent/image" },
+  "accepted": {
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "amount": "150000",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "payTo": "0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F",
+    "maxTimeoutSeconds": 300,
+    "extra": { "name": "USD Coin", "version": "2", "decimals": 6, "priceUsd": "$0.15" }
+  },
+  "payload": {
+    "signature": "0x...",
+    "authorization": {
+      "from": "0xYourWallet",
+      "to": "0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F",
+      "value": "150000",
+      "validAfter": "1791746000",
+      "validBefore": "1791746660",
+      "nonce": "0x..."
+    }
+  }
+}</code></pre>
+      <p>Base64-encode that JSON and send the identical request again with it in <code>PAYMENT-SIGNATURE</code>. Add an <code>X-Idempotency-Key</code>: if you resend the same key and body within the cache window, you get the original response back without a second charge.</p>
+<pre><code>curl -i -X POST https://app.suedeai.ai/agent/image \
+  -H 'Content-Type: application/json' \
+  -H "PAYMENT-SIGNATURE: $PAYMENT" \
+  -H 'X-Idempotency-Key: cover-art-0001' \
+  -d '{"prompt":"Album cover, neon city at night, rain on glass","aspectRatio":"1:1","outputFormat":"png"}'</code></pre>
+      <p>A paid call answers <code>202 Accepted</code> with a job to poll. The discovery document gives this example body:</p>
+<pre><code>{
+  "jobId": "image-job-example",
+  "status": "queued",
+  "provider": "suede",
+  "pollUrl": "https://app.suedeai.ai/agent/image/image-job-example"
+}</code></pre>
+      <p>Paid calls are asynchronous by default because a render takes minutes and payment clients time out in about 30 seconds. To block until the asset is ready, add <code>?async=false</code> to the URL. Only the literal value <code>true</code> selects asynchronous mode: any other value, including <code>1</code>, <code>yes</code> and <code>on</code>, counts as <code>false</code> and blocks.</p>
+      <p>The same header also accepts a Skyfire <code>pay+jwt</code> or <code>kya-pay+jwt</code> token in place of an x402 payload.</p>
+    </section>
+
+    <section>
+      <h2>5. Poll for the result</h2>
+      <p>Polling is free: the job was paid for when it was created. Request <code>pollUrl</code> until the job reaches a final state.</p>
+<pre><code>curl -s https://app.suedeai.ai/agent/image/&lt;jobId&gt;</code></pre>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Endpoint</th><th>Poll route</th><th>Finished when</th><th>Asset field</th></tr></thead>
+          <tbody>
+            <tr><td><a href="/endpoints/agent-image">/agent/image</a></td><td><code>GET /agent/image/{jobId}</code></td><td><code>status</code> is <code>completed</code> or <code>failed</code></td><td><code>imageUrl</code></td></tr>
+            <tr><td><a href="/endpoints/agent-video">/agent/video</a></td><td><code>GET /agent/video/{jobId}</code></td><td><code>status</code> is <code>completed</code> or <code>failed</code></td><td><code>videoUrl</code></td></tr>
+            <tr><td><a href="/endpoints/create-music">/create-music</a></td><td><code>GET /api/songs/{songId}</code></td><td><code>model_version</code> is no longer <code>pending</code></td><td><code>audio_url</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>For music, <code>audio_url</code> holds a placeholder cover image until the track is rendered, so check <code>model_version</code>, not <code>audio_url</code>. A value of <code>failed</code> is final. The <a href="/errors">errors page</a> covers rate limits, retries and what is never charged.</p>
+    </section>
+
+    <section>
+      <h2>Skip the signing code</h2>
+      <p>The <a href="/python-sdk">suede-ai Python SDK</a> runs steps 2 to 4 for you and returns the 202 body:</p>
+<pre><code>pip install suede-ai</code></pre>
+<pre><code>from suede_ai import SuedeClient
+
+with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
+    job = suede.agent_image(prompt="Album cover, neon city at night, rain on glass")
+    print(job["pollUrl"])</code></pre>
+    </section>
+
+    <section>
+      <h2>Sell your own x402 endpoint</h2>
+      <p>The same rail works in the other direction. <a href="https://agents.suedeai.ai/x402-agent-builder">x402 Agent Builder: Get Paid Per Call</a>: build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.</p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <p>Every value on this page comes from these documents, fetched on 2026-10-11, and from live requests to the endpoints on the same day.</p>
+      <ul>
+        <li><a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>: prices, payment requirements and example responses.</li>
+        <li><a href="https://app.suedeai.ai/openapi.json">app.suedeai.ai/openapi.json</a>: asynchronous execution, the <code>async</code> parameter, idempotency and poll routes.</li>
+        <li><a href="https://raw.githubusercontent.com/coinbase/x402/main/specs/transports-v2/http.md">x402 HTTP transport, version 2</a>: the <code>PAYMENT-REQUIRED</code> and <code>PAYMENT-SIGNATURE</code> headers and the <code>PaymentPayload</code> shape.</li>
+        <li><a href="https://raw.githubusercontent.com/coinbase/x402/main/specs/schemes/exact/scheme_exact_evm.md">x402 exact scheme on EVM</a>: EIP-3009 signing and who pays gas.</li>
+        <li><a href="https://eips.ethereum.org/EIPS/eip-3009">EIP-3009</a>: the <code>TransferWithAuthorization</code> type.</li>
+        <li><a href="https://pypi.org/project/suede-ai/">suede-ai 0.4.0 on PyPI</a>: the SDK's signing window.</li>
+      </ul>
+    </section>
+
+    <nav class="pager" aria-label="Previous and next page">
+      <a class="prev" rel="prev" href="/"><span>Previous</span>Overview</a>
+      <a class="next" rel="next" href="/endpoints"><span>Next</span>Endpoints</a>
+    </nav>
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+</footer>
+</body>
+</html>

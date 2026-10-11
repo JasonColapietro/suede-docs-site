@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Image API: POST /agent/image | Suede AI Docs</title>
+<meta name="description" content="POST /agent/image returns one PNG or JPEG for $0.15 USDC on Base. Request fields, the ten aspect ratios, the 202 job response and the poll route.">
+<meta name="keywords" content="ai image generation api, text to image api, x402 image api, cover art api, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/endpoints/agent-image">
+<meta property="og:title" content="Agent Image API: POST /agent/image | Suede AI Docs">
+<meta property="og:description" content="POST /agent/image returns one PNG or JPEG for $0.15 USDC on Base. Request fields, the ten aspect ratios, the 202 job response and the poll route.">
+<meta property="og:url" content="https://docs.suedeai.ai/endpoints/agent-image">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="Agent Image API: POST /agent/image | Suede AI Docs">
+<meta name="twitter:description" content="POST /agent/image returns one PNG or JPEG for $0.15 USDC on Base. Request fields, the ten aspect ratios, the 202 job response and the poll route.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="prev" href="https://docs.suedeai.ai/endpoints/agent-video">
+<link rel="next" href="https://docs.suedeai.ai/errors">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/endpoints">Endpoints</a> / <span aria-current="page">Agent Image</span></nav>
+    <h1>Agent Image: POST /agent/image</h1>
+
+    <p class="lede">Generate one hosted still image from a text prompt, as PNG or JPEG. One call costs $0.15 in USDC on Base, the lowest price of the three endpoints, which also makes it the cheapest way to test a full payment round trip.</p>
+
+    <section>
+      <h2>What it is for</h2>
+      <p>Album and single cover art, podcast and video thumbnails, social and campaign graphics, concept art, storyboard frames, product shots and article illustrations. Frame it square, portrait or widescreen.</p>
+    </section>
+
+    <section>
+      <h2>At a glance</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><th scope="row">Endpoint</th><td><code>POST https://app.suedeai.ai/agent/image</code></td></tr>
+            <tr><th scope="row">Price</th><td>$0.15, <code>amount</code> <code>150000</code> USDC base units</td></tr>
+            <tr><th scope="row">Payment</th><td>x402 <code>exact</code> on <code>eip155:8453</code> to <code>0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F</code>, or a Skyfire token</td></tr>
+            <tr><th scope="row">Output</th><td>One hosted PNG or JPEG</td></tr>
+            <tr><th scope="row">Paid response</th><td><code>202 Accepted</code> with <code>jobId</code> and <code>pollUrl</code></td></tr>
+            <tr><th scope="row">Poll</th><td><code>GET https://app.suedeai.ai/agent/image/{jobId}</code>, free</td></tr>
+            <tr><th scope="row">Identifiers</th><td>OpenAPI <code>operationId</code>, A2A skill and MCP tool: <code>agent_image</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Request body</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>prompt</code></td><td>string</td><td>Yes</td><td>Visual prompt describing the image to generate.</td></tr>
+            <tr><td><code>aspectRatio</code></td><td>string</td><td>No</td><td>One of <code>1:1</code>, <code>9:16</code>, <code>16:9</code>, <code>3:4</code>, <code>4:3</code>, <code>3:2</code>, <code>2:3</code>, <code>5:4</code>, <code>4:5</code>, <code>21:9</code>.</td></tr>
+            <tr><td><code>outputFormat</code></td><td>string</td><td>No</td><td><code>png</code> or <code>jpeg</code>.</td></tr>
+            <tr><td><code>asyncMode</code></td><td>boolean</td><td>No</td><td>Switches asynchronous mode on, never off. Paid calls are already asynchronous.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The ten aspect ratios cover square (<code>1:1</code>), portrait (<code>4:5</code>, <code>3:4</code>, <code>2:3</code>, <code>9:16</code>) and landscape or widescreen (<code>5:4</code>, <code>4:3</code>, <code>3:2</code>, <code>16:9</code>, <code>21:9</code>) framing.</p>
+    </section>
+
+    <section>
+      <h2>Example: square cover art</h2>
+      <p>Get the 402 challenge first (<code>amount</code> <code>150000</code>, <code>priceUsd</code> <code>$0.15</code>), sign it as shown in the <a href="/quickstart">quickstart</a>, then send:</p>
+<pre><code>curl -i -X POST https://app.suedeai.ai/agent/image \
+  -H 'Content-Type: application/json' \
+  -H "PAYMENT-SIGNATURE: $PAYMENT" \
+  -H 'X-Idempotency-Key: cover-art-0001' \
+  -d '{
+    "prompt": "Album cover, neon city at night, rain on glass",
+    "aspectRatio": "1:1",
+    "outputFormat": "png"
+  }'</code></pre>
+    </section>
+
+    <section>
+      <h2>Response to a paid call: 202 Accepted</h2>
+      <p>The discovery document gives this example body:</p>
+<pre><code>{
+  "jobId": "image-job-example",
+  "status": "queued",
+  "provider": "suede",
+  "pollUrl": "https://app.suedeai.ai/agent/image/image-job-example"
+}</code></pre>
+      <p>With <code>?async=false</code> the call blocks and answers <code>200</code> with the same body shape as the poll below.</p>
+    </section>
+
+    <section>
+      <h2>Polling: GET /agent/image/{jobId}</h2>
+      <p>Poll until <code>status</code> is <code>completed</code>, with <code>imageUrl</code> set, or <code>failed</code>. Both are final; <code>queued</code> and <code>processing</code> mean poll again.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>jobId</code></td><td>The render's job identifier.</td></tr>
+            <tr><td><code>status</code></td><td><code>queued</code>, <code>processing</code>, <code>completed</code> or <code>failed</code>.</td></tr>
+            <tr><td><code>provider</code></td><td>The provider handling the render.</td></tr>
+            <tr><td><code>imageUrl</code></td><td>The generated image once complete; <code>null</code> until then.</td></tr>
+            <tr><td><code>pollUrl</code></td><td>Set on the 202 accept; <code>null</code> on a poll response.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>An unknown or expired <code>jobId</code> answers <code>200</code> with <code>status</code> <code>failed</code>, not 404. On 2026-10-11 that response looked like this:</p>
+<pre><code>{"jobId":"unknown-job-id","imageUrl":null,"status":"failed","provider":"suede","pollUrl":null,"error":"Generation failed. Please try again."}</code></pre>
+    </section>
+
+    <section>
+      <h2>A polling loop in Python</h2>
+<pre><code>import time
+import httpx
+
+def wait_for_image(poll_url: str) -&gt; str | None:
+    while True:
+        job = httpx.get(poll_url).json()
+        if job["status"] == "completed":
+            return job["imageUrl"]
+        if job["status"] == "failed":
+            return None
+        time.sleep(5)</code></pre>
+      <p>The <a href="/python-sdk">suede-ai SDK</a> handles the payment and returns the <code>pollUrl</code> this loop needs.</p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>: description, price, payment requirement, input schema and example output (resource entry last updated 2026-08-30).</li>
+        <li><a href="https://app.suedeai.ai/openapi.json">app.suedeai.ai/openapi.json</a>: operations <code>agent_image</code> and <code>agent_image_status</code>.</li>
+        <li>Live requests on 2026-10-11: the unpaid 402 challenge and a poll for an unknown <code>jobId</code>.</li>
+      </ul>
+    </section>
+
+    <nav class="pager" aria-label="Previous and next page">
+      <a class="prev" rel="prev" href="/endpoints/agent-video"><span>Previous</span>Agent Video</a>
+      <a class="next" rel="next" href="/errors"><span>Next</span>Errors and limits</a>
+    </nav>
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+</footer>
+</body>
+</html>
