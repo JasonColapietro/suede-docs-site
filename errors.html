@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API Errors, Rate Limits and Retries | Suede AI Docs</title>
+<meta name="description" content="Status codes, error bodies, rate-limit headers, idempotency keys and API versioning for Suede AI x402 endpoints, and which requests are never charged.">
+<meta name="keywords" content="x402 errors, 402 payment required, api rate limits, idempotency key, api versioning, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/errors">
+<meta property="og:title" content="API Errors, Rate Limits and Retries | Suede AI Docs">
+<meta property="og:description" content="Status codes, error bodies, rate-limit headers, idempotency keys and API versioning for Suede AI x402 endpoints, and which requests are never charged.">
+<meta property="og:url" content="https://docs.suedeai.ai/errors">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="API Errors, Rate Limits and Retries | Suede AI Docs">
+<meta name="twitter:description" content="Status codes, error bodies, rate-limit headers, idempotency keys and API versioning for Suede AI x402 endpoints, and which requests are never charged.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="prev" href="https://docs.suedeai.ai/endpoints/agent-image">
+<link rel="next" href="https://docs.suedeai.ai/python-sdk">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <span aria-current="page">Errors</span></nav>
+    <h1>Errors, rate limits and retries</h1>
+
+    <p class="lede">Suede's x402 endpoints use standard HTTP status codes and a small JSON error body. This page lists what each code means, which requests are never charged, and how to retry safely. Example responses were captured from the live API on 2026-10-11.</p>
+
+    <section>
+      <h2>Status codes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Status</th><th>When</th><th>What to do</th></tr></thead>
+          <tbody>
+            <tr><td><code>202</code></td><td>A paid call was accepted and the job is queued.</td><td>Poll <code>pollUrl</code>.</td></tr>
+            <tr><td><code>200</code></td><td>A blocking call (<code>?async=false</code>) finished, or a poll returned the job state.</td><td>Read the asset URL, or check <code>status</code> / <code>model_version</code>.</td></tr>
+            <tr><td><code>400</code></td><td>Bad request, for example an unsupported <code>Suede-API-Version</code>.</td><td>Send <code>Suede-API-Version: 1</code> or leave the header out.</td></tr>
+            <tr><td><code>402</code></td><td>No payment was attached, or the payment was not accepted.</td><td>Read <code>accepts</code>, sign, and retry with <code>PAYMENT-SIGNATURE</code>.</td></tr>
+            <tr><td><code>404</code></td><td>A music poll for a <code>songId</code> that does not exist.</td><td>Use the <code>songId</code> from the 202 response.</td></tr>
+            <tr><td><code>422</code></td><td>The request body failed validation.</td><td>Fix the fields listed in <code>detail</code> and retry.</td></tr>
+            <tr><td><code>429</code></td><td>Rate-limited (<code>code</code>: <code>rate_limited</code>).</td><td>Wait the number of seconds in <code>Retry-After</code>.</td></tr>
+            <tr><td><code>5XX</code></td><td>A server or upstream failure.</td><td>Retry with backoff, reusing the same <code>X-Idempotency-Key</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Requests that are never charged</h2>
+      <ul>
+        <li>A paid request that fails validation (<code>422</code>).</li>
+        <li>A request that fails with a <code>5XX</code>.</li>
+        <li>Every poll: <code>GET /api/songs/{songId}</code>, <code>GET /agent/video/{jobId}</code> and <code>GET /agent/image/{jobId}</code>.</li>
+        <li>A resend with the same <code>X-Idempotency-Key</code> and body within the cache window, which returns the original response.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Error bodies</h2>
+      <p>The 400, 422, 429 and <code>5XX</code> responses share the <code>Error</code> shape from the OpenAPI spec: <code>detail</code>, a message string, and <code>code</code>, a machine-readable value present where a client should branch on it.</p>
+<pre><code>{"detail":"Unsupported Suede-API-Version '9'. Supported: 1.","code":"unsupported_api_version"}</code></pre>
+      <p>For a <code>422</code>, <code>detail</code> is a list of issues, each with the path to the field (<code>loc</code>), a message (<code>msg</code>) and a type:</p>
+<pre><code>{"detail":[{"loc":["body","prompt"],"msg":"Field required","type":"missing"}]}</code></pre>
+      <p>The two codes to branch on are <code>rate_limited</code> (429) and <code>unsupported_api_version</code> (400). The music poll's 404 is shaped differently: on 2026-10-11 an unknown <code>songId</code> answered <code>{"error":"Song not found"}</code>.</p>
+    </section>
+
+    <section>
+      <h2>402 Payment Required</h2>
+      <p>A 402 body is the x402 <code>PaymentRequired</code> object (<code>x402Version</code>, <code>error</code>, <code>resource</code>, <code>accepts</code>, <code>extensions</code>), and the same object is base64-encoded in the <code>PAYMENT-REQUIRED</code> header. The <code>error</code> string says why. Two values seen on 2026-10-11:</p>
+      <ul>
+        <li><code>PAYMENT-SIGNATURE header is required</code>: the request had no payment.</li>
+        <li><code>Payment authorization missing</code>: the header was present but could not be read as a payment. That response also carried a <code>PAYMENT-REFERENCE</code> header.</li>
+      </ul>
+      <p>An unpaid request gets the 402 before the body is validated: an empty body <code>{}</code> also returned 402. Check your body against the endpoint reference before you sign so the paid call does not come back 422.</p>
+      <p>If a signed payload is refused, check it against the verification steps of the x402 <code>exact</code> scheme:</p>
+      <ol>
+        <li>The signature recovers to <code>authorization.from</code>.</li>
+        <li>That wallet holds enough USDC on Base.</li>
+        <li><code>value</code> matches <code>amount</code>, and the <code>validAfter</code> / <code>validBefore</code> window is valid now.</li>
+        <li>The token and network match the requirement: <code>0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</code> on <code>eip155:8453</code>.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Poll states that mean failure</h2>
+      <p>Video and image polls do not answer 404 for an unknown id. An unknown or expired <code>jobId</code> answers <code>200</code> with <code>status</code> <code>failed</code>; on 2026-10-11 the body also carried <code>"error": "Generation failed. Please try again."</code>. For music, <code>model_version</code> <code>failed</code> is final, and a 404 means the <code>songId</code> is wrong rather than still rendering.</p>
+    </section>
+
+    <section>
+      <h2>Rate limits</h2>
+      <p>Responses counted by the limiter carry these headers:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Header</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>RateLimit-Policy</code></td><td>Quota <code>q</code> per window <code>w</code> seconds (IETF RateLimit header draft).</td></tr>
+            <tr><td><code>RateLimit</code></td><td>Requests remaining <code>r</code>, and seconds <code>t</code> until the window frees a slot.</td></tr>
+            <tr><td><code>X-RateLimit-Limit</code></td><td>Total quota for the window.</td></tr>
+            <tr><td><code>X-RateLimit-Remaining</code></td><td>Requests left in the window.</td></tr>
+            <tr><td><code>X-RateLimit-Reset</code></td><td>Unix time, in seconds, when the window resets.</td></tr>
+            <tr><td><code>Retry-After</code></td><td>Seconds to wait. Always set on 429; a 402 may carry it when the facilitator is back-pressured.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Unpaid requests on 2026-10-11 carried <code>RateLimit-Policy: "probe";q=20;w=60</code>, a quota of 20 requests per 60-second window, with <code>RateLimit: "probe";r=19;t=60</code> counting down from there.</p>
+    </section>
+
+    <section>
+      <h2>Idempotency</h2>
+      <p>Send <code>X-Idempotency-Key</code> (up to 200 characters) on every paid <code>POST</code>. A render is a non-idempotent job, and the key lets you retry a timeout or a <code>5XX</code> without paying twice: the same key and body within the cache window return the original response.</p>
+    </section>
+
+    <section>
+      <h2>Versioning</h2>
+      <p>Every response carries <code>Suede-API-Version</code>. The current version is <code>1</code>, and a request without the header is served the current version. Additive changes, such as new optional fields or new endpoints, ship within a version; a breaking change ships as a new version. Before a version or operation is withdrawn, its responses carry a <code>Deprecation</code> header (RFC 9745) and a <code>Sunset</code> header (RFC 8594) at least 90 days ahead, with a <code>Link</code> to the notice.</p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://app.suedeai.ai/openapi.json">app.suedeai.ai/openapi.json</a>: response codes, the <code>Error</code> and <code>ValidationIssue</code> schemas, rate-limit headers, idempotency and <code>info.x-api-versioning</code>.</li>
+        <li><a href="https://raw.githubusercontent.com/coinbase/x402/main/specs/schemes/exact/scheme_exact_evm.md">x402 exact scheme on EVM</a>: payment verification steps.</li>
+        <li>Live requests on 2026-10-11: unpaid and malformed-payment 402s, the 400 for <code>Suede-API-Version: 9</code>, rate-limit headers, and polls for unknown ids.</li>
+      </ul>
+    </section>
+
+    <nav class="pager" aria-label="Previous and next page">
+      <a class="prev" rel="prev" href="/endpoints/agent-image"><span>Previous</span>Agent Image</a>
+      <a class="next" rel="next" href="/python-sdk"><span>Next</span>Python SDK</a>
+    </nav>
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+</footer>
+</body>
+</html>

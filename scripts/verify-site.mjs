@@ -207,4 +207,91 @@ for (const [page, keywords] of Object.entries(SEO_KEYWORDS)) {
 }
 assert.ok(SEO_KEYWORDS["index.html"], "index.html must have a keywords map entry");
 
-console.log("Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, and docs links.");
+// API guides. The array is the reading order: it drives each page's
+// rel="prev"/rel="next" links, and the home page links forward to the first.
+// Every guide is self-canonical, indexable, in the sitemap and llms.txt,
+// linked from the home page docs index, and shares the home page <style>.
+const ORIGIN = "https://docs.suedeai.ai";
+const DOCS_PAGES = [
+  { file: "quickstart.html", path: "/quickstart" },
+  { file: "endpoints.html", path: "/endpoints" },
+  { file: "endpoints/create-music.html", path: "/endpoints/create-music" },
+  { file: "endpoints/agent-video.html", path: "/endpoints/agent-video" },
+  { file: "endpoints/agent-image.html", path: "/endpoints/agent-image" },
+  { file: "errors.html", path: "/errors" },
+  { file: "python-sdk.html", path: "/python-sdk" },
+  { file: "discovery.html", path: "/discovery" },
+];
+
+const styleBlock = (source) => source.match(/<style>[\s\S]*?<\/style>/)?.[0];
+const homeStyle = styleBlock(html);
+assert.ok(homeStyle, "index.html must carry the shared <style> block");
+
+const pagerLinks = (source) => {
+  const pager = source.match(/<nav class="pager"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? "";
+  const rel = (name) => pager.match(new RegExp(`<a\\b[^>]*rel="${name}"[^>]*href="([^"]+)"`))?.[1];
+  return { prev: rel("prev"), next: rel("next") };
+};
+assert.deepEqual(pagerLinks(html), { prev: undefined, next: DOCS_PAGES[0].path }, "home page must link forward to the first guide");
+
+const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/sitemap.xml", "/robots.txt", ...DOCS_PAGES.map((page) => page.path)]);
+const seenTitles = new Set([title]);
+const seenDescriptions = new Set([expected.description]);
+const allPublic = [html, llms, readFileSync(join(root, "ai-instructions.html"), "utf8")];
+
+DOCS_PAGES.forEach((page, index) => {
+  const path = join(root, page.file);
+  assert.ok(existsSync(path), `${page.file} is missing`);
+  const source = readFileSync(path, "utf8");
+  allPublic.push(source);
+  const url = `${ORIGIN}${page.path}`;
+  const pageMeta = [...source.matchAll(/<meta\b[^>]*>/gi)].map((match) => attributes(match[0]));
+  const pageLinks = [...source.matchAll(/<link\b[^>]*>/gi)].map((match) => attributes(match[0]));
+  const named = (key, kind = "name") => pageMeta.find((item) => item[kind] === key)?.content;
+
+  const pageTitle = source.match(/<title>(.*?)<\/title>/is)?.[1]?.trim();
+  assert.ok(pageTitle && pageTitle.length <= 60, `${page.file} needs a title of at most 60 characters`);
+  assert.ok(!seenTitles.has(pageTitle), `${page.file} title is not unique`);
+  seenTitles.add(pageTitle);
+  const description = named("description");
+  assert.ok(description && description.length <= 160, `${page.file} needs a description of at most 160 characters`);
+  assert.ok(!seenDescriptions.has(description), `${page.file} description is not unique`);
+  seenDescriptions.add(description);
+
+  assert.equal(pageLinks.find((item) => item.rel === "canonical")?.href, url, `${page.file} canonical must be ${url}`);
+  assert.equal(named("og:url", "property"), url, `${page.file} og:url must match its canonical`);
+  assert.equal(named("robots"), "index, follow", `${page.file} must be indexable`);
+  assert.equal([...source.matchAll(/<h1\b/gi)].length, 1, `${page.file} must have one H1`);
+  assert.equal([...source.matchAll(/<main\b/gi)].length, 1, `${page.file} must have one <main>`);
+  assert.equal(styleBlock(source), homeStyle, `${page.file} must share the home page <style> block`);
+
+  assert.ok(sitemap.includes(`<loc>${url}</loc>`), `${page.file} is missing from sitemap.xml`);
+  assert.ok(llms.includes(`(${url})`), `${page.file} is missing from llms.txt`);
+  assert.ok(html.includes(`href="${page.path}"`), `home page docs index must link ${page.path}`);
+
+  const expectedPrev = index === 0 ? "/" : DOCS_PAGES[index - 1].path;
+  const expectedNext = DOCS_PAGES[index + 1]?.path;
+  assert.deepEqual(pagerLinks(source), { prev: expectedPrev, next: expectedNext }, `${page.file} prev/next must follow the reading order`);
+
+  for (const match of source.matchAll(/href="(\/[^"#]*)"/g)) {
+    const target = match[1];
+    const isAsset = /\.(ico|png)$/.test(target);
+    assert.ok(isAsset || ownPaths.has(target), `${page.file} links ${target}, which is not a page on this site`);
+  }
+});
+
+// First-party link rules: ip.suedeai.ai is a noindex demo (the registry is
+// registry.suedeai.ai), producer.suedeai.ai answers 401, and webmcp is not a
+// public target. No tracking parameters on any link.
+for (const source of allPublic) {
+  assert.ok(!/https?:\/\/(ip|producer|webmcp)\.suedeai\.ai/i.test(source), "links to ip/producer/webmcp.suedeai.ai are not allowed");
+  assert.ok(!/[?&]utm_[a-z]+=/i.test(source), "tracking parameters are not allowed in links");
+  for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
+    assert.ok(!unsafe.test(source), `unsafe or unverifiable public claim remains: ${unsafe}`);
+  }
+}
+for (const page of DOCS_PAGES) {
+  assert.ok(SEO_KEYWORDS[page.file], `${page.file} must have a keywords map entry`);
+}
+
+console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, and ${DOCS_PAGES.length} API guides.`);

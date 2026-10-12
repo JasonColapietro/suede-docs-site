@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python SDK for x402 Calls: suede-ai | Suede AI Docs</title>
+<meta name="description" content="Install suede-ai from PyPI to call Suede AI x402 endpoints from Python. It signs the USDC payment on Base and retries for you. Methods, options, polling.">
+<meta name="keywords" content="suede-ai python sdk, x402 python client, pip install suede-ai, EIP-3009 signing, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/python-sdk">
+<meta property="og:title" content="Python SDK for x402 Calls: suede-ai | Suede AI Docs">
+<meta property="og:description" content="Install suede-ai from PyPI to call Suede AI x402 endpoints from Python. It signs the USDC payment on Base and retries for you. Methods, options, polling.">
+<meta property="og:url" content="https://docs.suedeai.ai/python-sdk">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="Python SDK for x402 Calls: suede-ai | Suede AI Docs">
+<meta name="twitter:description" content="Install suede-ai from PyPI to call Suede AI x402 endpoints from Python. It signs the USDC payment on Base and retries for you. Methods, options, polling.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="prev" href="https://docs.suedeai.ai/errors">
+<link rel="next" href="https://docs.suedeai.ai/discovery">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <span aria-current="page">Python SDK</span></nav>
+    <h1>Python SDK: suede-ai</h1>
+
+    <p class="lede"><code>suede-ai</code> is the Python client for Suede's x402 endpoints. It reads the 402 challenge, signs the EIP-3009 USDC authorization on Base with your key, and replays the request, so your code sends prompts and gets back a job to collect. Version 0.4.0 was released on PyPI on 2026-08-29 under the MIT license.</p>
+
+    <section>
+      <h2>Install</h2>
+<pre><code>pip install suede-ai</code></pre>
+      <p>Requires Python 3.10 or later. It installs <code>httpx</code> (0.27 or later), <code>eth-account</code> (0.10 or later) and <code>pydantic</code> (2.6 or later).</p>
+    </section>
+
+    <section>
+      <h2>Generate an image and collect it</h2>
+<pre><code>import os
+import time
+
+import httpx
+from suede_ai import SuedeClient
+
+with SuedeClient(wallet_private_key=os.environ["SUEDE_WALLET_KEY"]) as suede:
+    job = suede.agent_image(
+        prompt="Album cover, neon city at night, rain on glass",
+        aspect_ratio="1:1",
+        output_format="png",
+    )
+
+# A paid call is queued, so the SDK returns the 202 body with a pollUrl.
+while True:
+    state = httpx.get(job["pollUrl"]).json()
+    if state["status"] in ("completed", "failed"):
+        break
+    time.sleep(5)
+
+print(state.get("imageUrl"))</code></pre>
+      <p>The key signs real USDC transfers on Base mainnet. Keep it in an environment variable or a secret store, and use a wallet funded with what you plan to spend. The SDK sends <code>PAYMENT-SIGNATURE</code> on the retry, which makes the call asynchronous by default, so every typed method returns a job to poll. Polling is free; the <a href="/endpoints">endpoint reference</a> lists each poll route and its finished state.</p>
+    </section>
+
+    <section>
+      <h2>Client options</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Argument</th><th>Default</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>wallet_private_key</code></td><td>Required</td><td>Hex private key, with or without <code>0x</code>. Signs the EIP-3009 authorizations.</td></tr>
+            <tr><td><code>base_url</code></td><td><code>https://app.suedeai.ai</code></td><td>API host.</td></tr>
+            <tr><td><code>http_client</code></td><td>None</td><td>Your own <code>httpx.Client</code>.</td></tr>
+            <tr><td><code>timeout</code></td><td>60 s read, 10 s connect</td><td>Per-request timeout.</td></tr>
+            <tr><td><code>max_payment_attempts</code></td><td><code>1</code></td><td>Paid retries after a 402: one challenge, one paid retry.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Methods for the live endpoints</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Calls</th><th>Body it sends</th></tr></thead>
+          <tbody>
+            <tr><td><code>create_music(prompt, duration_seconds=30, style=None)</code></td><td><a href="/endpoints/create-music"><code>POST /create-music</code></a></td><td><code>prompt</code>, <code>durationSeconds</code>, <code>style</code></td></tr>
+            <tr><td><code>agent_video(prompt, duration_seconds=8, aspect_ratio=None, resolution=None)</code></td><td><a href="/endpoints/agent-video"><code>POST /agent/video</code></a></td><td><code>prompt</code>, <code>durationSeconds</code>, <code>aspectRatio</code>, <code>resolution</code></td></tr>
+            <tr><td><code>agent_image(prompt, aspect_ratio=None, output_format=None)</code></td><td><a href="/endpoints/agent-image"><code>POST /agent/image</code></a></td><td><code>prompt</code>, <code>aspectRatio</code>, <code>outputFormat</code></td></tr>
+            <tr><td><code>manifest()</code></td><td><code>GET /.well-known/x402.json</code></td><td>None. Free; read prices before you sign.</td></tr>
+            <tr><td><code>request(method, path, json=None, params=None)</code></td><td>Any path</td><td>Your JSON. Handles the 402 the same way.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The typed methods take keyword arguments only. For <code>/create-music</code> fields the typed method does not expose, such as <code>lyrics</code>, <code>custom_mode</code>, <code>make_instrumental</code>, <code>vocal_gender</code> or <code>tags</code>, call <code>request()</code>:</p>
+<pre><code>job = suede.request("POST", "/create-music", json={
+    "prompt": "A melancholic acoustic guitar ballad about rain",
+    "make_instrumental": True,
+})
+# Poll job["pollUrl"] until model_version is no longer "pending".</code></pre>
+    </section>
+
+    <section>
+      <h2>How the SDK pays</h2>
+      <ol>
+        <li>It sends your request with no payment.</li>
+        <li>On a 402 it reads the <code>PAYMENT-REQUIRED</code> header, falling back to the JSON body.</li>
+        <li>It picks the <code>accepts</code> entry with scheme <code>exact</code>, network <code>eip155:8453</code> and the USDC contract <code>0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</code>.</li>
+        <li>It signs <code>TransferWithAuthorization</code> for <code>amount</code> to <code>payTo</code>, with a random 32-byte nonce, <code>validAfter</code> 60 seconds in the past and <code>validBefore</code> at now plus the larger of 600 seconds and <code>maxTimeoutSeconds</code> plus 60.</li>
+        <li>It base64-encodes an x402 version 2 <code>PaymentPayload</code> (<code>x402Version</code>, <code>resource</code>, <code>accepted</code>, <code>extensions</code>, <code>payload</code>) and replays the request with <code>PAYMENT-SIGNATURE</code>.</li>
+        <li>It returns the JSON of the first response that is not a 402.</li>
+      </ol>
+      <p>The <a href="/quickstart">quickstart</a> shows the same exchange with curl, field by field.</p>
+    </section>
+
+    <section>
+      <h2>Exceptions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Exception</th><th>Raised when</th></tr></thead>
+          <tbody>
+            <tr><td><code>suede_ai.PaymentRequired</code></td><td>The 402 offers no <code>exact</code> USDC-on-Base entry to sign.</td></tr>
+            <tr><td><code>suede_ai.X402Error</code></td><td>The response is still 402 after <code>max_payment_attempts</code> paid retries. <code>PaymentRequired</code> is a subclass.</td></tr>
+            <tr><td><code>httpx.HTTPStatusError</code></td><td>Any other non-2xx response, such as a 422 or 429. See the <a href="/errors">errors page</a>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Releases</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Version</th><th>Released</th></tr></thead>
+          <tbody>
+            <tr><td>0.4.0</td><td>2026-08-29</td></tr>
+            <tr><td>0.3.1</td><td>2026-07-09</td></tr>
+            <tr><td>0.3.0</td><td>2026-06-17</td></tr>
+            <tr><td>0.2.0</td><td>2026-06-17</td></tr>
+            <tr><td>0.1.0</td><td>2026-06-05</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The package also ships helpers for older <code>/v1/*</code> routes, such as <code>extend</code>, <code>cover</code> and <code>stems_pro</code>. Those routes are not in the live x402 manifest; the three typed methods above cover the current catalog.</p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://pypi.org/project/suede-ai/">suede-ai on PyPI</a>: version, release dates, Python requirement, dependencies and license.</li>
+        <li><a href="https://github.com/Suede-AI/suede-sdk-python">Suede-AI/suede-sdk-python</a>: the SDK repository. The client and payment behavior on this page was read from the 0.4.0 wheel on PyPI on 2026-10-11.</li>
+        <li><a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>: the manifest the SDK reads.</li>
+      </ul>
+    </section>
+
+    <nav class="pager" aria-label="Previous and next page">
+      <a class="prev" rel="prev" href="/errors"><span>Previous</span>Errors and limits</a>
+      <a class="next" rel="next" href="/discovery"><span>Next</span>Discovery and MCP</a>
+    </nav>
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+</footer>
+</body>
+</html>

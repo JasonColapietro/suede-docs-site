@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create Music API: POST /create-music | Suede AI Docs</title>
+<meta name="description" content="POST /create-music turns a text prompt into a full original song for $0.50 USDC on Base. Request fields, the 202 job response and how to poll it.">
+<meta name="keywords" content="ai music generation api, text to music api, create music api, x402 music api, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/endpoints/create-music">
+<meta property="og:title" content="Create Music API: POST /create-music | Suede AI Docs">
+<meta property="og:description" content="POST /create-music turns a text prompt into a full original song for $0.50 USDC on Base. Request fields, the 202 job response and how to poll it.">
+<meta property="og:url" content="https://docs.suedeai.ai/endpoints/create-music">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="Create Music API: POST /create-music | Suede AI Docs">
+<meta name="twitter:description" content="POST /create-music turns a text prompt into a full original song for $0.50 USDC on Base. Request fields, the 202 job response and how to poll it.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="prev" href="https://docs.suedeai.ai/endpoints">
+<link rel="next" href="https://docs.suedeai.ai/endpoints/agent-video">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/endpoints">Endpoints</a> / <span aria-current="page">Create Music</span></nav>
+    <h1>Create Music: POST /create-music</h1>
+
+    <p class="lede">Turn a text prompt into a complete original song, with vocals, melody and full arrangement, delivered as a finished MP3 rather than a loop or preview. One call costs $0.50 in USDC on Base.</p>
+
+    <section>
+      <h2>What it is for</h2>
+      <p>Describe the genre, mood, instrumentation and tempo, supply your own lyrics, ask for an instrumental, or pin a style tag. The discovery document names soundtracks under video, release-ready artist tracks, podcast and game themes, and demo sketches as uses.</p>
+    </section>
+
+    <section>
+      <h2>At a glance</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><th scope="row">Endpoint</th><td><code>POST https://app.suedeai.ai/create-music</code></td></tr>
+            <tr><th scope="row">Price</th><td>$0.50, <code>amount</code> <code>500000</code> USDC base units</td></tr>
+            <tr><th scope="row">Payment</th><td>x402 <code>exact</code> on <code>eip155:8453</code> to <code>0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F</code>, or a Skyfire token</td></tr>
+            <tr><th scope="row">Paid response</th><td><code>202 Accepted</code> with <code>songId</code> and <code>pollUrl</code></td></tr>
+            <tr><th scope="row">Poll</th><td><code>GET https://app.suedeai.ai/api/songs/{songId}</code>, free</td></tr>
+            <tr><th scope="row">Identifiers</th><td>OpenAPI <code>operationId</code>, A2A skill and MCP tool: <code>create_music</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Request body</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>prompt</code></td><td>string</td><td>Yes</td><td>The song you want: genre, mood, instruments and any specific vibe. Examples from the schema: "Upbeat 80s synthwave with driving bass and neon atmosphere", "A melancholic acoustic guitar ballad about rain".</td></tr>
+            <tr><td><code>style</code></td><td>string</td><td>No</td><td>A style or genre tag, such as <code>Hip Hop</code>, <code>Ambient</code> or <code>Rock</code>.</td></tr>
+            <tr><td><code>custom_mode</code></td><td>boolean</td><td>No</td><td><code>true</code> to sing the lyrics you supply in <code>lyrics</code>.</td></tr>
+            <tr><td><code>lyrics</code></td><td>string</td><td>When <code>custom_mode</code> is <code>true</code></td><td>Your lyrics.</td></tr>
+            <tr><td><code>make_instrumental</code></td><td>boolean</td><td>No</td><td><code>true</code> for a track without vocals.</td></tr>
+            <tr><td><code>vocal_gender</code></td><td>string</td><td>No</td><td><code>m</code> or <code>f</code>.</td></tr>
+            <tr><td><code>tags</code></td><td>string</td><td>No</td><td>Comma-separated keywords to tag the generated file.</td></tr>
+            <tr><td><code>asyncMode</code></td><td>boolean</td><td>No</td><td>Switches asynchronous mode on, never off. Paid calls are already asynchronous.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Example: your own lyrics</h2>
+      <p>First send the request without <code>PAYMENT-SIGNATURE</code> to get the 402 challenge (<code>amount</code> <code>500000</code>, <code>priceUsd</code> <code>$0.50</code>), sign it as shown in the <a href="/quickstart">quickstart</a>, then send:</p>
+<pre><code>curl -i -X POST https://app.suedeai.ai/create-music \
+  -H 'Content-Type: application/json' \
+  -H "PAYMENT-SIGNATURE: $PAYMENT" \
+  -H 'X-Idempotency-Key: rain-ballad-0001' \
+  -d '{
+    "prompt": "A melancholic acoustic guitar ballad about rain",
+    "style": "Ambient",
+    "custom_mode": true,
+    "lyrics": "Your lyrics here",
+    "vocal_gender": "f"
+  }'</code></pre>
+      <p>For a track without vocals, drop <code>custom_mode</code> and <code>lyrics</code> and send <code>"make_instrumental": true</code>.</p>
+    </section>
+
+    <section>
+      <h2>Response to a paid call: 202 Accepted</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>status</code></td><td><code>processing</code> or <code>queued</code>.</td></tr>
+            <tr><td><code>shareUrl</code></td><td>The browser share URL the track will have once the job completes.</td></tr>
+            <tr><td><code>songId</code></td><td>The id of the song row, and the <code>{songId}</code> in <code>pollUrl</code>. It can be <code>null</code> when the job is queued before that row exists.</td></tr>
+            <tr><td><code>pollUrl</code></td><td>The absolute URL of <code>GET /api/songs/{songId}</code>. No further payment.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>With <code>?async=false</code> the call blocks and answers <code>200</code> with <code>shareUrl</code> (a public page to listen to and download the track), <code>title</code> and <code>imageUrl</code> (cover art). Renders take minutes and payment clients time out in about 30 seconds, so the default asynchronous mode suits most callers.</p>
+    </section>
+
+    <section>
+      <h2>Polling: GET /api/songs/{songId}</h2>
+      <p>Music returns the song row, not the <code>jobId</code> and <code>status</code> shape the video and image polls use. Read <code>model_version</code>:</p>
+      <ul>
+        <li><code>pending</code>: the track is queued or rendering. Poll again.</li>
+        <li><code>failed</code>: generation failed. This is final; stop polling.</li>
+        <li>Any version label, such as <code>v4.5</code>: the track is ready and <code>audio_url</code> is the finished MP3.</li>
+      </ul>
+      <p>Until the track is ready, <code>audio_url</code> holds the placeholder cover-image URL the row was created with. It is a reachable image, not audio, so a present <code>audio_url</code> does not mean the track is finished.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>The <code>songId</code> you polled.</td></tr>
+            <tr><td><code>model_version</code></td><td>The job state, as above.</td></tr>
+            <tr><td><code>audio_url</code></td><td>The finished MP3 once ready; a placeholder image URL before that.</td></tr>
+            <tr><td><code>title</code>, <code>prompt</code>, <code>genre</code></td><td>Track title, the prompt it was generated from, and the style label from the request.</td></tr>
+            <tr><td><code>image_url</code></td><td>Cover art URL.</td></tr>
+            <tr><td><code>duration</code></td><td>Length in seconds; <code>0</code> until the render finishes.</td></tr>
+            <tr><td><code>share_id</code></td><td>Public share identifier for the listener page.</td></tr>
+            <tr><td><code>is_public</code></td><td><code>true</code> for x402 and Skyfire paid jobs, which are created public so the buyer can fetch them.</td></tr>
+            <tr><td><code>created_at</code></td><td>Creation time, ISO 8601.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>An unknown <code>songId</code> answers <code>404</code> with <code>{"error":"Song not found"}</code>. Because paid jobs are created public, a 404 means the id is wrong, not that the track is still rendering.</p>
+    </section>
+
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>: description, price, payment requirement and input schema (resource entry last updated 2026-08-30).</li>
+        <li><a href="https://app.suedeai.ai/openapi.json">app.suedeai.ai/openapi.json</a>: operations <code>create_music</code> and <code>create_music_result</code>.</li>
+        <li>Live requests on 2026-10-11: the unpaid 402 challenge and the 404 for an unknown <code>songId</code>.</li>
+      </ul>
+    </section>
+
+    <nav class="pager" aria-label="Previous and next page">
+      <a class="prev" rel="prev" href="/endpoints"><span>Previous</span>Endpoints</a>
+      <a class="next" rel="next" href="/endpoints/agent-video"><span>Next</span>Agent Video</a>
+    </nav>
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+</footer>
+</body>
+</html>

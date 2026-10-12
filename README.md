@@ -2,7 +2,9 @@
 
 Static documentation index for `docs.suedeai.ai`. The canonical Suede AI developer documentation lives on GitHub at [Suede-AI/suede-docs](https://github.com/Suede-AI/suede-docs) and is mirrored publicly at [JasonColapietro/suede-docs](https://github.com/JasonColapietro/suede-docs).
 
-The site is a single static `index.html` with no build step. `suede-docs-og.svg` is the editable source for the committed 1200×630 `suede-docs-og.png` social card.
+The site is static HTML with no build step: `index.html` (overview and docs index), the API guides (`quickstart.html`, `endpoints.html`, `endpoints/*.html`, `errors.html`, `python-sdk.html`, `discovery.html`) and `ai-instructions.html`. `vercel.json` sets `cleanUrls`, so `quickstart.html` is served at `/quickstart`, and canonicals use that form. `suede-docs-og.svg` is the editable source for the committed 1200×630 `suede-docs-og.png` social card.
+
+The API guides document the live endpoints on `app.suedeai.ai`. Every price, field and response on them comes from the live discovery documents (`/.well-known/x402`, `/openapi.json`, `/api/v1/catalog`) or from a live request, and each page lists its sources. Re-check them against those documents when the catalog changes. The guides share the home page `<style>` block, and `scripts/verify-site.mjs` enforces it, along with the prev/next reading order, sitemap and `llms.txt` entries, and the keyword map.
 
 ## Verify
 

@@ -13,16 +13,32 @@ Suede AI (https://suedeai.ai) builds creator-ownership infrastructure for AI-nat
 - [suede-token](https://github.com/Suede-AI/suede-token): $SUEDE token contracts and chain references.
 - [suede-creator-skills](https://github.com/JasonColapietro/suede-creator-skills): Free public agent-workflow skills for creators.
 
+## API guides
+
+Checked against the live API on 2026-10-11. Prices and request fields come from the discovery documents on app.suedeai.ai.
+
+- [x402 quickstart](https://docs.suedeai.ai/quickstart): Pay a Suede endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.
+- [Endpoints](https://docs.suedeai.ai/endpoints): The three pay-per-call endpoints with prices, USDC amounts, shared payment terms, request headers and asynchronous mode.
+- [Create Music](https://docs.suedeai.ai/endpoints/create-music): POST /create-music, a full original song from a text prompt, $0.50 USDC on Base.
+- [Agent Video](https://docs.suedeai.ai/endpoints/agent-video): POST /agent/video, an 8-second 720p clip with native audio, $4.99 USDC on Base.
+- [Agent Image](https://docs.suedeai.ai/endpoints/agent-image): POST /agent/image, one PNG or JPEG, $0.15 USDC on Base.
+- [Errors and limits](https://docs.suedeai.ai/errors): Status codes, error bodies, rate-limit headers, idempotency keys, versioning, and which requests are never charged.
+- [Python SDK](https://docs.suedeai.ai/python-sdk): The suede-ai package on PyPI: install, client options, methods, how it pays, and polling.
+- [Discovery and MCP](https://docs.suedeai.ai/discovery): The x402 manifest, OpenAPI 3.1 spec, product catalog, A2A agent card, Agentic Commerce manifest and MCP server.
+
 ## Ecosystem
 
 - [Suede AI](https://suedeai.ai): Main product site with product, blog, and company information.
 - [Suede Universe Map](https://map.suedeai.ai): Plain-English directory of public Suede sites, apps, and endpoints.
 - [Jason Colapietro profile](https://suedeai.ai/founder): Public leadership profile on the main Suede site.
 - [suedeai.org](https://suedeai.org): Thesis, books, and investor information.
+- [AI Agent Builder & Workflow Automation](https://agents.suedeai.ai): Build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.
+- [Suede ACP/x402 Performance Engine](https://perform.suedeai.ai): Score your ACP/x402 readiness in 60 seconds. Free, no account required.
+- [Agentix: x402 AI Agent Earnings Tracker for USDC on Base](https://agentix.suedeai.ai): The portfolio tracker for the x402 agents you've launched. Total USDC earned on Base, calls, per-agent performance, status, and trend.
 
 ## Optional
 
-- [Suede IP Registry](https://ip.suedeai.ai): Public interface for provenance records and rights metadata.
+- [Suede AI IP Registry](https://registry.suedeai.ai): The ID and trust layer for music: one verifiable public ID per work, with a wallet-signed creator claim, contributors, timestamp, and derivative links on Base and Avalanche.
 - [Suede SEO](https://seo.suedeai.ai): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
 
 ## Source and citation guide
