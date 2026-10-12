@@ -314,7 +314,7 @@ for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-in
   const graph = JSON.parse(blocks[0][1])["@graph"];
   const types = graph.map((node) => node["@type"]);
   assert.ok(types.includes("BreadcrumbList"), `${page.file} needs a BreadcrumbList`);
-  assert.ok(types.includes("TechArticle") || types.includes("WebPage"), `${page.file} needs a WebPage or TechArticle node`);
+  assert.ok(types.includes("WebPage"), `${page.file} needs a WebPage node`);
   assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
   assert.ok(llmsFull.includes(`URL: ${ORIGIN}${page.path}`), `${page.file} is missing from llms-full.txt`);
 }

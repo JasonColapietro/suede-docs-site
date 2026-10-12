@@ -185,6 +185,30 @@
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebPage",
+      "@id": "https://docs.suedeai.ai/discovery#webpage",
+      "url": "https://docs.suedeai.ai/discovery",
+      "name": "x402 Discovery Documents and MCP Server | Suede AI Docs",
+      "description": "The machine-readable Suede AI discovery documents: x402 manifest, OpenAPI 3.1, product catalog, A2A agent card, Agentic Commerce manifest and MCP server.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://docs.suedeai.ai/#primaryimage"
+      },
+      "breadcrumb": {
+        "@id": "https://docs.suedeai.ai/discovery#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://docs.suedeai.ai/discovery#article"
+      },
+      "dateModified": "2026-10-11"
+    },
+    {
       "@type": "TechArticle",
       "@id": "https://docs.suedeai.ai/discovery#article",
       "url": "https://docs.suedeai.ai/discovery",
@@ -203,9 +227,6 @@
       "primaryImageOfPage": {
         "@id": "https://docs.suedeai.ai/#primaryimage"
       },
-      "breadcrumb": {
-        "@id": "https://docs.suedeai.ai/discovery#breadcrumb"
-      },
       "datePublished": "2026-10-11",
       "dateModified": "2026-10-11",
       "headline": "Discovery documents and MCP server",
@@ -213,7 +234,9 @@
       "author": {
         "@id": "https://suedeai.ai/#organization"
       },
-      "mainEntityOfPage": "https://docs.suedeai.ai/discovery"
+      "mainEntityOfPage": {
+        "@id": "https://docs.suedeai.ai/discovery#webpage"
+      }
     },
     {
       "@type": "BreadcrumbList",

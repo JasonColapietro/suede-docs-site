@@ -166,18 +166,36 @@ function graphFor(page, facts) {
     ...(facts.published ? { datePublished: facts.published } : {}),
     ...(facts.modified ? { dateModified: facts.modified } : {}),
   };
+  // A guide is a TechArticle inside a WebPage: the WebPage carries the page
+  // facts and breadcrumb, and names the article as its main entity.
+  const nodes = [pageNode];
   if (page.kind === "TechArticle") {
     Object.assign(pageNode, {
       headline: facts.h1,
       image: `${ORIGIN}/suede-docs-og.png`,
       author: { "@id": ORG_ID },
-      mainEntityOfPage: facts.url,
+      mainEntityOfPage: { "@id": `${facts.url}#webpage` },
+    });
+    delete pageNode.breadcrumb;
+    nodes.unshift({
+      "@type": "WebPage",
+      "@id": `${facts.url}#webpage`,
+      url: facts.url,
+      name: facts.title,
+      description: facts.description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE_ID },
+      publisher: { "@id": ORG_ID },
+      primaryImageOfPage: { "@id": IMAGE_ID },
+      breadcrumb: { "@id": `${facts.url}#breadcrumb` },
+      mainEntity: { "@id": `${facts.url}#article` },
+      ...(facts.modified ? { dateModified: facts.modified } : {}),
     });
   }
   return {
     "@context": "https://schema.org",
     "@graph": [
-      pageNode,
+      ...nodes,
       {
         "@type": "BreadcrumbList",
         "@id": `${facts.url}#breadcrumb`,
