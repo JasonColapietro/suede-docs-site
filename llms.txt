@@ -6,6 +6,7 @@ Suede AI (https://suedeai.ai) builds creator-ownership infrastructure for AI-nat
 
 ## Docs
 
+- [Full text of this site](https://docs.suedeai.ai/llms-full.txt): Every docs.suedeai.ai page as one Markdown file, generated from the pages, for assistants that want the complete text in one fetch.
 - [Suede Docs: canonical README](https://github.com/Suede-AI/suede-docs): Public doc set with core pillars, product directory, x402 and ACP guidance, token references, profiles, and language guidance.
 - [Live agent-commerce catalog](https://app.suedeai.ai/api/v1/catalog): Current public product availability and pricing in a schema.org ItemList response.
 - [x402 discovery document](https://app.suedeai.ai/.well-known/x402): Machine-readable x402 routes published by the live app surface.

@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SEO_KEYWORDS } from "./seo-keywords.mjs";
+import { buildDocsSeo } from "./build-docs-seo.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -234,7 +235,7 @@ const pagerLinks = (source) => {
 };
 assert.deepEqual(pagerLinks(html), { prev: undefined, next: DOCS_PAGES[0].path }, "home page must link forward to the first guide");
 
-const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/sitemap.xml", "/robots.txt", ...DOCS_PAGES.map((page) => page.path)]);
+const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/llms-full.txt", "/sitemap.xml", "/robots.txt", ...DOCS_PAGES.map((page) => page.path)]);
 const seenTitles = new Set([title]);
 const seenDescriptions = new Set([expected.description]);
 const allPublic = [html, llms, readFileSync(join(root, "ai-instructions.html"), "utf8")];
@@ -294,4 +295,32 @@ for (const page of DOCS_PAGES) {
   assert.ok(SEO_KEYWORDS[page.file], `${page.file} must have a keywords map entry`);
 }
 
-console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, and ${DOCS_PAGES.length} API guides.`);
+// Generated SEO files: every page except the home page carries a JSON-LD graph
+// (WebPage or TechArticle plus BreadcrumbList, shared entities by @id only),
+// and llms-full.txt carries the full text of every page. Both are built from
+// the pages by scripts/build-docs-seo.mjs and must be current.
+for (const file of buildDocsSeo()) {
+  const current = existsSync(join(root, file.path)) ? readFileSync(join(root, file.path), "utf8") : null;
+  assert.equal(current, file.content, `${file.path} is stale: run node scripts/build-docs-seo.mjs`);
+}
+const llmsFull = readFileSync(join(root, "llms-full.txt"), "utf8");
+assert.ok(llmsFull.startsWith("# "), "llms-full.txt must start with a Markdown H1");
+assert.ok(Buffer.byteLength(llmsFull) < 500_000, "llms-full.txt must stay under 500 KB");
+assert.match(llms, /https:\/\/docs\.suedeai\.ai\/llms-full\.txt/, "llms.txt must reference llms-full.txt");
+for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-instructions" }]) {
+  const source = readFileSync(join(root, page.file), "utf8");
+  const blocks = [...source.matchAll(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/gi)];
+  assert.equal(blocks.length, 1, `${page.file} must carry one JSON-LD graph`);
+  const graph = JSON.parse(blocks[0][1])["@graph"];
+  const types = graph.map((node) => node["@type"]);
+  assert.ok(types.includes("BreadcrumbList"), `${page.file} needs a BreadcrumbList`);
+  assert.ok(types.includes("TechArticle") || types.includes("WebPage"), `${page.file} needs a WebPage or TechArticle node`);
+  assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
+  assert.ok(llmsFull.includes(`URL: ${ORIGIN}${page.path}`), `${page.file} is missing from llms-full.txt`);
+}
+for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
+  assert.ok(!unsafe.test(llmsFull), `unsafe or unverifiable public claim remains in llms-full.txt: ${unsafe}`);
+}
+assert.ok(!/\u2014/.test(llmsFull), "llms-full.txt must not contain em dashes");
+
+console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, ${DOCS_PAGES.length} API guides, JSON-LD on every page and llms-full.txt.`);

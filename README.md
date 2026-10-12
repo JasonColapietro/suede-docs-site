@@ -9,8 +9,11 @@ The API guides document the live endpoints on `app.suedeai.ai`. Every price, fie
 ## Verify
 
 ```bash
+node scripts/build-docs-seo.mjs   # after editing any page
 node scripts/verify-site.mjs
 ```
+
+`scripts/build-docs-seo.mjs` writes two derived files from the pages: the JSON-LD block (WebPage or TechArticle plus BreadcrumbList) between the `docs-jsonld` markers in every page except `index.html`, and `llms-full.txt`, the full text of every page as Markdown. `verify-site.mjs` fails when either is stale.
 
 ## Deploy
 
