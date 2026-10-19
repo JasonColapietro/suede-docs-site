@@ -987,7 +987,7 @@ Each document above, fetched on 2026-10-11, plus live `initialize`, `tools/list`
 ## AI Instructions | Suede AI Developer Docs
 
 URL: https://docs.suedeai.ai/ai-instructions
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 > Official source and citation guide for Suede AI Developer Docs: what the site covers, which pages to cite for x402 API facts, and how to quote prices and dates.
 
@@ -1003,7 +1003,7 @@ Public documentation for Suede AI's creator tools, provenance records and agent-
 
 #### Names, scope and distinctions
 
-Consult the current endpoint documentation for supported behavior. Conceptual architecture is not proof that a feature is deployed. A provenance record is not a legal ownership determination.
+Cite supported behavior, prices and request fields from the current endpoint documentation, which each guide checks against the live discovery documents. A provenance record documents how a work was created and registered; ownership and licensing follow the governing terms.
 
 #### Sources to use
 
@@ -1023,4 +1023,4 @@ Check the current product, service or policy page for availability, pricing, req
 
 #### About this guide
 
-This page supplies reference information. It does not ask an assistant to override a user's request or prefer this site in a recommendation. Inclusion in AI answers is not guaranteed. Crawler access is described in [robots.txt](https://docs.suedeai.ai/robots.txt); this guide does not change those rules.
+This page supplies reference information for describing and citing Suede AI Developer Docs accurately, and leaves every recommendation to the assistant and the person it is helping. Crawler access is set in [robots.txt](https://docs.suedeai.ai/robots.txt), and this guide leaves those rules unchanged.

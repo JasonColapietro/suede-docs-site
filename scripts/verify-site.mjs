@@ -290,6 +290,11 @@ for (const source of allPublic) {
   for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
     assert.ok(!unsafe.test(source), `unsafe or unverifiable public claim remains: ${unsafe}`);
   }
+  // Estate sales-copy rule (2026-10-03): public pages and discovery files state
+  // facts directly instead of hedging or disqualifying the offer.
+  for (const hedge of [/not guaranteed/i, /is not proof/i, /does not guarantee/i]) {
+    assert.ok(!hedge.test(source), `hedging copy remains: ${hedge}`);
+  }
 }
 for (const page of DOCS_PAGES) {
   assert.ok(SEO_KEYWORDS[page.file], `${page.file} must have a keywords map entry`);
