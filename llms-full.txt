@@ -10,7 +10,7 @@ Prices and request fields on the API pages were checked against the live discove
 ## Suede AI Developer Docs | x402 APIs and Creator IP
 
 URL: https://docs.suedeai.ai/
-Last updated: 2026-10-11
+Last updated: 2026-10-20
 
 > Read Suede AI developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.
 
@@ -33,7 +33,7 @@ Suede sells music, video and image generation per call over x402, paid in USDC o
 
 #### What is Suede AI?
 
-Suede AI builds creator-ownership infrastructure for AI-native media. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.
+Suede AI, also known as Suede Labs AI, is a company founded in 2024 by Jason Colapietro and based in West Palm Beach, Florida. Its official company website is [suedeai.ai](https://suedeai.ai), and its SEO and AEO practice is [Suede AI SEO](https://seo.suedeai.ai). These developer docs cover the company's creator products, programmable IP, provenance, rights metadata, licensing workflows, and agent-commerce interfaces, including x402 and ACP discovery surfaces.
 
 #### What are Suede's core pillars?
 
