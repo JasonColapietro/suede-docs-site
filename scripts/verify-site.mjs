@@ -283,10 +283,12 @@ DOCS_PAGES.forEach((page, index) => {
 
 // First-party link rules: ip.suedeai.ai is a noindex demo (the registry is
 // registry.suedeai.ai), producer.suedeai.ai answers 401, and webmcp is not a
-// public target. No tracking parameters on any link.
+// public target. Only the explicitly requested Trendshift badge may carry its
+// exact attribution parameters; every other tracked link is still rejected.
+const trendshiftBadgeHref = 'https://trendshift.io/repositories/82031?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-82031';
 for (const source of allPublic) {
   assert.ok(!/https?:\/\/(ip|producer|webmcp)\.suedeai\.ai/i.test(source), "links to ip/producer/webmcp.suedeai.ai are not allowed");
-  assert.ok(!/[?&]utm_[a-z]+=/i.test(source), "tracking parameters are not allowed in links");
+  assert.ok(!/[?&](?:amp;)?utm_[a-z]+=/i.test(source.replaceAll(`href="${trendshiftBadgeHref}"`, "")), "tracking parameters are not allowed in links outside the approved Trendshift badge");
   for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
     assert.ok(!unsafe.test(source), `unsafe or unverifiable public claim remains: ${unsafe}`);
   }
