@@ -320,6 +320,10 @@ for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-in
   assert.equal(blocks.length, 1, `${page.file} must carry one JSON-LD graph`);
   const graph = JSON.parse(blocks[0][1])["@graph"];
   const types = graph.map((node) => node["@type"]);
+  for (const article of graph.filter((node) => node["@type"] === "TechArticle")) {
+    assert.ok(article.image, `${page.file}: the article retains its image`);
+    assert.ok(!Object.hasOwn(article, "primaryImageOfPage"), `${page.file}: primaryImageOfPage belongs to WebPage`);
+  }
   assert.ok(types.includes("BreadcrumbList"), `${page.file} needs a BreadcrumbList`);
   assert.ok(types.includes("WebPage"), `${page.file} needs a WebPage node`);
   assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
