@@ -177,6 +177,7 @@ function graphFor(page, facts) {
       mainEntityOfPage: { "@id": `${facts.url}#webpage` },
     });
     delete pageNode.breadcrumb;
+    delete pageNode.primaryImageOfPage;
     nodes.unshift({
       "@type": "WebPage",
       "@id": `${facts.url}#webpage`,
