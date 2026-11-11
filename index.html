@@ -41,7 +41,9 @@
       "@id": "https://suedeai.ai/#organization",
       "name": "Suede AI",
       "url": "https://suedeai.ai",
-      "founder": { "@id": "https://suedeai.ai/founder#person" },
+      "founder": {
+        "@id": "https://suedeai.ai/founder#person"
+      },
       "logo": {
         "@type": "ImageObject",
         "url": "https://app.suedeai.ai/SuedeLogo2.png"
@@ -52,7 +54,36 @@
         "https://www.youtube.com/@aisuede",
         "https://www.linkedin.com/company/suede-labs",
         "https://suedeai.org"
-      ]
+      ],
+      "alternateName": [
+        "Suede Labs AI",
+        "Suede Labs",
+        "Suede"
+      ],
+      "parentOrganization": {
+        "@type": "Organization",
+        "@id": "https://jcinvestmentgroup.ventures/#organization",
+        "name": "JC Investment Group LLC",
+        "url": "https://jcinvestmentgroup.ventures/"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "138 Victorian Lane",
+        "addressLocality": "Jupiter",
+        "addressRegion": "FL",
+        "postalCode": "33458",
+        "addressCountry": "US"
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "@id": "https://suedeai.ai/terms#money-back-policy",
+        "name": "90-day money-back policy",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 90,
+        "returnFees": "https://schema.org/FreeReturn",
+        "refundType": "https://schema.org/FullRefund",
+        "merchantReturnLink": "https://suedeai.ai/terms#money-back-policy"
+      }
     },
     {
       "@type": "Person",
@@ -66,7 +97,9 @@
       "url": "https://docs.suedeai.ai/",
       "name": "Suede AI Developer Docs",
       "description": "Public developer documentation for Suede programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs.",
-      "publisher": { "@id": "https://suedeai.ai/#organization" }
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      }
     },
     {
       "@type": "ImageObject",
@@ -83,10 +116,18 @@
       "url": "https://docs.suedeai.ai/",
       "name": "Suede AI Developer Docs | x402 APIs and Creator IP",
       "description": "Read Suede AI developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
-      "isPartOf": { "@id": "https://docs.suedeai.ai/#website" },
-      "about": { "@id": "https://suedeai.ai/#organization" },
-      "publisher": { "@id": "https://suedeai.ai/#organization" },
-      "primaryImageOfPage": { "@id": "https://docs.suedeai.ai/#primaryimage" },
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "about": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://docs.suedeai.ai/#primaryimage"
+      },
       "datePublished": "2026-07-04",
       "dateModified": "2026-10-20"
     }
