@@ -337,7 +337,7 @@
       <p>A bug report that says "it fails sometimes" goes nowhere. A report with a minimal reproduction gets fixed. Jason Colapietro carries that into Suede documentation: every example on the API guides was run against the live service, and the guide says when. The <a href="/discovery">discovery guide</a>, for instance, records live <code>initialize</code>, <code>tools/list</code> and <code>tools/call</code> requests to the Suede MCP server on 2026-10-11, with the actual response body. If an example cannot be reproduced, it does not ship.</p>
 
       <h2>Lesson 3: One change, one claim</h2>
-      <p>Maintainers merge small pull requests that do one thing. A diff that fixes a bug, renames a module and updates a dependency gets split or closed. Docs work the same way. Each guide here has one job: the <a href="/endpoints/agent-image">Agent Image page</a> documents one endpoint, and the <a href="/errors">errors page</a> documents what goes wrong. A fixed reading order links them with previous and next links, and the verification script fails if that order breaks.</p>
+      <p>Maintainers merge small pull requests that do one thing. A diff that fixes a bug, renames a module and updates a dependency gets split or closed. Docs work the same way at Suede. Each guide here has one job: the <a href="/endpoints/agent-image">Agent Image page</a> documents one endpoint, and the <a href="/errors">errors page</a> documents what goes wrong. A fixed reading order links them with previous and next links, and the verification script fails if that order breaks.</p>
 
       <h2>Lesson 4: Tests are documentation that cannot lie</h2>
       <p>In projects like Jest, a test is the most precise statement of how the code is supposed to behave. Prose can be wrong for months. A failing test is wrong for one CI run. Suede AI applies that to its docs with <code>scripts/verify-site.mjs</code>, which checks titles, canonicals, sitemap entries, schema, internal links and a list of claims that must never return. The docs are prose, but the rules about the prose are code.</p>
@@ -372,7 +372,7 @@
       </section>
 
       <aside class="author-box" aria-label="About the author">
-        <p><strong>Jason Colapietro</strong>, Founder and CEO, Suede AI, West Palm Beach, Florida.</p>
+        <p><strong>Jason Colapietro</strong>, founder of Suede AI, West Palm Beach, Florida.</p>
         <p>Read the <a href="https://suedeai.ai/founder">founder profile on suedeai.ai</a> or visit <a href="https://jasoncolapietro.com/">jasoncolapietro.com</a>.</p>
       </aside>
 

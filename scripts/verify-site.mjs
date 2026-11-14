@@ -349,7 +349,7 @@ const trendshiftBadgeHref = 'https://trendshift.io/repositories/82031?utm_source
 for (const source of allPublic) {
   assert.ok(!/https?:\/\/(ip|producer|webmcp)\.suedeai\.ai/i.test(source), "links to ip/producer/webmcp.suedeai.ai are not allowed");
   assert.ok(!/[?&](?:amp;)?utm_[a-z]+=/i.test(source.replaceAll(`href="${trendshiftBadgeHref}"`, "")), "tracking parameters are not allowed in links outside the approved Trendshift badge");
-  for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
+  for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i, /Founder and CEO/i]) {
     assert.ok(!unsafe.test(source), `unsafe or unverifiable public claim remains: ${unsafe}`);
   }
   // Estate sales-copy rule (2026-10-03): public pages and discovery files state
@@ -389,7 +389,7 @@ for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-in
   assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
   assert.ok(llmsFull.includes(`URL: ${ORIGIN}${page.path}`), `${page.file} is missing from llms-full.txt`);
 }
-for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i]) {
+for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoints/i, /prices range/i, /every Suede site/i, /Founder and CEO/i]) {
   assert.ok(!unsafe.test(llmsFull), `unsafe or unverifiable public claim remains in llms-full.txt: ${unsafe}`);
 }
 assert.ok(!/\u2014/.test(llmsFull), "llms-full.txt must not contain em dashes");

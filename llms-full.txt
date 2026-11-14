@@ -1122,7 +1122,7 @@ If you want this applied to your own site, start with the free [Suede AI assessm
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): What MCP is, how the Suede MCP server works, and the scoping rules an agency in West Palm Beach or Jupiter should set before connecting client data.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.
 
-**Jason Colapietro**, Founder and CEO, Suede AI, West Palm Beach, Florida.
+**Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
 
 Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [jasoncolapietro.com](https://jasoncolapietro.com/).
 
@@ -1156,7 +1156,7 @@ curl -s -X POST https://app.suedeai.ai/api/mcp \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
 
-One design choice is worth copying. For the three paid tools, `tools/call` does not run the job. It returns a payment pointer: the endpoint, the network and the price. The client then pays the HTTP endpoint over x402, as the [quickstart](https://docs.suedeai.ai/quickstart) shows. MCP describes the work, and money moves over a separate, auditable channel. Suede made that split so a model can never spend funds simply by deciding to call a tool.
+One design choice is worth copying. For the three paid tools, `tools/call` does not run the job. It returns a payment pointer: the endpoint, the network and the price. The client then pays the HTTP endpoint over x402, as the [quickstart](https://docs.suedeai.ai/quickstart) shows. MCP describes the work, and money moves over a separate, auditable channel. With that split, a model on the Suede stack cannot spend funds simply by deciding to call a tool.
 
 #### Where MCP earns its keep at an agency
 
@@ -1192,7 +1192,7 @@ Pick one read-only task your team repeats every week, and write down the inputs 
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them to its own site.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.
 
-**Jason Colapietro**, Founder and CEO, Suede AI, West Palm Beach, Florida.
+**Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
 
 Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [jasoncolapietro.com](https://jasoncolapietro.com/).
 
@@ -1221,7 +1221,7 @@ A bug report that says "it fails sometimes" goes nowhere. A report with a minima
 
 #### Lesson 3: One change, one claim
 
-Maintainers merge small pull requests that do one thing. A diff that fixes a bug, renames a module and updates a dependency gets split or closed. Docs work the same way. Each guide here has one job: the [Agent Image page](https://docs.suedeai.ai/endpoints/agent-image) documents one endpoint, and the [errors page](https://docs.suedeai.ai/errors) documents what goes wrong. A fixed reading order links them with previous and next links, and the verification script fails if that order breaks.
+Maintainers merge small pull requests that do one thing. A diff that fixes a bug, renames a module and updates a dependency gets split or closed. Docs work the same way at Suede. Each guide here has one job: the [Agent Image page](https://docs.suedeai.ai/endpoints/agent-image) documents one endpoint, and the [errors page](https://docs.suedeai.ai/errors) documents what goes wrong. A fixed reading order links them with previous and next links, and the verification script fails if that order breaks.
 
 #### Lesson 4: Tests are documentation that cannot lie
 
@@ -1256,6 +1256,6 @@ Open the [merged pull request search](https://github.com/search?q=is%3Apr+author
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them to its own site.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): What MCP is, how the Suede MCP server works, and the scoping rules an agency in West Palm Beach or Jupiter should set before connecting client data.
 
-**Jason Colapietro**, Founder and CEO, Suede AI, West Palm Beach, Florida.
+**Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
 
 Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [jasoncolapietro.com](https://jasoncolapietro.com/).

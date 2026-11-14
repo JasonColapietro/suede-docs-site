@@ -339,7 +339,7 @@
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
-      <p>One design choice is worth copying. For the three paid tools, <code>tools/call</code> does not run the job. It returns a payment pointer: the endpoint, the network and the price. The client then pays the HTTP endpoint over x402, as the <a href="/quickstart">quickstart</a> shows. MCP describes the work, and money moves over a separate, auditable channel. Suede made that split so a model can never spend funds simply by deciding to call a tool.</p>
+      <p>One design choice is worth copying. For the three paid tools, <code>tools/call</code> does not run the job. It returns a payment pointer: the endpoint, the network and the price. The client then pays the HTTP endpoint over x402, as the <a href="/quickstart">quickstart</a> shows. MCP describes the work, and money moves over a separate, auditable channel. With that split, a model on the Suede stack cannot spend funds simply by deciding to call a tool.</p>
 
       <h2>Where MCP earns its keep at an agency</h2>
       <ul>
@@ -378,7 +378,7 @@
       </section>
 
       <aside class="author-box" aria-label="About the author">
-        <p><strong>Jason Colapietro</strong>, Founder and CEO, Suede AI, West Palm Beach, Florida.</p>
+        <p><strong>Jason Colapietro</strong>, founder of Suede AI, West Palm Beach, Florida.</p>
         <p>Read the <a href="https://suedeai.ai/founder">founder profile on suedeai.ai</a> or visit <a href="https://jasoncolapietro.com/">jasoncolapietro.com</a>.</p>
       </aside>
 
