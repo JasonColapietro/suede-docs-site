@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP for Agencies: A South Florida Primer | Suede AI Docs</title>
+<meta name="description" content="Jason Colapietro explains the Model Context Protocol for agencies in West Palm Beach and Jupiter, using Suede AI&#x27;s live MCP server as a worked example.">
+<meta name="keywords" content="model context protocol, mcp server, mcp for agencies, ai agents for agencies, south florida web development, palm beach county ai agency, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida">
+<meta property="og:title" content="MCP for Agencies: A South Florida Primer | Suede AI Docs">
+<meta property="og:description" content="Jason Colapietro explains the Model Context Protocol for agencies in West Palm Beach and Jupiter, using Suede AI&#x27;s live MCP server as a worked example.">
+<meta property="og:url" content="https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta property="article:published_time" content="2026-11-14">
+<meta property="article:author" content="https://suedeai.ai/founder">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="MCP for Agencies: A South Florida Primer | Suede AI Docs">
+<meta name="twitter:description" content="Jason Colapietro explains the Model Context Protocol for agencies in West Palm Beach and Jupiter, using Suede AI&#x27;s live MCP server as a worked example.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+  .notes-list li { margin-bottom: 14px; }
+  .notes-list a { font-weight: 600; }
+  .author-box {
+    margin: 32px 0 0;
+    padding: 16px 18px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 8px;
+    background: var(--paper);
+    font-size: 0.95rem;
+  }
+  .author-box p { margin: 0 0 6px; }
+  .built-by { margin: 0 0 18px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+  .built-by p { margin: 0 0 8px; }
+</style>
+<!-- docs-jsonld:start -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#webpage",
+      "url": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida",
+      "name": "MCP for Agencies: A South Florida Primer | Suede AI Docs",
+      "description": "Jason Colapietro explains the Model Context Protocol for agencies in West Palm Beach and Jupiter, using Suede AI's live MCP server as a worked example.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://docs.suedeai.ai/#primaryimage"
+      },
+      "breadcrumb": {
+        "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#article"
+      },
+      "dateModified": "2026-11-14"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#article",
+      "url": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida",
+      "name": "MCP for Agencies: A South Florida Primer | Suede AI Docs",
+      "description": "Jason Colapietro explains the Model Context Protocol for agencies in West Palm Beach and Jupiter, using Suede AI's live MCP server as a worked example.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "about": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "datePublished": "2026-11-14",
+      "dateModified": "2026-11-14",
+      "headline": "Model Context Protocol for agencies: a South Florida primer from Jason Colapietro",
+      "image": "https://docs.suedeai.ai/suede-docs-og.png",
+      "author": {
+        "@id": "https://suedeai.ai/founder#person"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#webpage"
+      },
+      "spatialCoverage": [
+        {
+          "@type": "City",
+          "name": "West Palm Beach",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        },
+        {
+          "@type": "City",
+          "name": "Jupiter",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Palm Beach County",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Suede AI Developer Docs",
+          "item": "https://docs.suedeai.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://docs.suedeai.ai/notes"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "MCP for agencies",
+          "item": "https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://docs.suedeai.ai/#website",
+      "url": "https://docs.suedeai.ai/",
+      "name": "Suede AI Developer Docs",
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://docs.suedeai.ai/#primaryimage",
+      "url": "https://docs.suedeai.ai/suede-docs-og.png",
+      "width": 1200,
+      "height": 630
+    }
+  ]
+}
+</script>
+<!-- docs-jsonld:end -->
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/notes">Notes</a> / <span aria-current="page">MCP for agencies</span></nav>
+    <h1>Model Context Protocol for agencies: a South Florida primer from Jason Colapietro</h1>
+    <p class="lede">Most agencies in West Palm Beach and Jupiter first hear about the Model Context Protocol when a client asks whether their AI assistant can pull the numbers itself. It can, once somebody builds and scopes a server for it, and that somebody is increasingly the agency.</p>
+
+    <section>
+      <p>This primer is written by Jason Colapietro, founder of Suede AI, for agency owners and developers in Palm Beach County who need a working understanding of MCP without reading the whole specification first. It uses the Suede MCP server documented on this site as the worked example, because you can call it yourself in under a minute.</p>
+
+      <h2>What MCP is, in one paragraph</h2>
+      <p>MCP is an open protocol that lets an AI client, such as Claude or a coding assistant, discover and call tools on a server you control. The client sends JSON-RPC messages: <code>initialize</code> to agree on a protocol version, <code>tools/list</code> to learn what the server offers, and <code>tools/call</code> to run one tool with arguments. Each tool carries a name, a description and an input schema, so the model knows what to send. For an agency, that means a client's assistant can reach a defined set of actions instead of copying and pasting between tabs.</p>
+
+      <h2>A real server you can inspect today</h2>
+      <p>Suede AI runs an MCP server at <code>https://app.suedeai.ai/api/mcp</code>, a streamable-HTTP JSON-RPC endpoint. On 2026-10-11 it answered <code>initialize</code> with protocol version <code>2025-06-18</code> and server name <code>suede-agentic-commerce</code>, and <code>tools/list</code> returned five tools. The <a href="/discovery">discovery guide</a> lists each one. You can try a call from any terminal:</p>
+<pre><code>curl -s -X POST https://app.suedeai.ai/api/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
+      <p>One design choice is worth copying. For the three paid tools, <code>tools/call</code> does not run the job. It returns a payment pointer: the endpoint, the network and the price. The client then pays the HTTP endpoint over x402, as the <a href="/quickstart">quickstart</a> shows. MCP describes the work, and money moves over a separate, auditable channel. Suede made that split so a model can never spend funds simply by deciding to call a tool.</p>
+
+      <h2>Where MCP earns its keep at an agency</h2>
+      <ul>
+        <li><strong>Reporting.</strong> A read-only tool that returns last month's search and analytics figures for one client, so the account lead can ask questions in plain language.</li>
+        <li><strong>Content operations.</strong> Tools that draft a page into a staging CMS and stop there, leaving publishing to a person.</li>
+        <li><strong>Site checks.</strong> A tool that runs a crawl or schema validation and returns structured findings, the kind of work our <a href="https://suedeai.agency/services/technical-seo">technical SEO service</a> does by hand today.</li>
+        <li><strong>Client knowledge.</strong> A resource that exposes a client's brand facts, service areas and approved claims, so every assistant session starts from the same truth.</li>
+      </ul>
+
+      <h2>Scoping rules Suede AI uses</h2>
+      <ol>
+        <li><strong>Start read-only.</strong> Ship tools that look before tools that change anything. Add write access one tool at a time, after the read side has been used for a few weeks.</li>
+        <li><strong>One server, or one credential set, per client.</strong> Never let a tool for one Jupiter client see another client's data because they share a token.</li>
+        <li><strong>Use one name everywhere.</strong> On Suede's stack, <code>create_music</code>, <code>agent_video</code> and <code>agent_image</code> are the catalog ids, the A2A skill ids, the MCP tool names and the OpenAPI operation ids. One name per action makes logs and docs line up.</li>
+        <li><strong>Return structured content.</strong> A JSON object with named fields is easier for the model to use correctly than a paragraph of prose.</li>
+        <li><strong>Log every call.</strong> Record the tool, the arguments and the caller, so a surprising answer can be traced back to the call that produced it.</li>
+      </ol>
+
+      <h2>The tradeoffs</h2>
+      <p>MCP is young and moving. Protocol versions are dated, so a server written against one revision needs attention when clients adopt the next. Authentication is still the part teams spend the most time on, especially for servers that touch client accounts. Not every client supports streamable HTTP yet, and some only run local servers. And every tool you expose is a tool you have to document, test and maintain. An agency that ships ten tools in a week usually ends up retiring seven of them.</p>
+
+      <h2>Why this matters for South Florida agencies now</h2>
+      <p>Buyers in Palm Beach County already ask assistants which agency to hire, and they will soon expect those assistants to do work on their behalf. Agencies that can design, scope and document an MCP server will be the ones those clients trust with the keys.</p>
+      <p>Jason Colapietro brings formal training and program membership to this work. He holds Claude Academy badges including Model Context Protocol: Advanced topics and Building with the Claude API, part of 21 earned course credentials (<a href="https://seo.suedeai.ai/evidence#training-credentials">credential gallery</a>). Suede AI is a member of Claude for Startups, Anthropic's startup program (<a href="https://seo.suedeai.ai/evidence#claude-for-startups">evidence</a>), and a member of Google Cloud Partner Advantage through JC Investment Group LLC (<a href="https://seo.suedeai.ai/evidence#google-cloud">evidence</a>). He is also the author of <a href="https://www.amazon.com/dp/B0HHTMJWB4">The Claude Code Bible</a>, and he has had 54 pull requests merged across 46 open-source repositories he does not maintain (<a href="https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&amp;type=pullrequests">GitHub search</a>). On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide (<a href="https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida">The Manifest</a>).</p>
+
+      <h2>Your next step</h2>
+      <p>Pick one read-only task your team repeats every week, and write down the inputs and outputs a tool for it would need. Then book the free <a href="https://suedeai.agency/assessment">Suede AI assessment</a> with our West Palm Beach team and bring that list. The Suede Labs team that built the server above will tell you whether MCP is the right fit or whether a simpler integration will do. For background on who you would be working with, read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a>.</p>
+    </section>
+
+      <section>
+        <h2>More notes</h2>
+        <ul class="notes-list">
+        <li><a href="/notes/ai-quotable-developer-docs">Writing developer docs that AI assistants quote correctly</a>: The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them to its own site.</li>
+        <li><a href="/notes/open-source-to-docs">From open source to docs</a>: Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.</li>
+        </ul>
+      </section>
+
+      <aside class="author-box" aria-label="About the author">
+        <p><strong>Jason Colapietro</strong>, Founder and CEO, Suede AI, West Palm Beach, Florida.</p>
+        <p>Read the <a href="https://suedeai.ai/founder">founder profile on suedeai.ai</a> or visit <a href="https://jasoncolapietro.com/">jasoncolapietro.com</a>.</p>
+      </aside>
+
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a> · <a href="/notes">Notes</a></p></nav>
+  <section class="built-by" aria-label="Built by Suede AI">
+    <p><strong>Built by Suede AI in West Palm Beach, Florida.</strong> Suede AI is the agentic platform company Jason Colapietro started in 2024. Its <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development practice</a> works with businesses in Jupiter, Palm Beach Gardens and across Palm Beach County. Company site: <a href="https://suedeai.ai/">suedeai.ai</a>. Founder: <a href="https://suedeai.ai/founder">Jason Colapietro</a> (<a href="https://jasoncolapietro.com/">personal site</a>). Local publishing: <a href="https://jupitersocialfl.com/">Jupiter Social</a>, a Jupiter, FL magazine published with Suede AI.</p>
+    <p>More from Suede AI: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede AI team</a></p>
+  </section>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Written by Jason Colapietro for Suede AI. Published 2026-11-14.</p>
+</footer>
+</body>
+</html>

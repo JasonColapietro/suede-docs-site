@@ -38,6 +38,20 @@ export const PAGES = [
   { file: "python-sdk.html", path: "/python-sdk", kind: "TechArticle" },
   { file: "discovery.html", path: "/discovery", kind: "TechArticle" },
   { file: "ai-instructions.html", path: "/ai-instructions", kind: "WebPage" },
+  // Notes: long-form posts by the founder. The index is a CollectionPage; each
+  // note is a BlogPosting whose author is the estate Person, by @id only.
+  { file: "notes.html", path: "/notes", kind: "CollectionPage" },
+  { file: "notes/ai-quotable-developer-docs.html", path: "/notes/ai-quotable-developer-docs", kind: "BlogPosting" },
+  { file: "notes/mcp-for-agencies-south-florida.html", path: "/notes/mcp-for-agencies-south-florida", kind: "BlogPosting" },
+  { file: "notes/open-source-to-docs.html", path: "/notes/open-source-to-docs", kind: "BlogPosting" },
+];
+
+// Where the notes are written and who they serve. Places only: no address,
+// phone or other business details are minted here.
+const NOTES_PLACES = [
+  { "@type": "City", name: "West Palm Beach", containedInPlace: { "@type": "State", name: "Florida" } },
+  { "@type": "City", name: "Jupiter", containedInPlace: { "@type": "State", name: "Florida" } },
+  { "@type": "AdministrativeArea", name: "Palm Beach County", containedInPlace: { "@type": "State", name: "Florida" } },
 ];
 
 const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#x27;": "'", "&#39;": "'", "&nbsp;": " ", "&#8594;": "→" };
@@ -169,6 +183,36 @@ function graphFor(page, facts) {
   // A guide is a TechArticle inside a WebPage: the WebPage carries the page
   // facts and breadcrumb, and names the article as its main entity.
   const nodes = [pageNode];
+  if (page.kind === "CollectionPage") {
+    pageNode.hasPart = PAGES.filter((p) => p.kind === "BlogPosting").map((p) => ({ "@id": `${ORIGIN}${p.path}#article` }));
+    pageNode.spatialCoverage = NOTES_PLACES;
+  }
+  if (page.kind === "BlogPosting") {
+    pageNode["@id"] = `${facts.url}#article`;
+    Object.assign(pageNode, {
+      headline: facts.h1,
+      image: `${ORIGIN}/suede-docs-og.png`,
+      author: { "@id": PERSON_ID },
+      mainEntityOfPage: { "@id": `${facts.url}#webpage` },
+      spatialCoverage: NOTES_PLACES,
+    });
+    delete pageNode.breadcrumb;
+    delete pageNode.primaryImageOfPage;
+    nodes.unshift({
+      "@type": "WebPage",
+      "@id": `${facts.url}#webpage`,
+      url: facts.url,
+      name: facts.title,
+      description: facts.description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE_ID },
+      publisher: { "@id": ORG_ID },
+      primaryImageOfPage: { "@id": IMAGE_ID },
+      breadcrumb: { "@id": `${facts.url}#breadcrumb` },
+      mainEntity: { "@id": `${facts.url}#article` },
+      ...(facts.modified ? { dateModified: facts.modified } : {}),
+    });
+  }
   if (page.kind === "TechArticle") {
     Object.assign(pageNode, {
       headline: facts.h1,

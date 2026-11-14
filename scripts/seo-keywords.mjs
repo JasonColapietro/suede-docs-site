@@ -87,4 +87,38 @@ export const SEO_KEYWORDS = {
     "mcp server",
     "agentic commerce manifest",
   ]),
+  // Notes (2026-11-14): founder posts with a West Palm Beach / Palm Beach
+  // County angle, so local web-development and AI-search terms sit with the
+  // topic terms.
+  "notes.html": withBrand([
+    "suede ai notes",
+    "developer docs blog",
+    "ai search optimization",
+    "model context protocol",
+    "west palm beach web development",
+  ]),
+  "notes/ai-quotable-developer-docs.html": withBrand([
+    "ai quotable documentation",
+    "generative engine optimization",
+    "llms.txt",
+    "developer docs seo",
+    "ai search visibility",
+    "west palm beach ai seo",
+  ]),
+  "notes/mcp-for-agencies-south-florida.html": withBrand([
+    "model context protocol",
+    "mcp server",
+    "mcp for agencies",
+    "ai agents for agencies",
+    "south florida web development",
+    "palm beach county ai agency",
+  ]),
+  "notes/open-source-to-docs.html": withBrand([
+    "open source contributions",
+    "merged pull requests",
+    "writing developer documentation",
+    "docs as code",
+    "west palm beach software engineer",
+    "jupiter fl web developer",
+  ]),
 };

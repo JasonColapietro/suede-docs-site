@@ -235,7 +235,12 @@ const pagerLinks = (source) => {
 };
 assert.deepEqual(pagerLinks(html), { prev: undefined, next: DOCS_PAGES[0].path }, "home page must link forward to the first guide");
 
-const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/llms-full.txt", "/sitemap.xml", "/robots.txt", ...DOCS_PAGES.map((page) => page.path)]);
+const NOTES_PAGES = [
+  { file: "notes/ai-quotable-developer-docs.html", path: "/notes/ai-quotable-developer-docs" },
+  { file: "notes/mcp-for-agencies-south-florida.html", path: "/notes/mcp-for-agencies-south-florida" },
+  { file: "notes/open-source-to-docs.html", path: "/notes/open-source-to-docs" },
+];
+const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/llms-full.txt", "/sitemap.xml", "/robots.txt", "/notes", ...DOCS_PAGES.map((page) => page.path), ...NOTES_PAGES.map((page) => page.path)]);
 const seenTitles = new Set([title]);
 const seenDescriptions = new Set([expected.description]);
 const allPublic = [html, llms, readFileSync(join(root, "ai-instructions.html"), "utf8")];
@@ -281,6 +286,61 @@ DOCS_PAGES.forEach((page, index) => {
   }
 });
 
+// Notes: the index and each founder post. Same metadata rules as the guides,
+// plus a title of 50-60 characters, a description of 120-160, the shared
+// style block, a link from the home page, an author box pointing at the
+// founder page, and a BlogPosting whose author and publisher are the estate
+// entities by @id. Every docs page footer links the notes index.
+assert.ok(html.includes('href="/notes"'), "home page must link the notes index");
+for (const page of DOCS_PAGES) {
+  assert.ok(readFileSync(join(root, page.file), "utf8").includes('href="/notes"'), `${page.file} footer must link /notes`);
+}
+[{ file: "notes.html", path: "/notes" }, ...NOTES_PAGES].forEach((page) => {
+  const path = join(root, page.file);
+  assert.ok(existsSync(path), `${page.file} is missing`);
+  const source = readFileSync(path, "utf8");
+  allPublic.push(source);
+  const url = `${ORIGIN}${page.path}`;
+  const pageMeta = [...source.matchAll(/<meta\b[^>]*>/gi)].map((match) => attributes(match[0]));
+  const pageLinks = [...source.matchAll(/<link\b[^>]*>/gi)].map((match) => attributes(match[0]));
+  const named = (key, kind = "name") => pageMeta.find((item) => item[kind] === key)?.content;
+  const pageTitle = source.match(/<title>(.*?)<\/title>/is)?.[1]?.trim();
+  assert.ok(pageTitle && pageTitle.length >= 50 && pageTitle.length <= 60, `${page.file} needs a title of 50-60 characters`);
+  assert.ok(!seenTitles.has(pageTitle), `${page.file} title is not unique`);
+  seenTitles.add(pageTitle);
+  const description = named("description");
+  assert.ok(description && description.length >= 120 && description.length <= 160, `${page.file} needs a description of 120-160 characters`);
+  assert.ok(!seenDescriptions.has(description), `${page.file} description is not unique`);
+  seenDescriptions.add(description);
+  assert.equal(pageLinks.find((item) => item.rel === "canonical")?.href, url, `${page.file} canonical must be ${url}`);
+  assert.equal(named("og:url", "property"), url, `${page.file} og:url must match its canonical`);
+  assert.equal(named("twitter:card"), "summary_large_image", `${page.file} needs a Twitter card`);
+  assert.equal(named("robots"), "index, follow", `${page.file} must be indexable`);
+  assert.equal([...source.matchAll(/<h1\b/gi)].length, 1, `${page.file} must have one H1`);
+  assert.equal([...source.matchAll(/<main\b/gi)].length, 1, `${page.file} must have one <main>`);
+  assert.equal(styleBlock(source), homeStyle, `${page.file} must share the home page <style> block`);
+  assert.ok(sitemap.includes(`<loc>${url}</loc>`), `${page.file} is missing from sitemap.xml`);
+  assert.ok(llms.includes(`(${url})`), `${page.file} is missing from llms.txt`);
+  assert.ok(SEO_KEYWORDS[page.file], `${page.file} must have a keywords map entry`);
+  assert.match(source, /Built by Suede AI in West Palm Beach, Florida\./, `${page.file} needs the Suede AI footer block`);
+  for (const match of source.matchAll(/href="(\/[^"#]*)"/g)) {
+    const target = match[1];
+    assert.ok(/\.(ico|png)$/.test(target) || ownPaths.has(target), `${page.file} links ${target}, which is not a page on this site`);
+  }
+  if (page.path !== "/notes") {
+    assert.ok(source.includes('href="/notes"'), `${page.file} must link back to the notes index`);
+    assert.match(source, /class="author-box"[\s\S]*href="https:\/\/suedeai\.ai\/founder"/, `${page.file} needs an author box linking the founder page`);
+    assert.ok(source.includes('href="https://suedeai.agency/assessment"'), `${page.file} must end with a next step to the assessment`);
+    const graph = JSON.parse(source.match(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/i)[1])["@graph"];
+    const post = graph.find((node) => node["@type"] === "BlogPosting");
+    assert.ok(post, `${page.file} needs a BlogPosting`);
+    assert.deepEqual(post.author, { "@id": "https://suedeai.ai/founder#person" }, `${page.file}: author must be the estate Person @id`);
+    assert.deepEqual(post.publisher, { "@id": "https://suedeai.ai/#organization" }, `${page.file}: publisher must be the estate Organization @id`);
+    assert.ok(post.datePublished, `${page.file}: BlogPosting needs datePublished`);
+    assert.ok(!graph.some((node) => node["@type"] === "Person" || node["@type"] === "Organization"), `${page.file} must not redefine estate entities`);
+  }
+});
+
 // First-party link rules: ip.suedeai.ai is a noindex demo (the registry is
 // registry.suedeai.ai), producer.suedeai.ai answers 401, and webmcp is not a
 // public target. Only the explicitly requested Trendshift badge may carry its
@@ -314,7 +374,7 @@ const llmsFull = readFileSync(join(root, "llms-full.txt"), "utf8");
 assert.ok(llmsFull.startsWith("# "), "llms-full.txt must start with a Markdown H1");
 assert.ok(Buffer.byteLength(llmsFull) < 500_000, "llms-full.txt must stay under 500 KB");
 assert.match(llms, /https:\/\/docs\.suedeai\.ai\/llms-full\.txt/, "llms.txt must reference llms-full.txt");
-for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-instructions" }]) {
+for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-instructions" }, { file: "notes.html", path: "/notes" }, ...NOTES_PAGES]) {
   const source = readFileSync(join(root, page.file), "utf8");
   const blocks = [...source.matchAll(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/gi)];
   assert.equal(blocks.length, 1, `${page.file} must carry one JSON-LD graph`);
@@ -325,7 +385,7 @@ for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-in
     assert.ok(!Object.hasOwn(article, "primaryImageOfPage"), `${page.file}: primaryImageOfPage belongs to WebPage`);
   }
   assert.ok(types.includes("BreadcrumbList"), `${page.file} needs a BreadcrumbList`);
-  assert.ok(types.includes("WebPage"), `${page.file} needs a WebPage node`);
+  assert.ok(types.includes(page.path === "/notes" ? "CollectionPage" : "WebPage"), `${page.file} needs a WebPage node (CollectionPage for /notes)`);
   assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
   assert.ok(llmsFull.includes(`URL: ${ORIGIN}${page.path}`), `${page.file} is missing from llms-full.txt`);
 }
@@ -334,4 +394,4 @@ for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoi
 }
 assert.ok(!/\u2014/.test(llmsFull), "llms-full.txt must not contain em dashes");
 
-console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, ${DOCS_PAGES.length} API guides, JSON-LD on every page and llms-full.txt.`);
+console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, ${DOCS_PAGES.length} API guides, ${NOTES_PAGES.length} notes, JSON-LD on every page and llms-full.txt.`);

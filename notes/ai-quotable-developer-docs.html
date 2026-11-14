@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs That AI Assistants Quote Correctly | Suede AI Docs</title>
+<meta name="description" content="How Jason Colapietro and Suede AI in West Palm Beach build developer docs that ChatGPT, Claude and Perplexity quote correctly: sources, dates and checks.">
+<meta name="keywords" content="ai quotable documentation, generative engine optimization, llms.txt, developer docs seo, ai search visibility, west palm beach ai seo, Suede AI">
+<link rel="canonical" href="https://docs.suedeai.ai/notes/ai-quotable-developer-docs">
+<meta property="og:title" content="Docs That AI Assistants Quote Correctly | Suede AI Docs">
+<meta property="og:description" content="How Jason Colapietro and Suede AI in West Palm Beach build developer docs that ChatGPT, Claude and Perplexity quote correctly: sources, dates and checks.">
+<meta property="og:url" content="https://docs.suedeai.ai/notes/ai-quotable-developer-docs">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Suede AI">
+<meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta property="article:published_time" content="2026-11-14">
+<meta property="article:author" content="https://suedeai.ai/founder">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1b1b1e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@AISUEDE">
+<meta name="twitter:title" content="Docs That AI Assistants Quote Correctly | Suede AI Docs">
+<meta name="twitter:description" content="How Jason Colapietro and Suede AI in West Palm Beach build developer docs that ChatGPT, Claude and Perplexity quote correctly: sources, dates and checks.">
+<meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
+<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root {
+    --ink-deep: #1b1b1e;
+    --paper: #f7f7f2;
+    --card: #fcfcf8;
+    --ink: #232326;
+    --muted: #6b6b64;
+    --hairline: #eaebe5;
+    --hairline-strong: #d5d5d2;
+    --green: #94f27f;
+    --green-ink: #0d7916;
+    --green-ink-hover: #0a5f12;
+    --code-bg: #f0f0ea;
+    --radius: 5px;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--green-ink); text-decoration: none; }
+  a:hover { color: var(--green-ink-hover); }
+  a:focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 44px) 64px; }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .mono a { color: var(--muted); }
+  .mono a:hover { color: var(--green-ink); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 14px 0 12px;
+    color: var(--ink-deep);
+    line-height: 1.1;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--ink-deep);
+    margin: 40px 0 10px;
+  }
+  h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink-deep);
+    margin: 26px 0 8px;
+  }
+  section p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: clamp(20px, 5vw, 40px);
+    margin-bottom: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink-deep);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+    margin: 12px 0 4px;
+  }
+  .btn:hover { background: #000; color: var(--green); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 20px; }
+  .table-wrap table { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--ink-deep);
+    color: #ecece6;
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 8px 0 20px;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  td code { overflow-wrap: normal; }
+  .docs-index li { margin-bottom: 10px; }
+  .docs-index a { font-weight: 600; }
+  nav.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+  }
+  nav.pager a { display: block; max-width: 48%; }
+  nav.pager .next { margin-left: auto; text-align: right; }
+  nav.pager span { display: block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .fine {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .fine a { color: var(--muted); text-decoration: underline; }
+  .fine a:hover { color: var(--green-ink); }
+  footer.page {
+    max-width: 720px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 44px) 40px;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  footer.page a { color: var(--muted); text-decoration: underline; }
+  footer.page a:hover { color: var(--green-ink); }
+  .notes-list li { margin-bottom: 14px; }
+  .notes-list a { font-weight: 600; }
+  .author-box {
+    margin: 32px 0 0;
+    padding: 16px 18px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 8px;
+    background: var(--paper);
+    font-size: 0.95rem;
+  }
+  .author-box p { margin: 0 0 6px; }
+  .built-by { margin: 0 0 18px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+  .built-by p { margin: 0 0 8px; }
+</style>
+<!-- docs-jsonld:start -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#webpage",
+      "url": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs",
+      "name": "Docs That AI Assistants Quote Correctly | Suede AI Docs",
+      "description": "How Jason Colapietro and Suede AI in West Palm Beach build developer docs that ChatGPT, Claude and Perplexity quote correctly: sources, dates and checks.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://docs.suedeai.ai/#primaryimage"
+      },
+      "breadcrumb": {
+        "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#article"
+      },
+      "dateModified": "2026-11-14"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#article",
+      "url": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs",
+      "name": "Docs That AI Assistants Quote Correctly | Suede AI Docs",
+      "description": "How Jason Colapietro and Suede AI in West Palm Beach build developer docs that ChatGPT, Claude and Perplexity quote correctly: sources, dates and checks.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/#website"
+      },
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "about": {
+        "@id": "https://suedeai.ai/#organization"
+      },
+      "datePublished": "2026-11-14",
+      "dateModified": "2026-11-14",
+      "headline": "Writing developer docs that AI assistants quote correctly: Suede AI's method",
+      "image": "https://docs.suedeai.ai/suede-docs-og.png",
+      "author": {
+        "@id": "https://suedeai.ai/founder#person"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#webpage"
+      },
+      "spatialCoverage": [
+        {
+          "@type": "City",
+          "name": "West Palm Beach",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        },
+        {
+          "@type": "City",
+          "name": "Jupiter",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Palm Beach County",
+          "containedInPlace": {
+            "@type": "State",
+            "name": "Florida"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Suede AI Developer Docs",
+          "item": "https://docs.suedeai.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://docs.suedeai.ai/notes"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Docs AI assistants quote correctly",
+          "item": "https://docs.suedeai.ai/notes/ai-quotable-developer-docs"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://docs.suedeai.ai/#website",
+      "url": "https://docs.suedeai.ai/",
+      "name": "Suede AI Developer Docs",
+      "publisher": {
+        "@id": "https://suedeai.ai/#organization"
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://docs.suedeai.ai/#primaryimage",
+      "url": "https://docs.suedeai.ai/suede-docs-og.png",
+      "width": 1200,
+      "height": 630
+    }
+  ]
+}
+</script>
+<!-- docs-jsonld:end -->
+</head>
+<body>
+<main class="wrap">
+  <article class="card">
+    <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/notes">Notes</a> / <span aria-current="page">Docs AI assistants quote correctly</span></nav>
+    <h1>Writing developer docs that AI assistants quote correctly: Suede AI's method</h1>
+    <p class="lede">A developer asks an assistant what a Suede endpoint costs, and the assistant answers from whatever page it read last. If that page is stale or vague, a wrong price ends up inside someone's agent, and nobody at Suede AI sees it happen.</p>
+
+    <section>
+      <p>This note sets out the method Jason Colapietro and the Suede AI team use on docs.suedeai.ai so that assistants repeat the right facts. It is the same method our West Palm Beach practice applies to client sites in Jupiter, Palm Beach Gardens and the rest of Palm Beach County, and every part of it is visible in this site's own source. Nothing here depends on a secret ranking trick. It depends on making each fact easy to find, easy to check and hard to get out of date.</p>
+
+      <h2>Give every fact one source of truth</h2>
+      <p>Every price, request field and response on the API guides comes from the live discovery documents on <code>app.suedeai.ai</code>: the <a href="https://app.suedeai.ai/.well-known/x402">x402 manifest</a>, the OpenAPI spec and the <a href="https://app.suedeai.ai/api/v1/catalog">product catalog</a>. Each guide ends with a Sources section that names the documents it was checked against and the date of the check. When the <a href="/endpoints/create-music">Create Music guide</a> says $0.50 USDC on Base, a reader or an assistant can follow the link and confirm it.</p>
+      <p>The practical rule: if a number appears on a page, the page should say where the number came from. A citation an assistant can verify is a citation it can repeat without hedging, and a page that links its evidence is easier for a reviewer to trust as well.</p>
+
+      <h2>Write dates as sentences, not only as schema</h2>
+      <p>Structured data dates are invisible to human readers, so they drift. On this site the footer of every guide states when it was published and when it was last checked against the live API, in plain prose. The build script reads those sentences and writes the JSON-LD <code>dateModified</code> from them, and the verification script fails when the footer, the schema and the sitemap disagree.</p>
+      <p>That guard exists because the drift happened. The home page once carried a schema date weeks older than its last real change. Jason Colapietro rewrote the check to compare the three signals with each other instead of pinning one literal date, so the next drift fails loudly instead of quietly.</p>
+
+      <h2>Generate the machine-readable copies from the pages</h2>
+      <p>Assistants and crawlers increasingly read plain-text companions. This site publishes two: <a href="/llms.txt">llms.txt</a>, a short annotated index, and <a href="/llms-full.txt">llms-full.txt</a>, the full text of every page as Markdown. The second file is generated from the HTML by <code>scripts/build-docs-seo.mjs</code>. A hand-maintained copy would fall behind the first time someone edited a price in a hurry. A generated copy cannot, because verification fails until it is rebuilt.</p>
+      <p>The same script writes each guide's JSON-LD graph, and it references the shared estate entities by <code>@id</code> only. Suede AI is always <code>https://suedeai.ai/#organization</code> and Jason Colapietro is always <code>https://suedeai.ai/founder#person</code>. No page invents a second identity for either, which keeps the entity picture consistent everywhere an assistant looks.</p>
+
+      <h2>Keep unprovable claims off the page</h2>
+      <p>The verification script holds a list of phrases that once appeared in Suede copy and could not be backed by a public source. If any of them returns, verification fails. Hedging phrases that undercut a plain fact are blocked the same way. The point is not modesty. It is that an assistant quoting a page should be quoting something true.</p>
+      <p>We hold claims about Jason's own record to that standard, which is why each one below carries its receipt:</p>
+      <ul>
+        <li>On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory, and top 25 statewide (<a href="https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida">The Manifest directory</a>, <a href="https://suedeai.agency/company/recognition">Suede AI recognition page</a>).</li>
+        <li>Jason Colapietro holds the HubSpot AEO Fundamentals certification and Semrush Academy certificates including AI Search Operating System and Local SEO Essentials, among 21 earned course credentials across eight providers (<a href="https://seo.suedeai.ai/evidence#training-credentials">credential gallery</a>).</li>
+        <li>He has had 54 pull requests merged across 46 open-source repositories he does not maintain (<a href="https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&amp;type=pullrequests">GitHub search</a>).</li>
+      </ul>
+
+      <h2>Tell assistants how to cite you</h2>
+      <p>The <a href="/ai-instructions">AI Instructions page</a> is a short source guide: what the site covers, which page supports which kind of statement, and how to keep dates and qualifications intact when quoting. It does not try to steer recommendations. It simply removes guesswork about where a fact lives, which is most of what an answer engine needs.</p>
+
+      <h2>The tradeoffs</h2>
+      <p>This discipline costs time. Every catalog change means re-checking the guides and updating their check dates. A generated <code>llms-full.txt</code> adds a build step to a site that otherwise has none. Banning phrases occasionally blocks a sentence that was fine in context and has to be reworded. Suede accepts those costs because a wrong answer in an assistant is far harder to correct than a slower edit on our side.</p>
+
+      <h2>Applying the method to a Palm Beach County business site</h2>
+      <p>A roofing company in Jupiter or a clinic in West Palm Beach has the same problem with different facts: service areas, prices, hours and credentials. The method carries over directly. Keep one source for each fact, state dates in prose, publish an llms.txt that points at the pages that matter, link every claim to proof, and run a check that fails when any of it drifts. Our <a href="https://suedeai.agency/services/technical-seo">technical SEO service</a> handles the crawl and schema side, and the <a href="https://suedeai.agency/services/ai-visibility">AI visibility service</a> measures how assistants describe a business before and after the work.</p>
+      <p>If you want this applied to your own site, start with the free <a href="https://suedeai.agency/assessment">Suede AI assessment</a> from our West Palm Beach team, then read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a> to see the full record behind the work. Older press still calls the company Suede Labs, and the method is the same one it has always used.</p>
+    </section>
+
+      <section>
+        <h2>More notes</h2>
+        <ul class="notes-list">
+        <li><a href="/notes/mcp-for-agencies-south-florida">Model Context Protocol for agencies</a>: What MCP is, how the Suede MCP server works, and the scoping rules an agency in West Palm Beach or Jupiter should set before connecting client data.</li>
+        <li><a href="/notes/open-source-to-docs">From open source to docs</a>: Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.</li>
+        </ul>
+      </section>
+
+      <aside class="author-box" aria-label="About the author">
+        <p><strong>Jason Colapietro</strong>, Founder and CEO, Suede AI, West Palm Beach, Florida.</p>
+        <p>Read the <a href="https://suedeai.ai/founder">founder profile on suedeai.ai</a> or visit <a href="https://jasoncolapietro.com/">jasoncolapietro.com</a>.</p>
+      </aside>
+
+  </article>
+</main>
+<footer class="page">
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a> · <a href="/notes">Notes</a></p></nav>
+  <section class="built-by" aria-label="Built by Suede AI">
+    <p><strong>Built by Suede AI in West Palm Beach, Florida.</strong> Suede AI is the agentic platform company Jason Colapietro started in 2024. Its <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development practice</a> works with businesses in Jupiter, Palm Beach Gardens and across Palm Beach County. Company site: <a href="https://suedeai.ai/">suedeai.ai</a>. Founder: <a href="https://suedeai.ai/founder">Jason Colapietro</a> (<a href="https://jasoncolapietro.com/">personal site</a>). Local publishing: <a href="https://jupitersocialfl.com/">Jupiter Social</a>, a Jupiter, FL magazine published with Suede AI.</p>
+    <p>More from Suede AI: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede AI team</a></p>
+  </section>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Written by Jason Colapietro for Suede AI. Published 2026-11-14.</p>
+</footer>
+</body>
+</html>

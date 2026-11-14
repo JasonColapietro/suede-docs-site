@@ -129,7 +129,7 @@
         "@id": "https://docs.suedeai.ai/#primaryimage"
       },
       "datePublished": "2026-07-04",
-      "dateModified": "2026-10-20"
+      "dateModified": "2026-11-14"
     }
   ]
 }
@@ -279,6 +279,19 @@
   }
   footer.page a { color: var(--muted); text-decoration: underline; }
   footer.page a:hover { color: var(--green-ink); }
+  .notes-list li { margin-bottom: 14px; }
+  .notes-list a { font-weight: 600; }
+  .author-box {
+    margin: 32px 0 0;
+    padding: 16px 18px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 8px;
+    background: var(--paper);
+    font-size: 0.95rem;
+  }
+  .author-box p { margin: 0 0 6px; }
+  .built-by { margin: 0 0 18px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+  .built-by p { margin: 0 0 8px; }
 </style>
 </head>
 <body>
@@ -344,6 +357,17 @@
     </section>
 
     <section>
+      <h2>Notes from the Suede AI team</h2>
+      <p>Longer write-ups from Jason Colapietro and the Suede AI team in West Palm Beach, Florida, on how these docs are built and what agencies can take from them.</p>
+      <ul class="notes-list">
+        <li><a href="/notes/ai-quotable-developer-docs">Writing developer docs that AI assistants quote correctly</a>: the source, date and verification rules behind this site.</li>
+        <li><a href="/notes/mcp-for-agencies-south-florida">Model Context Protocol for agencies</a>: a South Florida primer built around the Suede MCP server.</li>
+        <li><a href="/notes/open-source-to-docs">From open source to docs</a>: lessons from 54 merged pull requests across 46 repositories.</li>
+      </ul>
+      <p>All notes live in the <a href="/notes">notes index</a>.</p>
+    </section>
+
+    <section>
       <h2>Related Suede tools for x402 sellers</h2>
       <ul>
         <li><a href="https://agents.suedeai.ai">AI Agent Builder &amp; Workflow Automation</a>: build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.</li>
@@ -360,8 +384,12 @@
   </div>
 </main>
 <footer class="page">
-  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a></p></nav>
-  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-07-04. Page last updated 2026-10-20.</p>
+  <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a> · <a href="/notes">Notes</a></p></nav>
+  <section class="built-by" aria-label="Built by Suede AI">
+    <p><strong>Built by Suede AI in West Palm Beach, Florida.</strong> Suede AI is the agentic platform company Jason Colapietro started in 2024. Its <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development practice</a> works with businesses in Jupiter, Palm Beach Gardens and across Palm Beach County. Company site: <a href="https://suedeai.ai/">suedeai.ai</a>. Founder: <a href="https://suedeai.ai/founder">Jason Colapietro</a> (<a href="https://jasoncolapietro.com/">personal site</a>). Local publishing: <a href="https://jupitersocialfl.com/">Jupiter Social</a>, a Jupiter, FL magazine published with Suede AI.</p>
+    <p>More from Suede AI: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede AI team</a></p>
+  </section>
+  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede AI. Published 2026-07-04. Page last updated 2026-11-14.</p>
 <div class="trendshift-recognition" style="width:250px;max-width:100%;margin:24px auto;text-align:center"><p style="margin:0 0 8px;font-size:13px">Suede Creator Skills on Trendshift</p><a href="https://trendshift.io/repositories/82031?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-82031" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/82031/daily?language=Python" alt="JasonColapietro%2Fsuede-creator-skills | Trendshift" width="250" height="55" loading="lazy" style="display:block;max-width:100%;height:auto"/></a></div>
 </footer>
 </body>

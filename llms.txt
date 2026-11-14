@@ -27,6 +27,15 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 - [Python SDK](https://docs.suedeai.ai/python-sdk): The suede-ai package on PyPI: install, client options, methods, how it pays, and polling.
 - [Discovery and MCP](https://docs.suedeai.ai/discovery): The x402 manifest, OpenAPI 3.1 spec, product catalog, A2A agent card, Agentic Commerce manifest and MCP server.
 
+## Notes
+
+Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14.
+
+- [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede AI team on developer docs, MCP and AI search.
+- [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind this site, and how a Palm Beach County business can apply them.
+- [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): A South Florida primer built around the live Suede MCP server, with scoping rules and tradeoffs.
+- [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Lessons from 54 merged pull requests across 46 open-source repositories, applied to developer documentation.
+
 ## Ecosystem
 
 - [Suede AI](https://suedeai.ai): Main product site with product, blog, and company information.
@@ -40,6 +49,7 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 ## Optional
 
 - [Suede AI IP Registry](https://registry.suedeai.ai): The ID and trust layer for music: one verifiable public ID per work, with a wallet-signed creator claim, contributors, timestamp, and derivative links on Base and Avalanche.
+- [Suede AI agency](https://suedeai.agency): Suede AI's West Palm Beach SEO, GEO and web development practice serving Jupiter and Palm Beach County.
 - [Suede SEO](https://seo.suedeai.ai): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
 
 ## Source and citation guide
