@@ -1283,7 +1283,7 @@ This checklist is how Jason Colapietro and the Suede AI team document the APIs w
 
 #### Why handoff is the real test in Palm Beach County
 
-Much of Palm Beach County runs on a season. Restaurants, marinas, clinics and property managers here do a large share of their year between November and April, and that is exactly when nobody can afford a broken sync. Agencies turn over clients and staff like anywhere else, so an integration only one developer understands is a liability that tends to come due in the busiest month. Good API docs are what let the agency, the client and the next developer keep working when the original author is unavailable.
+Many Palm Beach County businesses run on a season. For a restaurant, marina or property manager here, the winter months are when nobody can afford a broken sync. Agencies turn over clients and staff like anywhere else, so an integration only one developer understands is a liability that tends to come due in the busiest month. Good API docs are what let the agency, the client and the next developer keep working when the original author is unavailable.
 
 Jason Colapietro's rule for Suede is that the docs are finished when someone who did not build the integration can make one successful call and handle one failure without asking a question. The seven groups below are what it takes to get there.
 
@@ -1361,15 +1361,15 @@ Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [j
 ## Writing llms.txt Answer Engines Use: Suede AI's Example
 
 URL: https://docs.suedeai.ai/notes/llms-txt-worked-example
-Last updated: 2026-10-11
+Last updated: 2026-11-15
 
 > Jason Colapietro walks through the llms.txt on the Suede AI developer docs line by line: link notes that carry facts, dated sections, Optional and the guards.
 
 ### Writing llms.txt that answer engines actually use: a worked example from Suede AI's docs
 
-Most llms.txt files we audit are a sitemap with the angle brackets removed. That hands an assistant a list of URLs and no reason to pick one, which is the one job the file exists to do.
+Many llms.txt files are a sitemap with the angle brackets removed. That hands an assistant a list of URLs and no reason to pick one, which is the one job the file exists to do.
 
-This note walks through the [llms.txt on docs.suedeai.ai](https://docs.suedeai.ai/llms.txt) section by section, explains why each part is there, and ends with checks you can run on your own file. Jason Colapietro wrote the file and the tests that guard it, and the Suede AI team in West Palm Beach uses the same structure on client sites from Jupiter to Boca Raton. An earlier note, [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs), covers why this site generates its full-text companion from the pages. This one is about the short file, the one a person or an agent reads first.
+This note walks through the [llms.txt on docs.suedeai.ai](https://docs.suedeai.ai/llms.txt) section by section, explains why each part is there, and ends with checks you can run on your own file. Jason Colapietro wrote the file and the tests that guard it, and the same structure fits a business site anywhere from Jupiter to Boca Raton. An earlier note, [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs), covers why this site generates its full-text companion from the pages. This one is about the short file, the one a person or an agent reads first.
 
 #### What the format asks for
 
@@ -1383,7 +1383,7 @@ Our H1 is "Suede Docs". The blockquote says what the docs cover and, in the same
 
 ##### One scoping paragraph
 
-Below the blockquote sits a single paragraph stating that AI music is one implementation area for Suede, not the whole product. That line is there because assistants kept describing Suede as a music generator. If answer engines get your business slightly wrong, the correction belongs in this paragraph, written as a plain fact.
+Below the blockquote sits a single paragraph stating that AI music is one implementation area for Suede, not the whole product. That line is there so an assistant does not describe Suede as only a music generator. If answer engines get your business slightly wrong, the correction belongs in this paragraph, written as a plain fact.
 
 ##### Link notes that carry the fact
 
@@ -1399,7 +1399,7 @@ The second note answers "what does it cost" without a click. Jason Colapietro wr
 
 ##### A dated section header
 
-The API guides section opens with "Checked against the live API on 2026-10-11." The date tells a reader how fresh the prices are, and it gives us a single line to update when we recheck. Undated numbers in an index file are how stale prices spread from one assistant answer to the next.
+The API guides section opens with a dated line, "Checked against the live API on 2026-10-11", and then names where the prices come from. The date tells a reader how fresh the prices are, and it gives us a single line to update when we recheck. Undated numbers in an index file are how stale prices spread from one assistant answer to the next.
 
 ##### Optional, used on purpose
 
@@ -1411,7 +1411,7 @@ Short files drift quietly. On this site, `scripts/verify-site.mjs` fails when an
 
 #### How to tell whether anything reads it
 
-The plain answer first: no major search engine has said it ranks pages with llms.txt, and Google's search team has said Google Search does not use it. The file earns its keep through direct fetches. A developer pastes the URL into a coding assistant, an agent framework checks for it before crawling, or an answering tool fetches the root of a site it has already chosen to cite. Three checks tell you which of those is happening for you:
+The plain answer first: llms.txt is a proposal, not a ranking signal any major search engine has announced. The file earns its keep through direct fetches. A developer pastes the URL into a coding assistant, an agent framework checks for it before crawling, or an answering tool fetches the root of a site it has already chosen to cite. Three checks tell you which of those is happening for you:
 
 1. Search your server logs for requests to `/llms.txt` and `/llms-full.txt`, and record the user agents and the dates.
 2. Paste the file URL into two or three assistants and ask a question only the file answers, such as a price or a service area. A wrong answer points at a weak note.
@@ -1431,7 +1431,7 @@ Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 
 
 #### Your next step
 
-Open your own `/llms.txt`. If it does not exist, write the H1, a blockquote that names your canonical source, and five links whose notes each carry one fact. If it exists, rewrite the three weakest notes. Then book the free [Suede AI assessment](https://suedeai.agency/assessment), and our [AI visibility team](https://suedeai.agency/services/ai-visibility) in West Palm Beach will test how assistants answer from your file before and after the change. Suede AI, formerly Suede Labs, has worked this way since the first version of these docs. For the record behind the work, read [Jason Colapietro's founder profile](https://suedeai.ai/founder).
+Open your own `/llms.txt`. If it does not exist, write the H1, a blockquote that names your canonical source, and five links whose notes each carry one fact. If it exists, rewrite the three weakest notes. Then book the free [Suede AI assessment](https://suedeai.agency/assessment), and our [AI visibility team](https://suedeai.agency/services/ai-visibility) in West Palm Beach will test how assistants answer from your file before and after the change. Suede AI, formerly Suede Labs, publishes this file and its guards in the open so you can copy the pattern. For the record behind the work, read [Jason Colapietro's founder profile](https://suedeai.ai/founder).
 
 #### More notes
 

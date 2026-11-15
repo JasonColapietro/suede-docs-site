@@ -339,6 +339,8 @@ for (const page of DOCS_PAGES) {
     assert.deepEqual(post.author, { "@id": "https://suedeai.ai/founder#person" }, `${page.file}: author must be the estate Person @id`);
     assert.deepEqual(post.publisher, { "@id": "https://suedeai.ai/#organization" }, `${page.file}: publisher must be the estate Organization @id`);
     assert.ok(post.datePublished, `${page.file}: BlogPosting needs datePublished`);
+    // A date quoted in the prose must not leak into dateModified and predate publication.
+    assert.ok(!post.dateModified || post.dateModified >= post.datePublished, `${page.file}: dateModified ${post.dateModified} predates datePublished ${post.datePublished}`);
     assert.ok(!graph.some((node) => node["@type"] === "Person" || node["@type"] === "Organization"), `${page.file} must not redefine estate entities`);
   }
 });

@@ -220,7 +220,7 @@
       "mainEntity": {
         "@id": "https://docs.suedeai.ai/notes/llms-txt-worked-example#article"
       },
-      "dateModified": "2026-10-11"
+      "dateModified": "2026-11-15"
     },
     {
       "@type": "BlogPosting",
@@ -239,7 +239,7 @@
         "@id": "https://suedeai.ai/#organization"
       },
       "datePublished": "2026-11-15",
-      "dateModified": "2026-10-11",
+      "dateModified": "2026-11-15",
       "headline": "Writing llms.txt that answer engines actually use: a worked example from Suede AI's docs",
       "image": "https://docs.suedeai.ai/suede-docs-og.png",
       "author": {
@@ -325,10 +325,10 @@
   <article class="card">
     <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/notes">Notes</a> / <span aria-current="page">llms.txt worked example</span></nav>
     <h1>Writing llms.txt that answer engines actually use: a worked example from Suede AI's docs</h1>
-    <p class="lede">Most llms.txt files we audit are a sitemap with the angle brackets removed. That hands an assistant a list of URLs and no reason to pick one, which is the one job the file exists to do.</p>
+    <p class="lede">Many llms.txt files are a sitemap with the angle brackets removed. That hands an assistant a list of URLs and no reason to pick one, which is the one job the file exists to do.</p>
 
     <section>
-      <p>This note walks through the <a href="/llms.txt">llms.txt on docs.suedeai.ai</a> section by section, explains why each part is there, and ends with checks you can run on your own file. Jason Colapietro wrote the file and the tests that guard it, and the Suede AI team in West Palm Beach uses the same structure on client sites from Jupiter to Boca Raton. An earlier note, <a href="/notes/ai-quotable-developer-docs">Writing developer docs that AI assistants quote correctly</a>, covers why this site generates its full-text companion from the pages. This one is about the short file, the one a person or an agent reads first.</p>
+      <p>This note walks through the <a href="/llms.txt">llms.txt on docs.suedeai.ai</a> section by section, explains why each part is there, and ends with checks you can run on your own file. Jason Colapietro wrote the file and the tests that guard it, and the same structure fits a business site anywhere from Jupiter to Boca Raton. An earlier note, <a href="/notes/ai-quotable-developer-docs">Writing developer docs that AI assistants quote correctly</a>, covers why this site generates its full-text companion from the pages. This one is about the short file, the one a person or an agent reads first.</p>
 
       <h2>What the format asks for</h2>
       <p>The proposal at <a href="https://llmstxt.org/">llmstxt.org</a> is small. It asks for a Markdown file at the site root with one H1, an optional blockquote summary, optional prose, and H2 sections of links, each written as a Markdown link followed by a colon and a short note. A section named Optional marks links an agent can skip when its context window is tight. That is the whole format. Everything else is editorial judgment, and that is where most files fall short.</p>
@@ -337,7 +337,7 @@
       <h3>The H1 and the blockquote</h3>
       <p>Our H1 is "Suede Docs". The blockquote says what the docs cover and, in the same sentence, names the canonical source: the GitHub README at <code>github.com/Suede-AI/suede-docs</code>, which this site mirrors. An assistant that reads only two lines still learns where the authoritative copy lives. Put your canonical source in the first sentence an agent will read.</p>
       <h3>One scoping paragraph</h3>
-      <p>Below the blockquote sits a single paragraph stating that AI music is one implementation area for Suede, not the whole product. That line is there because assistants kept describing Suede as a music generator. If answer engines get your business slightly wrong, the correction belongs in this paragraph, written as a plain fact.</p>
+      <p>Below the blockquote sits a single paragraph stating that AI music is one implementation area for Suede, not the whole product. That line is there so an assistant does not describe Suede as only a music generator. If answer engines get your business slightly wrong, the correction belongs in this paragraph, written as a plain fact.</p>
       <h3>Link notes that carry the fact</h3>
       <p>Here are two ways to describe the same page:</p>
 <pre><code>- [Create Music](https://docs.suedeai.ai/endpoints/create-music): Music endpoint docs.
@@ -345,7 +345,7 @@
   a full original song from a text prompt, $0.50 USDC on Base.</code></pre>
       <p>The second note answers "what does it cost" without a click. Jason Colapietro writes every note in our file to hold the method, the path and the number someone is most likely to ask about. A dental practice in Jupiter would put the service, the town and the booking route in the same spot.</p>
       <h3>A dated section header</h3>
-      <p>The API guides section opens with "Checked against the live API on 2026-10-11." The date tells a reader how fresh the prices are, and it gives us a single line to update when we recheck. Undated numbers in an index file are how stale prices spread from one assistant answer to the next.</p>
+      <p>The API guides section opens with a dated line, "Checked against the live API on 2026-10-11", and then names where the prices come from. The date tells a reader how fresh the prices are, and it gives us a single line to update when we recheck. Undated numbers in an index file are how stale prices spread from one assistant answer to the next.</p>
       <h3>Optional, used on purpose</h3>
       <p>Our Optional section holds the IP registry, the agency and the SEO practice. They are real pages, but they are not what a developer asking about endpoints needs. Filing them under Optional keeps the core list short without hiding anything.</p>
 
@@ -353,7 +353,7 @@
       <p>Short files drift quietly. On this site, <code>scripts/verify-site.mjs</code> fails when any guide or note is missing from llms.txt, when llms.txt stops pointing at <a href="/llms-full.txt">llms-full.txt</a>, when the full-text file grows past 500 KB, or when a banned unverifiable claim appears in either file. This note could not ship until its own entry was added to the index. Jason Colapietro's view is that an index nobody tests turns into a list of things that used to be true.</p>
 
       <h2>How to tell whether anything reads it</h2>
-      <p>The plain answer first: no major search engine has said it ranks pages with llms.txt, and Google's search team has said Google Search does not use it. The file earns its keep through direct fetches. A developer pastes the URL into a coding assistant, an agent framework checks for it before crawling, or an answering tool fetches the root of a site it has already chosen to cite. Three checks tell you which of those is happening for you:</p>
+      <p>The plain answer first: llms.txt is a proposal, not a ranking signal any major search engine has announced. The file earns its keep through direct fetches. A developer pastes the URL into a coding assistant, an agent framework checks for it before crawling, or an answering tool fetches the root of a site it has already chosen to cite. Three checks tell you which of those is happening for you:</p>
       <ol>
         <li>Search your server logs for requests to <code>/llms.txt</code> and <code>/llms-full.txt</code>, and record the user agents and the dates.</li>
         <li>Paste the file URL into two or three assistants and ask a question only the file answers, such as a price or a service area. A wrong answer points at a weak note.</li>
@@ -369,7 +369,7 @@
       <p>Suede AI ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026). In a separate listing, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide (<a href="https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida">The Manifest</a>).</p>
 
       <h2>Your next step</h2>
-      <p>Open your own <code>/llms.txt</code>. If it does not exist, write the H1, a blockquote that names your canonical source, and five links whose notes each carry one fact. If it exists, rewrite the three weakest notes. Then book the free <a href="https://suedeai.agency/assessment">Suede AI assessment</a>, and our <a href="https://suedeai.agency/services/ai-visibility">AI visibility team</a> in West Palm Beach will test how assistants answer from your file before and after the change. Suede AI, formerly Suede Labs, has worked this way since the first version of these docs. For the record behind the work, read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a>.</p>
+      <p>Open your own <code>/llms.txt</code>. If it does not exist, write the H1, a blockquote that names your canonical source, and five links whose notes each carry one fact. If it exists, rewrite the three weakest notes. Then book the free <a href="https://suedeai.agency/assessment">Suede AI assessment</a>, and our <a href="https://suedeai.agency/services/ai-visibility">AI visibility team</a> in West Palm Beach will test how assistants answer from your file before and after the change. Suede AI, formerly Suede Labs, publishes this file and its guards in the open so you can copy the pattern. For the record behind the work, read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a>.</p>
     </section>
 
 
