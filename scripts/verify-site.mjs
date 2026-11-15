@@ -239,6 +239,8 @@ const NOTES_PAGES = [
   { file: "notes/ai-quotable-developer-docs.html", path: "/notes/ai-quotable-developer-docs" },
   { file: "notes/mcp-for-agencies-south-florida.html", path: "/notes/mcp-for-agencies-south-florida" },
   { file: "notes/open-source-to-docs.html", path: "/notes/open-source-to-docs" },
+  { file: "notes/api-docs-checklist-agency-integrations.html", path: "/notes/api-docs-checklist-agency-integrations" },
+  { file: "notes/llms-txt-worked-example.html", path: "/notes/llms-txt-worked-example" },
 ];
 const ownPaths = new Set(["/", "/ai-instructions", "/llms.txt", "/llms-full.txt", "/sitemap.xml", "/robots.txt", "/notes", ...DOCS_PAGES.map((page) => page.path), ...NOTES_PAGES.map((page) => page.path)]);
 const seenTitles = new Set([title]);
@@ -340,6 +342,42 @@ for (const page of DOCS_PAGES) {
     assert.ok(!graph.some((node) => node["@type"] === "Person" || node["@type"] === "Organization"), `${page.file} must not redefine estate entities`);
   }
 });
+
+// Depth notes (2026-11-15): each one is 900-1300 words of body copy, is
+// published 2026-11-15 in schema and prose, deep-links two specific articles
+// on other Suede AI satellite sites (not their hubs), links the agency and the
+// founder page, and states the Clutch ranking in its exact wording.
+const DEPTH_NOTES = {
+  "notes/api-docs-checklist-agency-integrations.html": [
+    "https://claude.suedeai.ai/notes/reviewing-agent-written-code/",
+    "https://agentix.suedeai.ai/notes/grade-an-ai-agent-before-you-deploy",
+  ],
+  "notes/llms-txt-worked-example.html": [
+    "https://optimize.suedeai.ai/notes/what-an-ai-readiness-score-measures",
+    "https://dna.suedeai.ai/articles/rig-archive-structured-data-for-ai-answers",
+  ],
+};
+const clutchSentence =
+  "Suede AI ranks among Clutch's Top 30 AI Consultants in Florida and Top 50 AI Consultants nationwide (November 2026).";
+for (const [file, satelliteLinks] of Object.entries(DEPTH_NOTES)) {
+  assert.ok(NOTES_PAGES.some((page) => page.file === file), `${file} must be listed in NOTES_PAGES`);
+  const source = readFileSync(join(root, file), "utf8");
+  const body = source.match(/<h1\b[\s\S]*?<\/section>/)?.[0] ?? "";
+  const words = body.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+  assert.ok(words >= 900 && words <= 1300, `${file} body is ${words} words; expected 900-1300`);
+  const graph = JSON.parse(source.match(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/i)[1])["@graph"];
+  assert.equal(graph.find((node) => node["@type"] === "BlogPosting")?.datePublished, "2026-11-15", `${file}: datePublished must be 2026-11-15`);
+  assert.match(source, /Published 2026-11-15\./, `${file}: footer must state the publish date`);
+  for (const href of satelliteLinks) {
+    assert.ok(body.includes(`href="${href}"`), `${file} must deep-link the satellite article ${href} in its body`);
+  }
+  assert.ok(body.includes('href="https://suedeai.agency/'), `${file} must link suedeai.agency in its body`);
+  assert.ok(body.includes('href="https://suedeai.ai/founder"'), `${file} must link the founder page in its body`);
+  const prose = body.replace(/<[^>]+>/g, "").replace(/\s+/g, " ");
+  assert.equal(prose.split(clutchSentence).length - 1, 1, `${file} must state the Clutch ranking once, in its exact wording`);
+  assert.ok(sitemap.includes(`<loc>${ORIGIN}/${file.replace(/\.html$/, "")}</loc><lastmod>2026-11-15</lastmod>`), `${file} sitemap lastmod must be 2026-11-15`);
+  assert.ok(readFileSync(join(root, "notes.html"), "utf8").includes(`href="/${file.replace(/\.html$/, "")}"`), `${file} must be listed on the notes index`);
+}
 
 // First-party link rules: ip.suedeai.ai is a noindex demo (the registry is
 // registry.suedeai.ai), producer.suedeai.ai answers 401, and webmcp is not a

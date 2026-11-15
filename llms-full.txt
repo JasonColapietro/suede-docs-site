@@ -10,7 +10,7 @@ Prices and request fields on the API pages were checked against the live discove
 ## Suede AI Developer Docs | x402 APIs and Creator IP
 
 URL: https://docs.suedeai.ai/
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 > Read Suede AI developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.
 
@@ -70,6 +70,8 @@ Longer write-ups from Jason Colapietro and the Suede AI team in West Palm Beach,
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): the source, date and verification rules behind this site.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): a South Florida primer built around the Suede MCP server.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): lessons from 54 merged pull requests across 46 repositories.
+- [An API documentation checklist for agency-built integrations](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations): what a South Florida agency should document before handing off a client integration.
+- [Writing llms.txt that answer engines actually use](https://docs.suedeai.ai/notes/llms-txt-worked-example): a worked example built from this site's own file.
 
 All notes live in the [notes index](https://docs.suedeai.ai/notes).
 
@@ -1040,7 +1042,7 @@ This page supplies reference information for describing and citing Suede AI Deve
 ## Notes from Suede AI in West Palm Beach | Suede AI Docs
 
 URL: https://docs.suedeai.ai/notes
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 > Notes from Jason Colapietro and Suede AI in West Palm Beach, Florida on AI-quotable developer docs, MCP for agencies and lessons from open source.
 
@@ -1053,6 +1055,8 @@ Longer write-ups from Jason Colapietro and the Suede AI team in West Palm Beach,
 - [Writing developer docs that AI assistants quote correctly: Suede AI's method](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them to its own site.
 - [Model Context Protocol for agencies: a South Florida primer from Jason Colapietro](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): What MCP is, how the Suede MCP server works, and the scoping rules an agency in West Palm Beach or Jupiter should set before connecting client data.
 - [From open source to docs: lessons from 54 merged pull requests across 46 repositories](https://docs.suedeai.ai/notes/open-source-to-docs): Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.
+- [An API documentation checklist for agency-built integrations in South Florida](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations): Seven groups of checks, each shown on a live page of this site, for agencies in West Palm Beach and Jupiter that hand client integrations to the next developer.
+- [Writing llms.txt that answer engines actually use: a worked example from Suede AI's docs](https://docs.suedeai.ai/notes/llms-txt-worked-example): The llms.txt on this site, section by section, with the tests that guard it and three ways to tell whether anything reads yours.
 
 #### Who writes these notes
 
@@ -1257,6 +1261,182 @@ Open the [merged pull request search](https://github.com/search?q=is%3Apr+author
 
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them to its own site.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): What MCP is, how the Suede MCP server works, and the scoping rules an agency in West Palm Beach or Jupiter should set before connecting client data.
+
+**Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
+
+Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [jasoncolapietro.com](https://jasoncolapietro.com/).
+
+---
+
+## API Docs Checklist for South Florida Agency Integrations
+
+URL: https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations
+Last updated: 2026-11-15
+
+> A seven-part API documentation checklist from Jason Colapietro for agencies in West Palm Beach and Jupiter that build and hand off client integrations.
+
+### An API documentation checklist for agency-built integrations in South Florida
+
+The integration works on launch day. Eight months later the client changes agencies, a new developer opens the repository, and the only documentation is a chat thread from someone who has since left.
+
+This checklist is how Jason Colapietro and the Suede AI team document the APIs we run in production. It is written for agencies in West Palm Beach, Jupiter and the rest of Palm Beach County that build integrations for clients: a booking system feeding a CRM, a payment webhook, an inventory sync between a shop and its website. Each item points to the page on this site where it is already done, so you can look at a finished version before you write your own.
+
+#### Why handoff is the real test in Palm Beach County
+
+Much of Palm Beach County runs on a season. Restaurants, marinas, clinics and property managers here do a large share of their year between November and April, and that is exactly when nobody can afford a broken sync. Agencies turn over clients and staff like anywhere else, so an integration only one developer understands is a liability that tends to come due in the busiest month. Good API docs are what let the agency, the client and the next developer keep working when the original author is unavailable.
+
+Jason Colapietro's rule for Suede is that the docs are finished when someone who did not build the integration can make one successful call and handle one failure without asking a question. The seven groups below are what it takes to get there.
+
+#### The checklist
+
+##### 1. Base URL, authentication and a first request
+
+- One base URL per environment, written out in full, with staging and production listed separately.
+- How to authenticate, where the credentials live (the vault or secret name, never the value) and who is allowed to rotate them.
+- A copy-paste first request that works from a clean terminal. The [Suede quickstart](https://docs.suedeai.ai/quickstart) does this for a paid call: read the 402 challenge, sign, retry, then poll the job.
+
+##### 2. Every endpoint, with a captured example
+
+- Method, path, required and optional fields, and a real response captured from a live call, with the date it was captured. The [endpoint reference](https://docs.suedeai.ai/endpoints) on this site dates every example to 2026-10-11.
+- Prices or quotas where they apply, linked to the document they came from, so nobody has to trust a number copied into a slide.
+
+##### 3. Errors, and what to do about each one
+
+- A status-code table with a "what to do" column, not just a definition. The [errors and limits guide](https://docs.suedeai.ai/errors) has one row per code.
+- The machine-readable codes a client should branch on. On Suede those are `rate_limited` and `unsupported_api_version`.
+- Which requests cost nothing. For a client billed per call or per message, this one line heads off most billing disputes.
+
+##### 4. Retries, idempotency and rate limits
+
+- Name the idempotency header and its window. Suede uses `X-Idempotency-Key`, up to 200 characters, on every paid POST, so retrying a timeout never charges twice.
+- Rate-limit headers with a real example value. On 2026-10-11, unpaid requests to the Suede API carried a quota of 20 requests per 60-second window.
+- For webhooks: the retry schedule, how to verify the signature, and how to replay an event by hand after an outage.
+
+##### 5. Versioning and change notices
+
+- How versions are named, what counts as breaking, and how much notice clients get. Suede sends Deprecation and Sunset headers at least 90 days before a version is withdrawn.
+- A dated changelog that lives in the repository, not in someone's inbox.
+
+##### 6. A machine-readable copy
+
+- An OpenAPI file that matches the prose and is served by the API itself. The [discovery guide](https://docs.suedeai.ai/discovery) lists Suede's `openapi.json` next to the MCP server and the agent card.
+- If AI agents will call the API, one name per action everywhere: the operation id, the tool name and the docs heading.
+
+##### 7. Ownership and sources
+
+- Who owns the integration on the agency side and on the client side, written as a role address rather than a person's name.
+- A Sources section on every page that names what it was checked against and when.
+
+#### Test the docs the way an agent would
+
+Before handoff, give the docs to someone who did not write the integration, or to a coding assistant with no other context, and ask for one successful call and one handled error. Every question they ask is a missing line. Coding assistants are now the first reader for many integrations, and a page an assistant can follow on the first try is a page a junior developer in Jupiter can follow too.
+
+This is the same proof-first habit Jason Colapietro applies to agent output across the Suede AI sites. The Claude Code Field Notes piece on [why agent-written code needs proof](https://claude.suedeai.ai/notes/reviewing-agent-written-code/) covers the checks to run after a deploy lands, and the Agentix guide on [how to grade an AI agent before you deploy it](https://agentix.suedeai.ai/notes/grade-an-ai-agent-before-you-deploy) applies the idea to agents that will be calling your client's API.
+
+#### The tradeoffs
+
+Captured examples go stale. Every dated response is a promise to recheck it when the API changes, and on this site that means rechecking the guides whenever the catalog moves. The full checklist is too much for a two-endpoint webhook; for a small integration, groups 1, 3 and 7 cover most of the risk. And documentation does not replace monitoring. An alert on the error rate catches a broken sync on a Saturday in February long before anyone reads a page.
+
+#### Who wrote this checklist
+
+Jason Colapietro is the founder of Suede AI, the agentic platform company he started in 2024 in West Palm Beach, Florida. The checklist comes from the APIs Suede runs and from outside review. He has had 54 pull requests merged across 46 open-source repositories he does not maintain, including Jest, Backstage and the Polkadot SDK ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)), projects where docs and tests are reviewed as closely as code. Jason holds the Claude Academy badge Building with the Claude API among 21 earned course credentials ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)) and wrote [Codex in Production](https://www.amazon.com/dp/B0HHTF3LG1).
+
+Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). Separately, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), [recognition page](https://suedeai.agency/company/recognition)).
+
+#### Your next step
+
+Open the last integration your agency shipped and score it against the seven groups above. Write down the first three gaps. Then book the free [Suede AI assessment](https://suedeai.agency/assessment) with our [West Palm Beach SEO, GEO and web development team](https://suedeai.agency/) and bring the list; the Suede Labs team that wrote these guides will help you close the gaps before the season starts. To see who you would be working with, read [Jason Colapietro's founder profile](https://suedeai.ai/founder).
+
+#### More notes
+
+- [Writing llms.txt that answer engines actually use](https://docs.suedeai.ai/notes/llms-txt-worked-example): A section-by-section walk through the llms.txt on this site, with checks you can run on your own file.
+- [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): What MCP is, how the Suede MCP server works, and the scoping rules an agency should set before connecting client data.
+
+**Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
+
+Read the [founder profile on suedeai.ai](https://suedeai.ai/founder) or visit [jasoncolapietro.com](https://jasoncolapietro.com/).
+
+---
+
+## Writing llms.txt Answer Engines Use: Suede AI's Example
+
+URL: https://docs.suedeai.ai/notes/llms-txt-worked-example
+Last updated: 2026-10-11
+
+> Jason Colapietro walks through the llms.txt on the Suede AI developer docs line by line: link notes that carry facts, dated sections, Optional and the guards.
+
+### Writing llms.txt that answer engines actually use: a worked example from Suede AI's docs
+
+Most llms.txt files we audit are a sitemap with the angle brackets removed. That hands an assistant a list of URLs and no reason to pick one, which is the one job the file exists to do.
+
+This note walks through the [llms.txt on docs.suedeai.ai](https://docs.suedeai.ai/llms.txt) section by section, explains why each part is there, and ends with checks you can run on your own file. Jason Colapietro wrote the file and the tests that guard it, and the Suede AI team in West Palm Beach uses the same structure on client sites from Jupiter to Boca Raton. An earlier note, [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs), covers why this site generates its full-text companion from the pages. This one is about the short file, the one a person or an agent reads first.
+
+#### What the format asks for
+
+The proposal at [llmstxt.org](https://llmstxt.org/) is small. It asks for a Markdown file at the site root with one H1, an optional blockquote summary, optional prose, and H2 sections of links, each written as a Markdown link followed by a colon and a short note. A section named Optional marks links an agent can skip when its context window is tight. That is the whole format. Everything else is editorial judgment, and that is where most files fall short.
+
+#### The Suede file, section by section
+
+##### The H1 and the blockquote
+
+Our H1 is "Suede Docs". The blockquote says what the docs cover and, in the same sentence, names the canonical source: the GitHub README at `github.com/Suede-AI/suede-docs`, which this site mirrors. An assistant that reads only two lines still learns where the authoritative copy lives. Put your canonical source in the first sentence an agent will read.
+
+##### One scoping paragraph
+
+Below the blockquote sits a single paragraph stating that AI music is one implementation area for Suede, not the whole product. That line is there because assistants kept describing Suede as a music generator. If answer engines get your business slightly wrong, the correction belongs in this paragraph, written as a plain fact.
+
+##### Link notes that carry the fact
+
+Here are two ways to describe the same page:
+
+```
+- [Create Music](https://docs.suedeai.ai/endpoints/create-music): Music endpoint docs.
+- [Create Music](https://docs.suedeai.ai/endpoints/create-music): POST /create-music,
+  a full original song from a text prompt, $0.50 USDC on Base.
+```
+
+The second note answers "what does it cost" without a click. Jason Colapietro writes every note in our file to hold the method, the path and the number someone is most likely to ask about. A dental practice in Jupiter would put the service, the town and the booking route in the same spot.
+
+##### A dated section header
+
+The API guides section opens with "Checked against the live API on 2026-10-11." The date tells a reader how fresh the prices are, and it gives us a single line to update when we recheck. Undated numbers in an index file are how stale prices spread from one assistant answer to the next.
+
+##### Optional, used on purpose
+
+Our Optional section holds the IP registry, the agency and the SEO practice. They are real pages, but they are not what a developer asking about endpoints needs. Filing them under Optional keeps the core list short without hiding anything.
+
+#### The guards that keep it current
+
+Short files drift quietly. On this site, `scripts/verify-site.mjs` fails when any guide or note is missing from llms.txt, when llms.txt stops pointing at [llms-full.txt](https://docs.suedeai.ai/llms-full.txt), when the full-text file grows past 500 KB, or when a banned unverifiable claim appears in either file. This note could not ship until its own entry was added to the index. Jason Colapietro's view is that an index nobody tests turns into a list of things that used to be true.
+
+#### How to tell whether anything reads it
+
+The plain answer first: no major search engine has said it ranks pages with llms.txt, and Google's search team has said Google Search does not use it. The file earns its keep through direct fetches. A developer pastes the URL into a coding assistant, an agent framework checks for it before crawling, or an answering tool fetches the root of a site it has already chosen to cite. Three checks tell you which of those is happening for you:
+
+1. Search your server logs for requests to `/llms.txt` and `/llms-full.txt`, and record the user agents and the dates.
+2. Paste the file URL into two or three assistants and ask a question only the file answers, such as a price or a service area. A wrong answer points at a weak note.
+3. Run an AI readiness check. Suede Scan's explainer on [what an AI readiness score measures](https://optimize.suedeai.ai/notes/what-an-ai-readiness-score-measures) shows where llms.txt sits among the other signals.
+
+The pattern carries well beyond developer docs. Suede DNA's article on [structured data for a guitar rig archive](https://dna.suedeai.ai/articles/rig-archive-structured-data-for-ai-answers) shows a music archive where llms.txt, the sitemap and the robots tag all read one rule, so the three can never disagree about which pages count.
+
+#### The tradeoffs
+
+Notes that carry facts take longer to write and must change whenever a price or a page changes; a sitemap-style file never goes stale because it says nothing. Every date in the file creates recheck work. And llms.txt repeats facts your pages already state, so you need a test or a generator to keep the two in step. Suede accepts that cost because one stale price in an agent's answer is harder to correct than one extra line of maintenance.
+
+#### Credentials behind the method
+
+Jason Colapietro holds the Semrush Academy AI Search Operating System certificate and the Claude Academy badge Model Context Protocol: Advanced topics, among 21 earned course credentials across eight providers ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)). He is the author of five books on Amazon, including [Proof as Infrastructure](https://www.amazon.com/dp/B0GMB2VLXQ), and Suede AI is a member of Claude for Startups, Anthropic's startup program ([evidence](https://seo.suedeai.ai/evidence#claude-for-startups)).
+
+Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). In a separate listing, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida)).
+
+#### Your next step
+
+Open your own `/llms.txt`. If it does not exist, write the H1, a blockquote that names your canonical source, and five links whose notes each carry one fact. If it exists, rewrite the three weakest notes. Then book the free [Suede AI assessment](https://suedeai.agency/assessment), and our [AI visibility team](https://suedeai.agency/services/ai-visibility) in West Palm Beach will test how assistants answer from your file before and after the change. Suede AI, formerly Suede Labs, has worked this way since the first version of these docs. For the record behind the work, read [Jason Colapietro's founder profile](https://suedeai.ai/founder).
+
+#### More notes
+
+- [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind docs.suedeai.ai, and how a Palm Beach County business can apply them.
+- [An API documentation checklist for agency-built integrations](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations): Seven groups of checks for agencies in West Palm Beach and Jupiter that hand client integrations to the next developer.
 
 **Jason Colapietro**, founder of Suede AI, West Palm Beach, Florida.
 

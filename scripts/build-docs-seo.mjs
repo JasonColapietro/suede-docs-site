@@ -44,6 +44,8 @@ export const PAGES = [
   { file: "notes/ai-quotable-developer-docs.html", path: "/notes/ai-quotable-developer-docs", kind: "BlogPosting" },
   { file: "notes/mcp-for-agencies-south-florida.html", path: "/notes/mcp-for-agencies-south-florida", kind: "BlogPosting" },
   { file: "notes/open-source-to-docs.html", path: "/notes/open-source-to-docs", kind: "BlogPosting" },
+  { file: "notes/api-docs-checklist-agency-integrations.html", path: "/notes/api-docs-checklist-agency-integrations", kind: "BlogPosting" },
+  { file: "notes/llms-txt-worked-example.html", path: "/notes/llms-txt-worked-example", kind: "BlogPosting" },
 ];
 
 // Where the notes are written and who they serve. Places only: no address,

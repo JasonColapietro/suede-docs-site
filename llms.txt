@@ -29,7 +29,7 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 
 ## Notes
 
-Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14, updated 2026-11-15.
+Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14 and 2026-11-15, updated 2026-11-15.
 
 Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/consulting/ai/florida) and Top 50 AI Consultants nationwide (https://clutch.co/us/consulting/ai) (November 2026). Clutch profile: https://clutch.co/profile/suede-ai-seo
 
@@ -37,6 +37,8 @@ Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.c
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind this site, and how a Palm Beach County business can apply them.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): A South Florida primer built around the live Suede MCP server, with scoping rules and tradeoffs.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Lessons from 54 merged pull requests across 46 open-source repositories, applied to developer documentation.
+- [An API documentation checklist for agency-built integrations](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations): Seven groups of checks (auth, captured examples, errors, idempotency, versioning, OpenAPI, ownership) for agencies in West Palm Beach and Jupiter that hand off client integrations.
+- [Writing llms.txt that answer engines actually use](https://docs.suedeai.ai/notes/llms-txt-worked-example): A section-by-section walk through this file, with the guards that keep it current and three checks for whether anything reads yours.
 
 ## Ecosystem
 

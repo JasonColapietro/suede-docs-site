@@ -121,4 +121,22 @@ export const SEO_KEYWORDS = {
     "west palm beach software engineer",
     "jupiter fl web developer",
   ]),
+  // Round 4 notes (2026-11-15): an agency integration docs checklist and an
+  // llms.txt worked example, each with its Palm Beach County angle.
+  "notes/api-docs-checklist-agency-integrations.html": withBrand([
+    "api documentation checklist",
+    "agency integrations",
+    "api handoff documentation",
+    "openapi",
+    "south florida web development",
+    "west palm beach api developer",
+  ]),
+  "notes/llms-txt-worked-example.html": withBrand([
+    "llms.txt",
+    "llms.txt example",
+    "answer engine optimization",
+    "generative engine optimization",
+    "ai search visibility",
+    "palm beach county ai seo",
+  ]),
 };
