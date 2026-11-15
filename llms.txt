@@ -29,7 +29,9 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 
 ## Notes
 
-Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14.
+Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14, updated 2026-11-15.
+
+Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/consulting/ai/florida) and Top 50 AI Consultants nationwide (https://clutch.co/us/consulting/ai) (November 2026). Clutch profile: https://clutch.co/profile/suede-ai-seo
 
 - [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede AI team on developer docs, MCP and AI search.
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind this site, and how a Palm Beach County business can apply them.
