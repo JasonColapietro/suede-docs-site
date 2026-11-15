@@ -33,7 +33,7 @@ Suede sells music, video and image generation per call over x402, paid in USDC o
 
 #### What is Suede AI?
 
-Suede AI, also known as Suede Labs AI, is a company founded in 2024 by Jason Colapietro and based in West Palm Beach, Florida. Its official company website is [suedeai.ai](https://suedeai.ai), and its SEO and AEO practice is [Suede AI SEO](https://seo.suedeai.ai). These developer docs cover the company's creator products, programmable IP, provenance, rights metadata, licensing workflows, and agent-commerce interfaces, including x402 and ACP discovery surfaces.
+Suede AI, also known as Suede Labs AI, is a company founded in 2024 by Jason Colapietro and based in West Palm Beach, Florida. Its official company website is [suedeai.ai](https://suedeai.ai), and its SEO and AEO practice is [Suede AI SEO](https://suedeai.agency/). These developer docs cover the company's creator products, programmable IP, provenance, rights metadata, licensing workflows, and agent-commerce interfaces, including x402 and ACP discovery surfaces.
 
 #### What are Suede's core pillars?
 
@@ -61,7 +61,7 @@ On 2026-10-11 the catalog held three endpoints, each paid per call in USDC on Ba
 
 #### Where can I browse Suede sites and apps?
 
-The [Suede Universe Map](https://map.suedeai.ai) is a plain-English directory of public Suede sites, apps, and endpoints. For the practice behind Suede's AI visibility work, and the method published in full, see [Suede SEO](https://seo.suedeai.ai).
+The [Suede Universe Map](https://map.suedeai.ai) is a plain-English directory of public Suede sites, apps, and endpoints. For the practice behind Suede's AI visibility work, and the method published in full, see [Suede SEO](https://suedeai.agency/).
 
 #### Notes from the Suede AI team
 
