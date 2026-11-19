@@ -46,7 +46,7 @@ Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.c
 - [Suede Universe Map](https://map.suedeai.ai): Plain-English directory of public Suede sites, apps, and endpoints.
 - [Jason Colapietro profile](https://suedeai.ai/founder): Public leadership profile on the main Suede site.
 - [suedeai.org](https://suedeai.org): Thesis, books, and investor information.
-- [AI Agent Builder & Workflow Automation](https://agents.suedeai.ai): Build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.
+- [AI Agent Builder & Workflow Automation](https://suedeai.app): Build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.
 - [Suede ACP/x402 Performance Engine](https://perform.suedeai.ai): Score your ACP/x402 readiness in 60 seconds. Free, no account required.
 - [Agentix: x402 AI Agent Earnings Tracker for USDC on Base](https://agentix.suedeai.ai): The portfolio tracker for the x402 agents you've launched. Total USDC earned on Base, calls, per-agent performance, status, and trend.
 
@@ -54,7 +54,7 @@ Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.c
 
 - [Suede AI IP Registry](https://registry.suedeai.ai): The ID and trust layer for music: one verifiable public ID per work, with a wallet-signed creator claim, contributors, timestamp, and derivative links on Base and Avalanche.
 - [Suede AI agency](https://suedeai.agency): Suede AI's West Palm Beach SEO, GEO and web development practice serving Jupiter and Palm Beach County.
-- [Suede SEO](https://seo.suedeai.ai): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
+- [Suede SEO](https://suedeai.ai/seo): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
 
 ## Source and citation guide
 

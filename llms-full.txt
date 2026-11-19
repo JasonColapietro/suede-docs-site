@@ -77,7 +77,7 @@ All notes live in the [notes index](https://docs.suedeai.ai/notes).
 
 #### Related Suede tools for x402 sellers
 
-- [AI Agent Builder & Workflow Automation](https://agents.suedeai.ai): build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.
+- [AI Agent Builder & Workflow Automation](https://suedeai.app): build AI agents visually for leads, invoices and reports. Test workflows, inspect every run, and publish paid x402 APIs when payments are enabled.
 - [Suede ACP/x402 Performance Engine](https://perform.suedeai.ai): score your ACP/x402 readiness in 60 seconds. Free, no account required.
 - [Agentix: x402 AI Agent Earnings Tracker for USDC on Base](https://agentix.suedeai.ai): the portfolio tracker for the x402 agents you've launched, with total USDC earned on Base, calls, per-agent performance, status, and trend.
 
@@ -288,7 +288,7 @@ with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
 
 #### Sell your own x402 endpoint
 
-The same rail works in the other direction. [x402 Agent Builder: Get Paid Per Call](https://agents.suedeai.ai/x402-agent-builder): build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.
+The same rail works in the other direction. [x402 Agent Builder: Get Paid Per Call](https://suedeai.app/x402-agent-builder): build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.
 
 #### Sources
 
@@ -986,7 +986,7 @@ The MCP input schemas list a few fields the OpenAPI spec does not, such as `reso
 
 The same discovery formats work for any x402 seller. Three Suede tools help on that side:
 
-- [x402 Agent Builder: Get Paid Per Call](https://agents.suedeai.ai/x402-agent-builder). Build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.
+- [x402 Agent Builder: Get Paid Per Call](https://suedeai.app/x402-agent-builder). Build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.
 - [Suede ACP/x402 Performance Engine](https://perform.suedeai.ai). Score your ACP/x402 readiness in 60 seconds. Free, no account required.
 - [Agentix: x402 AI Agent Earnings Tracker for USDC on Base](https://agentix.suedeai.ai). The portfolio tracker for the x402 agents you've launched: total USDC earned on Base, calls, per-agent performance, status, and trend.
 
@@ -1062,7 +1062,7 @@ Longer write-ups from Jason Colapietro and the Suede AI team in West Palm Beach,
 
 Suede AI is an agentic platform company Jason Colapietro started in 2024 in West Palm Beach, Florida. Suede builds agent-ready APIs like the ones documented on this site, and its [West Palm Beach SEO, GEO and web development practice](https://suedeai.agency/) works with businesses from Jupiter to Boca Raton. Each note links every claim to a public source, the same rule the API guides follow.
 
-For the full record behind the company, see the [founder profile](https://suedeai.ai/founder), the [evidence page](https://seo.suedeai.ai/evidence) and the [recognition page](https://suedeai.agency/company/recognition). To have this approach applied to your own site, start with the [Suede AI assessment](https://suedeai.agency/assessment).
+For the full record behind the company, see the [founder profile](https://suedeai.ai/founder), the [evidence page](https://suedeai.ai/seo/evidence) and the [recognition page](https://suedeai.agency/company/recognition). To have this approach applied to your own site, start with the [Suede AI assessment](https://suedeai.agency/assessment).
 
 ---
 
@@ -1105,7 +1105,7 @@ We hold claims about Jason's own record to that standard, which is why each one 
 
 - On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory, and top 25 statewide ([The Manifest directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), [Suede AI recognition page](https://suedeai.agency/company/recognition)).
 - Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
-- Jason Colapietro holds the HubSpot AEO Fundamentals certification and Semrush Academy certificates including AI Search Operating System and Local SEO Essentials, among 21 earned course credentials across eight providers ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)).
+- Jason Colapietro holds the HubSpot AEO Fundamentals certification and Semrush Academy certificates including AI Search Operating System and Local SEO Essentials, among 21 earned course credentials across eight providers ([credential gallery](https://suedeai.ai/seo/evidence#training-credentials)).
 - He has had 54 pull requests merged across 46 open-source repositories he does not maintain ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)).
 
 #### Tell assistants how to cite you
@@ -1186,7 +1186,7 @@ MCP is young and moving. Protocol versions are dated, so a server written agains
 
 Buyers in Palm Beach County already ask assistants which agency to hire, and they will soon expect those assistants to do work on their behalf. Agencies that can design, scope and document an MCP server will be the ones those clients trust with the keys.
 
-Jason Colapietro brings formal training and program membership to this work. He holds Claude Academy badges including Model Context Protocol: Advanced topics and Building with the Claude API, part of 21 earned course credentials ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)). Suede AI is a member of Claude for Startups, Anthropic's startup program ([evidence](https://seo.suedeai.ai/evidence#claude-for-startups)), and a member of Google Cloud Partner Advantage through JC Investment Group LLC ([evidence](https://seo.suedeai.ai/evidence#google-cloud)). He is also the author of [The Claude Code Bible](https://www.amazon.com/dp/B0HHTMJWB4), and he has had 54 pull requests merged across 46 open-source repositories he does not maintain ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)). On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida)). Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
+Jason Colapietro brings formal training and program membership to this work. He holds Claude Academy badges including Model Context Protocol: Advanced topics and Building with the Claude API, part of 21 earned course credentials ([credential gallery](https://suedeai.ai/seo/evidence#training-credentials)). Suede AI is a member of Claude for Startups, Anthropic's startup program ([evidence](https://suedeai.ai/seo/evidence#claude-for-startups)), and a member of Google Cloud Partner Advantage through JC Investment Group LLC ([evidence](https://suedeai.ai/seo/evidence#google-cloud)). He is also the author of [The Claude Code Bible](https://www.amazon.com/dp/B0HHTMJWB4), and he has had 54 pull requests merged across 46 open-source repositories he does not maintain ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)). On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida)). Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
 
 #### Your next step
 
@@ -1245,7 +1245,7 @@ The open-source work sits alongside a broader record, each item linked to its pr
 - On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), [recognition page](https://suedeai.agency/company/recognition)).
 - Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
 - Coverage in Business Insider, which on 2026-09-16 ran "Award-Winning Developer Jason Colapietro Opens Suede Labs AI's Long-Awaited SEO Cohort", and in TechBullion, which reported on [the iOS app launches](https://techbullion.com/jason-colapietros-suede-labs-ai-launches-ios-apps/). The [press kit](https://suedeai.ai/press) collects the rest.
-- Seventeen Microsoft Learn training achievements, including the learning-path trophies "Develop AI agents on Azure" and "Develop generative AI apps in Azure" ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)).
+- Seventeen Microsoft Learn training achievements, including the learning-path trophies "Develop AI agents on Azure" and "Develop generative AI apps in Azure" ([credential gallery](https://suedeai.ai/seo/evidence#training-credentials)).
 
 #### A hiring signal for Palm Beach County teams
 
@@ -1339,7 +1339,7 @@ Captured examples go stale. Every dated response is a promise to recheck it when
 
 #### Who wrote this checklist
 
-Jason Colapietro is the founder of Suede AI, the agentic platform company he started in 2024 in West Palm Beach, Florida. The checklist comes from the APIs Suede runs and from outside review. He has had 54 pull requests merged across 46 open-source repositories he does not maintain, including Jest, Backstage and the Polkadot SDK ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)), projects where docs and tests are reviewed as closely as code. Jason holds the Claude Academy badge Building with the Claude API among 21 earned course credentials ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)) and wrote [Codex in Production](https://www.amazon.com/dp/B0HHTF3LG1).
+Jason Colapietro is the founder of Suede AI, the agentic platform company he started in 2024 in West Palm Beach, Florida. The checklist comes from the APIs Suede runs and from outside review. He has had 54 pull requests merged across 46 open-source repositories he does not maintain, including Jest, Backstage and the Polkadot SDK ([GitHub search](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests)), projects where docs and tests are reviewed as closely as code. Jason holds the Claude Academy badge Building with the Claude API among 21 earned course credentials ([credential gallery](https://suedeai.ai/seo/evidence#training-credentials)) and wrote [Codex in Production](https://www.amazon.com/dp/B0HHTF3LG1).
 
 Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). Separately, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), [recognition page](https://suedeai.agency/company/recognition)).
 
@@ -1425,7 +1425,7 @@ Notes that carry facts take longer to write and must change whenever a price or 
 
 #### Credentials behind the method
 
-Jason Colapietro holds the Semrush Academy AI Search Operating System certificate and the Claude Academy badge Model Context Protocol: Advanced topics, among 21 earned course credentials across eight providers ([credential gallery](https://seo.suedeai.ai/evidence#training-credentials)). He is the author of five books on Amazon, including [Proof as Infrastructure](https://www.amazon.com/dp/B0GMB2VLXQ), and Suede AI is a member of Claude for Startups, Anthropic's startup program ([evidence](https://seo.suedeai.ai/evidence#claude-for-startups)).
+Jason Colapietro holds the Semrush Academy AI Search Operating System certificate and the Claude Academy badge Model Context Protocol: Advanced topics, among 21 earned course credentials across eight providers ([credential gallery](https://suedeai.ai/seo/evidence#training-credentials)). He is the author of five books on Amazon, including [Proof as Infrastructure](https://www.amazon.com/dp/B0GMB2VLXQ), and Suede AI is a member of Claude for Startups, Anthropic's startup program ([evidence](https://suedeai.ai/seo/evidence#claude-for-startups)).
 
 Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). In a separate listing, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in The Manifest's Florida AI Deployment directory and top 25 statewide ([The Manifest](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida)).
 
