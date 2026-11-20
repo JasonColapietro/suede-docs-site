@@ -302,6 +302,10 @@
 
     <p class="lede">Generate one hosted still image from a text prompt, as PNG or JPEG. One call costs $0.15 in USDC on Base, the lowest price of the three endpoints, which also makes it the cheapest way to test a full payment round trip.</p>
 
+    <nav aria-label="On this page">
+      <p>On this page: <a href="#first-call">First call</a> · <a href="#request">Request contract</a> · <a href="#execution-modes">Execution modes</a> · <a href="#polling">Polling</a> · <a href="#python-poller">Python poller</a> · <a href="#worker">Worker integration</a> · <a href="#states">Failure decisions</a> · <a href="#framing">Framing</a> · <a href="#delivery">Asset delivery</a> · <a href="#testing">Integration tests</a></p>
+    </nav>
+
     <section>
       <h2>What it is for</h2>
       <p>Album and single cover art, podcast and video thumbnails, social and campaign graphics, concept art, storyboard frames, product shots and article illustrations. Frame it square, portrait or widescreen.</p>
@@ -324,7 +328,22 @@
       </div>
     </section>
 
-    <section>
+    <section id="first-call">
+      <h2>Make your first call without spending</h2>
+      <p>First confirm your client can reach the endpoint and read a payment challenge. The following request has no payment credential. It requests a challenge, not a render.</p>
+<pre><code>curl -sS -i https://app.suedeai.ai/agent/image \
+  -H 'Content-Type: application/json' \
+  -H 'Suede-API-Version: 1' \
+  --data-binary '{"prompt":"An unlettered red record sleeve on a cream counter","aspectRatio":"1:1","outputFormat":"png"}'</code></pre>
+      <ol>
+        <li>Expect HTTP <code>402</code>. Inspect <code>x402Version</code>, <code>resource.url</code> and <code>accepts</code>. A challenge is not a successful request and does not prove the image body is valid.</li>
+        <li>Compare the resource and accepted payment terms with the <a href="https://app.suedeai.ai/.well-known/x402">live discovery manifest</a> and your own allowlist. For direct x402, check the network, token, recipient and amount before signing. The price shown in this guide is a reference, not approval to spend.</li>
+        <li>When authorized to spend, use the <a href="/quickstart">x402 quickstart</a> or <a href="/python-sdk">Python SDK</a> to submit the same URL and body with <code>PAYMENT-SIGNATURE</code>. Save the returned job before showing the caller a success screen.</li>
+      </ol>
+      <p>The public x402 flow does not require a Suede account or Suede API key. The published OpenAPI also documents a Skyfire pay or kya-pay JWT supplied in the same header for the Skyfire rail. Treat both as sensitive. Keep wallet keys, signatures and payment tokens out of browser code, logs and analytics. A GET of the returned job URL does not require another authorization.</p>
+    </section>
+
+    <section id="request">
       <h2>Request body</h2>
       <div class="table-wrap">
         <table>
@@ -338,6 +357,19 @@
         </table>
       </div>
       <p>The ten aspect ratios cover square (<code>1:1</code>), portrait (<code>4:5</code>, <code>3:4</code>, <code>2:3</code>, <code>9:16</code>) and landscape or widescreen (<code>5:4</code>, <code>4:3</code>, <code>3:2</code>, <code>16:9</code>, <code>21:9</code>) framing.</p>
+    </section>
+
+    <section id="execution-modes">
+      <h2>Choose an execution mode before you sign</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Request</th><th>Mode</th><th>What the client should do</th></tr></thead>
+        <tbody>
+          <tr><td>Paid POST without an <code>async</code> query parameter</td><td>Async, even with <code>asyncMode: false</code></td><td>Handle <code>202</code>; store the job ID and status URL.</td></tr>
+          <tr><td><code>?async=true</code></td><td>Async; wins over the body</td><td>Use this literal if explicitly choosing async.</td></tr>
+          <tr><td><code>?async=false</code></td><td>Blocking; wins over the body</td><td>Inspect the body even on <code>200</code>. It can report processing or failure without an image.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Use the default for paid calls unless you have a reason to block. Do not send <code>?async=1</code>, <code>yes</code> or <code>on</code>; the implementation treats them as false. There is no documented caller-controlled pixel-size, seed, transparency, or edit input in the request. Check the file you receive rather than inferring its properties from the prompt.</p>
     </section>
 
     <section>
@@ -363,10 +395,10 @@
   "provider": "suede",
   "pollUrl": "https://app.suedeai.ai/agent/image/image-job-example"
 }</code></pre>
-      <p>With <code>?async=false</code> the call blocks and answers <code>200</code> with the same body shape as the poll below.</p>
+      <p>With <code>?async=false</code>, a successful HTTP response is <code>200</code> with the same response fields as the poll below. Read <code>status</code> before treating it as a finished asset.</p>
     </section>
 
-    <section>
+    <section id="polling">
       <h2>Polling: GET /agent/image/{jobId}</h2>
       <p>Poll until <code>status</code> is <code>completed</code>, with <code>imageUrl</code> set, or <code>failed</code>. Both are final; <code>queued</code> and <code>processing</code> mean poll again.</p>
       <div class="table-wrap">
@@ -386,22 +418,6 @@
     </section>
 
     <section>
-      <h2>A polling loop in Python</h2>
-<pre><code>import time
-import httpx
-
-def wait_for_image(poll_url: str) -&gt; str | None:
-    while True:
-        job = httpx.get(poll_url).json()
-        if job["status"] == "completed":
-            return job["imageUrl"]
-        if job["status"] == "failed":
-            return None
-        time.sleep(5)</code></pre>
-      <p>The <a href="/python-sdk">suede-ai SDK</a> handles the payment and returns the <code>pollUrl</code> this loop needs.</p>
-    </section>
-
-    <section>
       <h2>One campaign, two placements: crop or generate again?</h2>
       <p>Suppose a record shop needs a square release tile and a vertical story. If the customer expects the <em>same</em> photograph in both placements, start with one image. Ask for the record sleeve in the center, with enough background around it for a crop. A second prompt is a new generation, not a resize of the first image.</p>
       <ol>
@@ -410,6 +426,170 @@ def wait_for_image(poll_url: str) -&gt; str | None:
         <li><strong>Make the revision match the problem.</strong> If only the lettering fails, fix the overlay. If the vertical crop removes the subject, request a separate 9:16 composition. Review the current challenge before approving that additional paid call.</li>
       </ol>
       <p>For handoff, keep the accepted image, its placement, the request body and the job ID together. Record whether the story is a crop or a separate render. That gives the next designer a specific asset to revise rather than a prompt to guess from.</p>
+    </section>
+
+    <section id="python-poller">
+      <h2>Poll an accepted job with Python</h2>
+      <p>Pass the <code>pollUrl</code> saved from your <code>202</code> response. This standard-library example uses only GET and never authorizes another payment. It backs off on throttling, server errors and transport errors, and stops on a failed job or a payment reconciliation signal. It schedules requests within an overall polling window and gives each request its own socket timeout. A production worker can schedule individual polls instead of sleeping.</p>
+<pre><code>import json
+import time
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def poll_image(poll_url, *, deadline_seconds=120, request_timeout=10):
+    url = urlsplit(poll_url)
+    if (url.scheme, url.netloc) != ("https", "app.suedeai.ai"):
+        raise ValueError("Use the status URL returned by Suede")
+    if not url.path.startswith("/agent/image/") or url.query or url.fragment:
+        raise ValueError("Expected an Agent Image status URL")
+
+    opener = build_opener(NoRedirect())
+    deadline = time.monotonic() + deadline_seconds
+    delay = 1.0
+    while (remaining := deadline - time.monotonic()) &gt; 0:
+        pause = delay
+        try:
+            req = Request(poll_url, headers={"Accept": "application/json"})
+            with opener.open(req, timeout=min(request_timeout, remaining)) as res:
+                raw = res.read(65537)
+                if len(raw) &gt; 65536:
+                    raise RuntimeError("Status response too large")
+                job = json.loads(raw)
+        except HTTPError as exc:
+            if exc.code == 402:
+                raise RuntimeError("Reconcile the original payment") from exc
+            if exc.code != 429 and not 500 &lt;= exc.code &lt;= 599:
+                raise
+            retry_after = exc.headers.get("Retry-After", "")
+            if retry_after:
+                if not (retry_after.isascii() and retry_after.isdecimal()):
+                    raise TimeoutError("Defer polling using Retry-After") from exc
+                seconds = retry_after.lstrip("0") or "0"
+                if len(seconds) &gt; 2 or int(seconds) &gt; 30:
+                    raise TimeoutError("Defer polling using Retry-After") from exc
+                pause = max(pause, int(seconds))
+        except (URLError, TimeoutError):
+            pass
+        else:
+            status = job["status"]
+            if status == "completed":
+                result = job.get("imageUrl")
+                if not isinstance(result, str) or not result:
+                    raise RuntimeError("Completed without an image URL")
+                return result
+            if status == "failed":
+                raise RuntimeError(job.get("error") or "Render failed")
+            if status not in ("queued", "processing"):
+                raise RuntimeError(f"Unexpected job status: {status}")
+        time.sleep(max(0, min(pause, deadline - time.monotonic())))
+        delay = min(delay * 2, 10.0)
+    raise TimeoutError("Polling deadline reached; resume the same job later")</code></pre>
+      <p>The return value is an image URL, not downloaded bytes. Pass it to the <a href="#delivery">asset delivery</a> step. Keep the saved job if this function times out. Its backoff is capped at 10 seconds, and it honors numeric server hints of up to 30 seconds. If your deployment uses longer retry hints or HTTP-date hints, defer the job to your scheduler instead of polling sooner.</p>
+    </section>
+
+    <section id="worker">
+      <h2>Build a worker that can recover without buying a second image</h2>
+      <p>Separate submit, poll and download into different steps. The submit worker is the only part that authorizes payment; the poller receives an existing job ID and cannot start another render. For a dashboard, send your own internal request ID to the browser and proxy status through your application. The public poll route itself needs no payment, so treat the job ID and status URL as private references.</p>
+      <ol>
+        <li><strong>Prepare:</strong> authenticate your user, validate the body against the published schema, and save an internal request ID, exact body, target URL, one server-generated idempotency key, and the approved spending cap. Use a unique database constraint or worker lease so a double-click cannot cause two simultaneous renders.</li>
+        <li><strong>Authorize:</strong> fetch the challenge and compare it to policy. If the requested price exceeds the cap or the resource, chain, token or recipient differs from your allowlist, stop before signing. Record the rail, amount and decision, not the signed authorization itself.</li>
+        <li><strong>Submit:</strong> use the approved payment client and persist <code>jobId</code>, <code>pollUrl</code> and any available non-secret payment reference before releasing the worker lease. If the paid request times out before returning a job, record an ambiguous submit. Do not silently start a second paid request or mint another authorization.</li>
+        <li><strong>Reconcile:</strong> look for the original job and settlement using your payment client or provider records. Use the same request body and <code>X-Idempotency-Key</code> for any authorized replay within the documented caching window; the key is not an exactly-once billing guarantee. Escalate when you cannot establish what happened rather than automatically buying another image.</li>
+        <li><strong>Finish:</strong> poll with a timeout per GET, bounded backoff and a separate overall deadline. Record transitions, keep the job attached when your deadline expires, and resume the GET later if needed. At completion, download and validate the file before marking it ready.</li>
+      </ol>
+<pre><code># Worker pseudocode: payment/client and storage are your adapters.
+row = load_and_lease(request_id)
+if row.job_id:
+    schedule_poll(row.job_id)
+elif row.state in ("submitting", "ambiguous_submit"):
+    schedule_reconciliation(row.id)
+else:
+    terms = get_unpaid_challenge(row.url, row.body)
+    require_policy_match(terms, row.approved_cap)
+    persist_state(row.id, "submitting")
+    try:
+        reply = authorized_post_once(row.url, row.body, row.key, terms)
+    except TransportError:
+        persist_state(row.id, "ambiguous_submit")
+    else:
+        if reply.http_status == 202 and valid_job_reference(reply):
+            persist_job_and_schedule_poll(row.id, reply)
+        else:
+            record_response_for_classification(row.id, reply)</code></pre>
+      <p>Write the submitting state before the paid network call. If the worker crashes between payment and saving the response, a replacement worker will reconcile rather than assume the job was never submitted. Do not accept arbitrary polling URLs from a browser or follow cross-origin redirects with a payment header.</p>
+    </section>
+
+    <section id="states">
+      <h2>State transitions and failure decisions</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Signal</th><th>Client transition</th><th>Next action</th></tr></thead>
+        <tbody>
+          <tr><td>Unsigned POST returns <code>402</code></td><td>Awaiting authorization</td><td>Evaluate the challenge; no job exists merely because terms were offered.</td></tr>
+          <tr><td>Authorized POST returns <code>202</code> and a job reference</td><td>Queued</td><td>Save the job and poll. Do not resubmit while waiting.</td></tr>
+          <tr><td>GET reports <code>queued</code> or <code>processing</code></td><td>In progress</td><td>Schedule another GET. If your deadline expires, resume later using the same reference.</td></tr>
+          <tr><td>GET reports <code>completed</code> with <code>imageUrl</code></td><td>Asset available</td><td>Fetch, decode and inspect the file before delivery. If download alone fails, retry the download, not generation.</td></tr>
+          <tr><td>GET reports <code>failed</code></td><td>Terminal render failure</td><td>Keep the job and error for support and reconcile payment separately. An unknown ID can also return this status with HTTP <code>200</code>; first check that the ID was preserved correctly.</td></tr>
+          <tr><td>HTTP <code>400</code> or <code>422</code></td><td>Invalid request</td><td>Read the error, correct input or version, and treat a changed render body as a new intent. Validate locally before authorizing payment.</td></tr>
+          <tr><td><code>402</code> after attaching payment</td><td>Authorization not accepted</td><td>Inspect the challenge and retry hint. Check expiration, network and rail configuration. Do not loop signing new authorizations.</td></tr>
+          <tr><td>Poll GET returns <code>402</code> with <code>payment_required</code></td><td>Payment not verified for this job</td><td>Stop and reconcile the original payment; do not attach a new payment to the GET.</td></tr>
+          <tr><td>HTTP <code>429</code></td><td>Throttled</td><td>Honor <code>Retry-After</code> when supplied. Retain the job if there is one; keep polling and spending retries separate.</td></tr>
+          <tr><td>Network timeout or <code>5xx</code> on paid POST</td><td>Potentially ambiguous submit</td><td>Reconcile before authorizing a replacement. A network error does not tell you whether your request reached the server.</td></tr>
+          <tr><td>Unexpected body, missing URL, or unknown status</td><td>Needs investigation</td><td>Do not interpret a malformed payload as either a finished asset or permission to pay again.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="framing">
+      <h2>Translate placement dimensions into a framing choice</h2>
+      <p><code>aspectRatio</code> asks for a shape, not a pixel count. A 1080 × 1920 story slot is 9:16, but requesting 9:16 does not promise that the returned image is exactly 1080 × 1920. Read the actual dimensions after decoding, then crop, pad or resize in your application as needed. These are example placement sizes, not Suede output sizes.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Placement example</th><th>Request ratio</th><th>Composition instruction</th></tr></thead>
+        <tbody>
+          <tr><td>1080 × 1080 release tile</td><td><code>1:1</code></td><td>Keep the sleeve central and reserve space above for a separately typeset title.</td></tr>
+          <tr><td>1080 × 1350 portrait card</td><td><code>4:5</code></td><td>Leave breathing room above and below a person or a tall product.</td></tr>
+          <tr><td>1080 × 1920 story</td><td><code>9:16</code></td><td>Protect the center from captions and interface controls; preview the actual placement.</td></tr>
+          <tr><td>1920 × 1080 article banner</td><td><code>16:9</code></td><td>Keep the subject to one side if the headline will sit on the opposite side.</td></tr>
+          <tr><td>2100 × 900 wide masthead</td><td><code>21:9</code></td><td>Keep important details near the vertical center and away from either edge.</td></tr>
+        </tbody>
+      </table></div>
+      <p>A centered 9:16 crop of a square source keeps the middle 56.25% of its width if it keeps the full height. If the sleeve fills 75% of the original width, that crop cannot retain it. Padding preserves the whole original at the cost of spare space; a new portrait render can recompose the scene, but it costs another call and may not match the first image. CSS <code>object-fit: cover</code> changes what the viewer sees, not the source file. Export a derivative if a downstream platform needs the crop baked in.</p>
+      <p>For an editorial illustration, brief subject, camera or viewpoint, lighting and empty space. For a product page, keep the actual product photo as the source of truth; use the generated image for concepts or atmosphere rather than treating a generated label, color or shape as the real item. For a storyboard, use one frame per shot and treat continuity between separately generated frames as something to review, not an API guarantee.</p>
+    </section>
+
+    <section id="delivery">
+      <h2>Turn the hosted image into a usable asset</h2>
+      <ol>
+        <li>Validate the URL in your downloader. Require HTTPS, enforce your allowed destinations and redirect policy, and do not forward payment credentials. Apply a byte limit and request timeout.</li>
+        <li>Verify the decoded format and dimensions against your delivery needs. A file extension or successful HTTP response does not prove the bytes are a valid PNG or JPEG. Check transparency explicitly if the placement needs it; choosing PNG alone does not request transparency.</li>
+        <li>Keep a controlled original for workflows that need stable storage. Save placement-specific derivatives separately, record the source job ID and requested format, and preserve the original for a future crop. Do not depend on an undocumented retention period.</li>
+        <li>Preview at the actual display size. For visual acceptance, check subject framing, unintended marks or text, the placement of overlays and whether the asset still communicates the brief on a phone. For publishing, add your own text alternative where the image conveys information.</li>
+      </ol>
+    </section>
+
+    <section id="testing">
+      <h2>Test the full integration with fixtures before a paid smoke test</h2>
+      <p>Use a local HTTP stub or recorded, redacted responses. Assert network calls as well as on-screen state. A status badge can look correct while the client has accidentally submitted a second charge.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Fixture</th><th>Pass condition</th></tr></thead>
+        <tbody>
+          <tr><td>Unsigned <code>402</code> for the expected resource</td><td>Terms are parsed and displayed; zero paid POSTs are made without approval.</td></tr>
+          <tr><td>Wrong recipient, unsupported network or price above cap</td><td>No signing and no paid POST, even if the challenge is otherwise well formed.</td></tr>
+          <tr><td>Two clicks or two workers for one request</td><td>One paid submit attempt; both clients resolve to one internal record.</td></tr>
+          <tr><td><code>202</code>, then <code>processing</code>, then <code>completed</code></td><td>The job survives restart. Only GETs occur after accept, and the decoded file is delivered once.</td></tr>
+          <tr><td>Response dropped after submitting</td><td>Request is flagged for reconciliation. Re-running the worker does not sign again.</td></tr>
+          <tr><td>HTTP <code>200</code> with <code>failed</code>, plus a separate malformed completion</td><td>Each is recorded with its own reason; neither is marked delivered or automatically re-rendered.</td></tr>
+          <tr><td>Poll deadline and throttled GET</td><td>Backoff respects a retry hint; later resumption uses the same job without a paid POST.</td></tr>
+          <tr><td>Completed response with a bad image or rejected download destination</td><td>Asset delivery is blocked and the render remains linked to its original job.</td></tr>
+        </tbody>
+      </table></div>
+      <p>If you choose to do one real smoke test, authorize one known-valid request at the live terms. Keep evidence of the challenge, accepted job, terminal response, decoded image and payment reference, with credentials removed. Use fixtures for invalid paid requests and ambiguous settlement rather than spending to manufacture failures.</p>
     </section>
 
     <section>
