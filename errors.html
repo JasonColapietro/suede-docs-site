@@ -353,7 +353,7 @@
 
     <section>
       <h2>Poll states that mean failure</h2>
-      <p>Video and image polls do not answer 404 for an unknown id. An unknown or expired <code>jobId</code> answers <code>200</code> with <code>status</code> <code>failed</code>; on 2026-10-11 the body also carried <code>"error": "Generation failed. Please try again."</code>. For music, <code>model_version</code> <code>failed</code> is final, and a 404 means the <code>songId</code> is wrong rather than still rendering.</p>
+      <p>Video and image polls can return HTTP <code>200</code> even when <code>status</code> is <code>failed</code>. An unknown job ID returned that combination in a live probe, but a nonterminal response alone does not establish that the ID is valid. Check the exact reference you saved. For music, <code>model_version</code> <code>failed</code> is final, and a <code>404</code> means no accessible song was found for that lookup, not that it is still rendering.</p>
     </section>
 
     <section>
@@ -377,7 +377,22 @@
 
     <section>
       <h2>Idempotency</h2>
-      <p>Send <code>X-Idempotency-Key</code> (up to 200 characters) on every paid <code>POST</code>. A render is a non-idempotent job, and the key lets you retry a timeout or a <code>5XX</code> without paying twice: the same key and body within the cache window return the original response.</p>
+      <p>Send <code>X-Idempotency-Key</code> (up to 200 characters) on every paid <code>POST</code>. Keep the same key and exact body for an authorized replay of the same intent. A matching cached response can prevent duplicate work; a key is not a payment receipt or a permanent exactly-once guarantee. Do not assume a transport timeout means the request never reached the server.</p>
+    </section>
+
+    <section id="recovery-decisions">
+      <h2>Recover from an interrupted request</h2>
+      <p>Classify the failure by which operation was in flight. A retry of a read and a retry that may buy another render are different decisions.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>What happened</th><th>Keep</th><th>Recover</th></tr></thead>
+        <tbody>
+          <tr><td>Paid POST times out without a job reference</td><td>Original request ID, route, key, timestamp and non-secret payment reference</td><td>Mark outcome unknown and check the original attempt. Do not turn a timeout into a second purchase.</td></tr>
+          <tr><td>Poll returns 429 or a transient server error</td><td>Job reference and next eligible poll time</td><td>Back off on the GET, respect <code>Retry-After</code> when present, and resume the same job.</td></tr>
+          <tr><td>Asset download fails after completion</td><td>Completed state and original asset reference</td><td>Retry the download within your time limit rather than calling the paid endpoint again.</td></tr>
+          <tr><td>400 or 422 on submit</td><td>Error code or field paths without private input</td><td>Fix the request or version before the next attempt. Do not auto-retry the same bad body.</td></tr>
+        </tbody>
+      </table></div>
+      <p>For a support handoff, include the operation, status code, API version, timestamp and internal request ID. Share the job identifier privately if needed. Never include a wallet key or a <code>PAYMENT-SIGNATURE</code> value.</p>
     </section>
 
     <section>

@@ -256,7 +256,7 @@ The same header also accepts a Skyfire `pay+jwt` or `kya-pay+jwt` token in place
 
 #### 5. Poll for the result
 
-Polling is free: the job was paid for when it was created. Request `pollUrl` until the job reaches a final state.
+Polling requires no new payment. Request the saved `pollUrl` until the job reaches a final state or your local deadline expires. A local timeout does not end the remote job; later, resume polling the same reference.
 
 ```
 curl -s https://app.suedeai.ai/agent/image/<jobId>
@@ -285,6 +285,15 @@ with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
     job = suede.agent_image(prompt="Album cover, neon city at night, rain on glass")
     print(job["pollUrl"])
 ```
+
+#### Verify your integration before enabling payment
+
+1. **Discovery:** fetch the [manifest and OpenAPI](https://docs.suedeai.ai/discovery) with no wallet configured. Match the exact method and URL; verify the expected fields and payment network.
+2. **Challenge:** make the unsigned request in step 2. Check that the client presents the offered terms and stops before signing. For an agent, set a server-side amount cap and match the rail, resource, network, token and intended recipient before allowing payment.
+3. **Job handling:** use local responses for 202, processing, completed and failed. Restart the worker after 202 and confirm it reads the same job instead of submitting a new one.
+4. **Recovery:** simulate a timeout after submit and a throttled GET. The first should set aside the purchase for reconciliation; the second should only delay the next status read.
+
+Only the submit step should be able to sign. Polling and downloading should run without wallet credentials. See the [recovery decisions](https://docs.suedeai.ai/errors#recovery-decisions) for what to retain when a request is interrupted.
 
 #### Sell your own x402 endpoint
 
@@ -402,7 +411,7 @@ Describe the genre, mood, instrumentation and tempo, supply your own lyrics, ask
 | Endpoint | `POST https://app.suedeai.ai/create-music` |
 | Price | $0.50, `amount` `500000` USDC base units |
 | Payment | x402 `exact` on `eip155:8453` to `0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F`, or a Skyfire token |
-| Paid response | `202 Accepted` with `songId` and `pollUrl` |
+| Paid response | `202 Accepted` with a job envelope; save `pollUrl` when returned |
 | Poll | `GET https://app.suedeai.ai/api/songs/{songId}`, free |
 | Identifiers | OpenAPI `operationId`, A2A skill and MCP tool: `create_music` |
 
@@ -472,7 +481,129 @@ Until the track is ready, `audio_url` holds the placeholder cover-image URL the 
 | `is_public` | `true` for x402 and Skyfire paid jobs, which are created public so the buyer can fetch them. |
 | `created_at` | Creation time, ISO 8601. |
 
-An unknown `songId` answers `404` with `{"error":"Song not found"}`. Because paid jobs are created public, a 404 means the id is wrong, not that the track is still rendering.
+An unknown `songId` answers `404` with `{"error":"Song not found"}`. A 404 means no accessible song row was found for that lookup, not that the track is still rendering.
+
+#### Choose the right request mode
+
+For generated vocals, describe the song rather than supplying a lyrics field. Start with genre, mood, instrumentation and structure. For a podcast opener, for example, ask for a restrained intro, a recognizable motif, and space for speech. Treat tempo, structure and length in the brief as creative direction, not timing guarantees; cut the delivered audio to picture after review.
+
+For supplied lyrics, use `custom_mode: true` and put the intended words in `lyrics`. Keep arrangement instructions in `prompt`. Use text you are authorized to transmit, and do not send confidential lyrics or client information: paid tracks are created public and the song record can include the prompt.
+
+For an instrumental, omit `custom_mode`, `lyrics` and `vocal_gender`. Use one clear direction rather than mixing instrumental and vocal instructions:
+
+```
+{
+  "prompt": "Quiet documentary underscore. Felt piano, soft strings, no percussion, sparse texture under spoken narration.",
+  "style": "Ambient",
+  "make_instrumental": true
+}
+```
+
+For original generated vocals:
+
+```
+{
+  "prompt": "Mid-tempo indie folk song with a close vocal, brushed drums and acoustic guitar; restrained verses and a wider final chorus.",
+  "style": "Indie Folk"
+}
+```
+
+Use the published request schema for automation. The SDK can send other values in its convenience methods; an argument being transmitted does not mean the server guarantees an exact duration, file size, or arrangement.
+
+#### From payment approval to delivery
+
+1. Give each intended purchase its own `X-Idempotency-Key` and retain the original JSON. A changed prompt or intentional new take is a new purchase, not a retry.
+2. Read the current terms from the [discovery document](https://docs.suedeai.ai/discovery) and verify the payment challenge before signing. Check network, asset, recipient, amount and resource against your budget and allowlist. Keep the signing key and `PAYMENT-SIGNATURE` out of URLs, logs and browser code.
+3. Use the default asynchronous mode. Save the response, its `pollUrl` if present, its `songId` when available, and the locally recorded payment reference. A `202` confirms acceptance, not audio delivery. Save a valid `pollUrl` even when `songId` is absent; never construct a URL ending in `null`.
+4. Poll without payment. Read `model_version` first. `pending` means wait even if `audio_url` returns HTTP 200. `failed` is terminal. A nonempty version label and a valid media URL give you a candidate for delivery.
+5. Download the candidate as media, not the `shareUrl` listener page or the `image_url` cover. Check successful HTTP status, audio content type and playable, decodable bytes before marking a job delivered. Store the version, duration and your verified output reference in your own records.
+
+If you already received a job reference, resume the existing poll after a restart. If a signed POST timed out and no response was saved, reconcile the payment reference before sending a newly signed purchase. Treat a submit timeout as an unknown job outcome. Use the original key for a permitted replay within the cache window; reconcile payment separately.
+
+#### Bounded polling in Python
+
+This `httpx` example takes the saved `pollUrl` from an accepted request. It performs no paid calls and does not download the file. The three-minute deadline is a client choice, not a service limit. Timeout means the polling worker stopped, not that it canceled the generation.
+
+```
+import time
+from urllib.parse import urlsplit
+
+import httpx
+
+def wait_for_song(poll_url: str, max_wait: float = 180) -> str:
+    url = urlsplit(poll_url)
+    path = url.path.split("/")
+    if (url.scheme != "https" or url.netloc != "app.suedeai.ai"
+            or len(path) != 4 or path[:3] != ["", "api", "songs"]
+            or path[3] in ("", ".", "..") or url.query or url.fragment):
+        raise ValueError("Unexpected song polling URL")
+
+    deadline = time.monotonic() + max_wait
+    delay = 3.0
+    with httpx.Client(follow_redirects=False) as client:
+        while (remaining := deadline - time.monotonic()) > 0:
+            pause = delay
+            try:
+                response = client.get(
+                    poll_url, timeout=min(10.0, remaining)
+                )
+            except httpx.TransportError:
+                pass  # transient network error; retry only the free GET
+            else:
+                if response.status_code == 404:
+                    raise LookupError("Song not found; check the saved reference")
+                if response.status_code in (429, 502, 503, 504):
+                    retry_after = response.headers.get("Retry-After", "")
+                    if retry_after.isascii() and retry_after.isdecimal():
+                        pause = max(pause, int(retry_after))
+                else:
+                    response.raise_for_status()
+                    song = response.json()
+                    version = song.get("model_version")
+                    if version == "failed":
+                        raise RuntimeError("Music generation failed")
+                    if version != "pending":
+                        audio_url = song.get("audio_url")
+                        if isinstance(version, str) and version.strip() and isinstance(audio_url, str):
+                            audio = urlsplit(audio_url)
+                            if audio.scheme == "https" and audio.hostname:
+                                return audio_url
+                        raise ValueError("Song result is missing version or audio URL")
+            time.sleep(max(0, min(pause, deadline - time.monotonic())))
+            delay = min(delay * 1.5, 15.0)
+
+    raise TimeoutError("Still unresolved; save the poll URL and resume later")
+```
+
+Before using the returned URL in a server-side downloader, apply your media-host allowlist and check any redirect destination independently. An HTTPS URL alone does not prove that it serves MP3 audio.
+
+#### Test the states without paying
+
+Use local fixtures with placeholder values. These examples illustrate fields the poller should act on, not complete API responses or URLs to fetch.
+
+```
+{"id":"example-song","model_version":"pending","audio_url":"https://example.invalid/cover.png"}
+{"id":"example-song","model_version":"failed","audio_url":null}
+{"id":"example-song","model_version":"v4.5","audio_url":"https://example.invalid/track.mp3"}
+```
+
+- In the first case assert that no download starts, even if the cover URL says `200`.
+- In the second case assert that the poller stops and does not resubmit.
+- In the third case assert that the downloader receives the media URL, not the public share page. Simulate a response with `image/png` or HTML and require a delivery error.
+- Also test `429` with a numeric `Retry-After`, a transport timeout, a `404`, and a worker restart using an existing poll URL. Do not attach credentials to any poll request.
+
+#### Troubleshooting and retry decisions
+
+| What you see | Next action |
+| --- | --- |
+| First POST returns `402` | Read the challenge. Authorize only after verifying the current terms. A repeated `402` is a signal to inspect the challenge or payment result, not to sign in a loop. |
+| `400`, `413` or `422` on POST | Check the API version, body size and field errors. Fix the request before another authorization; do not retry the same malformed body. |
+| Poll returns `429` | Honor `Retry-After`, back off and resume the same GET. Avoid one polling loop per UI tab. |
+| Poll returns `404` | Check the original reference and whether the app used the right route. Not the pending signal; do not pay again based on this alone. |
+| Accepted, but client deadline passes | Persist the original handle and resume later. Distinguish local timeout from a server-side `failed` status. |
+| Version label present but audio does not play | Verify the media response and bytes instead of relying on extension or status alone. Retain the song ID and report a delivery issue without a new purchase. |
+
+For transport and payment recovery rules see [Errors, rate limits and retries](https://docs.suedeai.ai/errors). For signing and budget checks see the [x402 quickstart](https://docs.suedeai.ai/quickstart).
 
 #### Sources
 
@@ -487,11 +618,11 @@ An unknown `songId` answers `404` with `{"error":"Song not found"}`. Because pai
 URL: https://docs.suedeai.ai/endpoints/agent-video
 Last updated: 2026-10-11
 
-> POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.
+> Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.
 
 ### Agent Video: POST /agent/video
 
-Generate an 8-second 720p video clip with native audio from a text prompt. One call costs $4.99 in USDC on Base.
+Turn a written shot into a short video with native audio. Budget $4.99 USDC on Base per render, then retrieve the result without another payment. The default target is eight seconds at 720p; inspect the actual clip before using it in an edit.
 
 #### What it is for
 
@@ -504,7 +635,7 @@ Short-form video, b-roll, product shots, music-video visuals, social clips and a
 | Endpoint | `POST https://app.suedeai.ai/agent/video` |
 | Price | $4.99, `amount` `4990000` USDC base units |
 | Payment | x402 `exact` on `eip155:8453` to `0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F`, or a Skyfire token |
-| Output | An 8-second 720p clip with native audio |
+| Output | A short clip with native audio; default target: 8 seconds at 720p |
 | Paid response | `202 Accepted` with `jobId` and `pollUrl` |
 | Poll | `GET https://app.suedeai.ai/agent/video/{jobId}`, free |
 | Identifiers | OpenAPI `operationId`, A2A skill and MCP tool: `agent_video` |
@@ -515,8 +646,26 @@ Short-form video, b-roll, product shots, music-video visuals, social clips and a
 | --- | --- | --- | --- |
 | `prompt` | string | Yes | Narrative or visual prompt that drives the video concept. |
 | `durationSeconds` | integer | No | Requested length in seconds. Default `8`, minimum `3`, maximum `15`. The service maps it to a supported render length. |
-| `aspectRatio` | string | No | `16:9`, `9:16` or `1:1`. |
-| `asyncMode` | boolean | No | Switches asynchronous mode on, never off. Paid calls are already asynchronous. |
+| `aspectRatio` | string | No | `16:9` (landscape, default), `9:16` (portrait) or `1:1` (square). |
+| `asyncMode` | boolean | No | Default `false`. Switches asynchronous mode on, never off. Paid calls are already asynchronous. |
+
+#### Choose the frame before writing the prompt
+
+Start with the editor’s cut, not adjectives. Write one sentence for each of four things: what the viewer sees first, what changes, where the camera ends, and what the viewer hears when the action happens. If the sentence needs “meanwhile” or “cut to,” split it into shots. Each separately generated shot is another paid render.
+
+A landscape banner can use horizontal movement and empty space for a headline. Portrait clips have less room beside the subject, so use depth or vertical movement instead. For square placements, center the decisive action and test a square preview. An aspect-ratio request describes the intended frame, not a guarantee that every subject or overlay will fit.
+
+##### Landscape: show how a pour-over starts
+
+```
+{
+  "prompt": "Single locked wide shot across a cafe counter. A glass brewer sits on the right; leave the left third empty for a title. A hand tilts a kettle above the brewer, a thin stream touches the grounds, then the first drop lands in the glass. Quiet room tone, soft pouring, one clear drip. No speech or music.",
+  "aspectRatio": "16:9",
+  "durationSeconds": 8
+}
+```
+
+Acceptance check: pause on the first drop. Are both the pour and its destination visible? Can an editor add a headline on the left without covering either? If a headline must be spelled exactly, add it in the editor rather than asking the model to paint the words into the scene.
 
 #### Example: a vertical social clip
 
@@ -575,6 +724,82 @@ A shot list for a full commercial is a poor brief for one short render. For a re
 3. **At review:** watch once muted to judge framing and motion. Then listen without captions. Does the crackle begin with the needle, and is there room for the planned voiceover? Scrub the first and last frames if the placement requires a loop.
 
 If the shot works but the caption covers the label, reposition the caption in the edit. If the needle never enters frame, rewrite that action as the subject of the shot before authorizing another render. Save the chosen clip and note which check failed on any rejected take.
+
+#### Keep one authorization attached to one shot
+
+1. Save the exact request body. Create a fresh idempotency key for this shot and keep it with the body. The example key above is illustrative, not a key to share across customers or projects.
+2. Send the same JSON without a payment signature to receive the challenge. Compare its amount, token, network and recipient to the approved spend. Stop if any differ. A challenge is not a render.
+3. Use your payment client to authorize, then submit the same body with the key. Keep payment credentials out of logs. Save the accepted job ID and poll URL before doing other work. Only the creation request needs the payment header; never forward it when retrieving the media.
+4. If the connection drops after sending, first recover the saved job or original response. If a replay is necessary, use the same key and identical body within the service’s idempotency cache window. A fresh key, changed prompt or later replay is not a safe way to recover an existing charge.
+
+The four JSON fields in the request table are the public controls. There is no published request field for a custom resolution, frame rate, fixed seed, subtitle file or separate soundtrack. A requested length of 15 seconds is valid input, not a promise of 15 seconds of footage. Plan a longer sequence as independently reviewed shots or extend it in an editor.
+
+#### Collect the result without resubmitting the shot
+
+Here is a Python 3 collector for a previously accepted job. Pass the saved absolute `pollUrl` as its only argument. It makes only free GET requests, waits between checks, honors numeric retry delays, and stops after at most 20 requests. A local stop is not a cancellation. Save the job and resume later instead of paying again.
+
+```
+import json, sys, time
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import urlopen
+
+url = sys.argv[1]
+u = urlsplit(url)
+if (u.scheme, u.netloc) != ("https", "app.suedeai.ai") or not u.path.startswith("/agent/video/"):
+    sys.exit("Expected the Suede video poll URL from the 202 response.")
+for attempt in range(20):
+    delay = min(5 * (attempt + 1), 30)
+    try:
+        with urlopen(url, timeout=15) as r:
+            job = json.load(r)
+    except HTTPError as e:
+        if e.code != 429 and not 500 <= e.code <= 599:
+            sys.exit(f"Poll HTTP {e.code}; inspect saved job. No new render.")
+        hint = e.headers.get("Retry-After")
+        if hint and (not hint.isdecimal() or int(hint) > 60):
+            sys.exit(f"Resume after Retry-After: {hint}")
+        delay = max(delay, int(hint or 0))
+    except (URLError, TimeoutError):
+        pass  # Retry only this GET.
+    else:
+        state = job.get("status")
+        if state == "completed" and job.get("videoUrl"):
+            print(job["videoUrl"])
+            break
+        if state not in ("queued", "processing"):
+            sys.exit(f"Inspect job: {state!r}; no usable asset or job failed.")
+    if attempt < 19:
+        time.sleep(delay)
+else:
+    sys.exit("Polling paused. Keep the job ID and resume later.")
+```
+
+A 200 response only means the status lookup succeeded. A failed job, an unexpected state, malformed JSON or a completed job without media all require inspection, not another paid POST. Keep the last response and the job ID for troubleshooting. For a validation error on creation, check the exact field named in the response before making a corrected request.
+
+#### Download the MP4, not the share page
+
+Use `videoUrl` for the media itself. `pageUrl`, when present, is for a human to open in a browser. Saving that page as `.mp4` gives an editor HTML rather than footage. Do not reconstruct either link from `jobId` or `videoId`.
+
+Set `VIDEO_URL` to the completed job’s media URL. This example follows HTTPS redirects, records the final content type and saves a candidate download. Verify it before assigning an MP4 extension.
+
+```
+curl --fail --show-error --silent --location --proto '=https' --proto-redir '=https' \
+  --max-time 120 --output take.download --write-out '%{content_type}\n' "$VIDEO_URL"
+ffprobe -v error -show_entries format=format_name,duration:stream=codec_type,width,height \
+  -of json take.download
+```
+
+Expect MP4 media (normally `video/mp4`), a decodable video stream and a plausible duration. If the server reports `application/octet-stream`, inspect the container rather than assuming it is broken. If it returns HTML, an error or a zero-byte file, stop. Compare frame dimensions with the placement and check for an audio stream if sound is part of the brief. Rename the verified file and store it with the prompt, job ID and review decision.
+
+#### Review the deliverable, not just the render status
+
+- **First and last frames:** compare the opening with your thumbnail and the ending with the next shot. If a usable opening or hold exists, trim the clip instead of commissioning another one.
+- **Movement and continuity:** watch at normal speed, then scrub through hands, reflections, object edges and contact points. A pleasing still does not establish that the motion works.
+- **Sound and captions:** play the final edit muted. Is the point still clear? Caption speech and meaningful sound cues such as “[needle crackles]”; review timing and wording manually. If a visual action is essential but not explained aloud, supply a descriptive transcript or audio description appropriate to the placement.
+- **Placement:** preview in the actual player at phone size. Check that captions, controls and platform overlays do not cover the subject. Check for distracting flashes and sudden audio jumps. Do not publish automatically just because the job completed.
+
+Keep a short review record: “Pass: first drip visible and audible. Edit: add captions. Hold: mobile title overlaps kettle.” A failed technical download calls for another retrieval of the existing media; a new creative take calls for a changed brief and a new spending decision.
 
 #### Sources
 
@@ -938,7 +1163,7 @@ If a signed payload is refused, check it against the verification steps of the x
 
 #### Poll states that mean failure
 
-Video and image polls do not answer 404 for an unknown id. An unknown or expired `jobId` answers `200` with `status` `failed`; on 2026-10-11 the body also carried `"error": "Generation failed. Please try again."`. For music, `model_version` `failed` is final, and a 404 means the `songId` is wrong rather than still rendering.
+Video and image polls can return HTTP `200` even when `status` is `failed`. An unknown job ID returned that combination in a live probe, but a nonterminal response alone does not establish that the ID is valid. Check the exact reference you saved. For music, `model_version` `failed` is final, and a `404` means no accessible song was found for that lookup, not that it is still rendering.
 
 #### Rate limits
 
@@ -957,7 +1182,20 @@ Unpaid requests on 2026-10-11 carried `RateLimit-Policy: "probe";q=20;w=60`, a q
 
 #### Idempotency
 
-Send `X-Idempotency-Key` (up to 200 characters) on every paid `POST`. A render is a non-idempotent job, and the key lets you retry a timeout or a `5XX` without paying twice: the same key and body within the cache window return the original response.
+Send `X-Idempotency-Key` (up to 200 characters) on every paid `POST`. Keep the same key and exact body for an authorized replay of the same intent. A matching cached response can prevent duplicate work; a key is not a payment receipt or a permanent exactly-once guarantee. Do not assume a transport timeout means the request never reached the server.
+
+#### Recover from an interrupted request
+
+Classify the failure by which operation was in flight. A retry of a read and a retry that may buy another render are different decisions.
+
+| What happened | Keep | Recover |
+| --- | --- | --- |
+| Paid POST times out without a job reference | Original request ID, route, key, timestamp and non-secret payment reference | Mark outcome unknown and check the original attempt. Do not turn a timeout into a second purchase. |
+| Poll returns 429 or a transient server error | Job reference and next eligible poll time | Back off on the GET, respect `Retry-After` when present, and resume the same job. |
+| Asset download fails after completion | Completed state and original asset reference | Retry the download within your time limit rather than calling the paid endpoint again. |
+| 400 or 422 on submit | Error code or field paths without private input | Fix the request or version before the next attempt. Do not auto-retry the same bad body. |
+
+For a support handoff, include the operation, status code, API version, timestamp and internal request ID. Share the job identifier privately if needed. Never include a wallet key or a `PAYMENT-SIGNATURE` value.
 
 #### Versioning
 
@@ -1067,6 +1305,15 @@ The [quickstart](https://docs.suedeai.ai/quickstart) shows the same exchange wit
 | `suede_ai.X402Error` | The response is still 402 after `max_payment_attempts` paid retries. `PaymentRequired` is a subclass. |
 | `httpx.HTTPStatusError` | Any other non-2xx response, such as a 422 or 429. See the [errors page](https://docs.suedeai.ai/errors). |
 
+#### Test the SDK boundary before an upgrade
+
+1. Pin the package version your application tested and record it in the release notes. Run `python -m pip show suede-ai` to check the installed version.
+2. Fetch the manifest without submitting a paid job. Compare the methods and body fields you use with the current [OpenAPI](https://app.suedeai.ai/openapi.json). A parameter in a typed SDK method describes what the client sends, not a guarantee of output duration, resolution or framing.
+3. Use local fixtures for a successful accept, missing payment option, 422, 429 and a transport timeout. On accept, persist the returned job reference. A timeout from the submit call should not cause your application to invoke the typed method again automatically.
+4. Poll the saved job from a read-only worker. Test one fixture with in-progress status and another with completed status but a missing asset URL. Neither is ready for delivery.
+
+Route payment negotiation and API errors differently: `PaymentRequired` is a subtype of `X402Error`, so catch it first when you need distinct behavior. Use [the recovery table](https://docs.suedeai.ai/errors#recovery-decisions) for HTTP or transport outcomes.
+
 #### Releases
 
 | Version | Released |
@@ -1128,6 +1375,21 @@ curl -s https://app.suedeai.ai/.well-known/x402 \
 ```
 
 Each resource entry also has a `lastUpdated` timestamp; all three read `2026-08-30T16:19:22Z` on 2026-10-11. The [endpoint reference](https://docs.suedeai.ai/endpoints) turns these entries into per-endpoint pages.
+
+#### Verify one operation without buying a render
+
+Use the manifest to discover payment terms and OpenAPI to check the payload and response shape. For example, this read-only check lists the response codes and request field names for the image POST:
+
+```
+curl -fsS https://app.suedeai.ai/openapi.json \
+  | jq '.paths["/agent/image"].post
+        | {responses: (.responses | keys),
+           fields: (.requestBody.content["application/json"].schema.properties | keys)}'
+```
+
+Compare the result with the manifest entry's `resource` and method. If the operation disappears, the price changes, or a field your client depends on is no longer advertised, pause that paid workflow and review the contract. Do not switch to a different endpoint or sign an unexpected challenge automatically.
+
+MCP tool listing is discovery. A payment pointer is not a generated asset. Keep tool discovery, paid execution and status reads distinct in your application.
 
 #### MCP server
 

@@ -430,7 +430,7 @@ primaryType  TransferWithAuthorization
 
     <section>
       <h2>5. Poll for the result</h2>
-      <p>Polling is free: the job was paid for when it was created. Request <code>pollUrl</code> until the job reaches a final state.</p>
+      <p>Polling requires no new payment. Request the saved <code>pollUrl</code> until the job reaches a final state or your local deadline expires. A local timeout does not end the remote job; later, resume polling the same reference.</p>
 <pre><code>curl -s https://app.suedeai.ai/agent/image/&lt;jobId&gt;</code></pre>
       <div class="table-wrap">
         <table>
@@ -454,6 +454,17 @@ primaryType  TransferWithAuthorization
 with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
     job = suede.agent_image(prompt="Album cover, neon city at night, rain on glass")
     print(job["pollUrl"])</code></pre>
+    </section>
+
+    <section id="first-integration-check">
+      <h2>Verify your integration before enabling payment</h2>
+      <ol>
+        <li><strong>Discovery:</strong> fetch the <a href="/discovery">manifest and OpenAPI</a> with no wallet configured. Match the exact method and URL; verify the expected fields and payment network.</li>
+        <li><strong>Challenge:</strong> make the unsigned request in step 2. Check that the client presents the offered terms and stops before signing. For an agent, set a server-side amount cap and match the rail, resource, network, token and intended recipient before allowing payment.</li>
+        <li><strong>Job handling:</strong> use local responses for 202, processing, completed and failed. Restart the worker after 202 and confirm it reads the same job instead of submitting a new one.</li>
+        <li><strong>Recovery:</strong> simulate a timeout after submit and a throttled GET. The first should set aside the purchase for reconciliation; the second should only delay the next status read.</li>
+      </ol>
+      <p>Only the submit step should be able to sign. Polling and downloading should run without wallet credentials. See the <a href="/errors#recovery-decisions">recovery decisions</a> for what to retain when a request is interrupted.</p>
     </section>
 
     <section>
