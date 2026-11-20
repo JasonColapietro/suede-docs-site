@@ -303,7 +303,7 @@
     <p class="lede">Generate one hosted still image from a text prompt, as PNG or JPEG. One call costs $0.15 in USDC on Base, the lowest price of the three endpoints, which also makes it the cheapest way to test a full payment round trip.</p>
 
     <nav aria-label="On this page">
-      <p>On this page: <a href="#first-call">First call</a> · <a href="#request">Request contract</a> · <a href="#execution-modes">Execution modes</a> · <a href="#polling">Polling</a> · <a href="#worker">Worker integration</a> · <a href="#states">Failure decisions</a> · <a href="#framing">Framing</a> · <a href="#delivery">Asset delivery</a> · <a href="#testing">Integration tests</a></p>
+      <p>On this page: <a href="#first-call">First call</a> · <a href="#request">Request contract</a> · <a href="#execution-modes">Execution modes</a> · <a href="#polling">Polling</a> · <a href="#python-poller">Python poller</a> · <a href="#worker">Worker integration</a> · <a href="#states">Failure decisions</a> · <a href="#framing">Framing</a> · <a href="#delivery">Asset delivery</a> · <a href="#testing">Integration tests</a></p>
     </nav>
 
     <section>
@@ -426,6 +426,72 @@
         <li><strong>Make the revision match the problem.</strong> If only the lettering fails, fix the overlay. If the vertical crop removes the subject, request a separate 9:16 composition. Review the current challenge before approving that additional paid call.</li>
       </ol>
       <p>For handoff, keep the accepted image, its placement, the request body and the job ID together. Record whether the story is a crop or a separate render. That gives the next designer a specific asset to revise rather than a prompt to guess from.</p>
+    </section>
+
+    <section id="python-poller">
+      <h2>Poll an accepted job with Python</h2>
+      <p>Pass the <code>pollUrl</code> saved from your <code>202</code> response. This standard-library example uses only GET and never authorizes another payment. It backs off on throttling, server errors and transport errors, and stops on a failed job or a payment reconciliation signal. It schedules requests within an overall polling window and gives each request its own socket timeout. A production worker can schedule individual polls instead of sleeping.</p>
+<pre><code>import json
+import time
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def poll_image(poll_url, *, deadline_seconds=120, request_timeout=10):
+    url = urlsplit(poll_url)
+    if (url.scheme, url.netloc) != ("https", "app.suedeai.ai"):
+        raise ValueError("Use the status URL returned by Suede")
+    if not url.path.startswith("/agent/image/") or url.query or url.fragment:
+        raise ValueError("Expected an Agent Image status URL")
+
+    opener = build_opener(NoRedirect())
+    deadline = time.monotonic() + deadline_seconds
+    delay = 1.0
+    while (remaining := deadline - time.monotonic()) &gt; 0:
+        pause = delay
+        try:
+            req = Request(poll_url, headers={"Accept": "application/json"})
+            with opener.open(req, timeout=min(request_timeout, remaining)) as res:
+                raw = res.read(65537)
+                if len(raw) &gt; 65536:
+                    raise RuntimeError("Status response too large")
+                job = json.loads(raw)
+        except HTTPError as exc:
+            if exc.code == 402:
+                raise RuntimeError("Reconcile the original payment") from exc
+            if exc.code != 429 and not 500 &lt;= exc.code &lt;= 599:
+                raise
+            retry_after = exc.headers.get("Retry-After", "")
+            if retry_after:
+                if not (retry_after.isascii() and retry_after.isdecimal()):
+                    raise TimeoutError("Defer polling using Retry-After") from exc
+                seconds = retry_after.lstrip("0") or "0"
+                if len(seconds) &gt; 2 or int(seconds) &gt; 30:
+                    raise TimeoutError("Defer polling using Retry-After") from exc
+                pause = max(pause, int(seconds))
+        except (URLError, TimeoutError):
+            pass
+        else:
+            status = job["status"]
+            if status == "completed":
+                result = job.get("imageUrl")
+                if not isinstance(result, str) or not result:
+                    raise RuntimeError("Completed without an image URL")
+                return result
+            if status == "failed":
+                raise RuntimeError(job.get("error") or "Render failed")
+            if status not in ("queued", "processing"):
+                raise RuntimeError(f"Unexpected job status: {status}")
+        time.sleep(max(0, min(pause, deadline - time.monotonic())))
+        delay = min(delay * 2, 10.0)
+    raise TimeoutError("Polling deadline reached; resume the same job later")</code></pre>
+      <p>The return value is an image URL, not downloaded bytes. Pass it to the <a href="#delivery">asset delivery</a> step. Keep the saved job if this function times out. Its backoff is capped at 10 seconds, and it honors numeric server hints of up to 30 seconds. If your deployment uses longer retry hints or HTTP-date hints, defer the job to your scheduler instead of polling sooner.</p>
     </section>
 
     <section id="worker">
