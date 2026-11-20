@@ -315,7 +315,7 @@
             <tr><th scope="row">Endpoint</th><td><code>POST https://app.suedeai.ai/create-music</code></td></tr>
             <tr><th scope="row">Price</th><td>$0.50, <code>amount</code> <code>500000</code> USDC base units</td></tr>
             <tr><th scope="row">Payment</th><td>x402 <code>exact</code> on <code>eip155:8453</code> to <code>0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F</code>, or a Skyfire token</td></tr>
-            <tr><th scope="row">Paid response</th><td><code>202 Accepted</code> with <code>songId</code> and <code>pollUrl</code></td></tr>
+            <tr><th scope="row">Paid response</th><td><code>202 Accepted</code> with a job envelope; save <code>pollUrl</code> when returned</td></tr>
             <tr><th scope="row">Poll</th><td><code>GET https://app.suedeai.ai/api/songs/{songId}</code>, free</td></tr>
             <tr><th scope="row">Identifiers</th><td>OpenAPI <code>operationId</code>, A2A skill and MCP tool: <code>create_music</code></td></tr>
           </tbody>
@@ -400,7 +400,124 @@
           </tbody>
         </table>
       </div>
-      <p>An unknown <code>songId</code> answers <code>404</code> with <code>{"error":"Song not found"}</code>. Because paid jobs are created public, a 404 means the id is wrong, not that the track is still rendering.</p>
+      <p>An unknown <code>songId</code> answers <code>404</code> with <code>{"error":"Song not found"}</code>. A 404 means no accessible song row was found for that lookup, not that the track is still rendering.</p>
+    </section>
+
+    <section>
+      <h2>Choose the right request mode</h2>
+      <p>For generated vocals, describe the song rather than supplying a lyrics field. Start with genre, mood, instrumentation and structure. For a podcast opener, for example, ask for a restrained intro, a recognizable motif, and space for speech. Treat tempo, structure and length in the brief as creative direction, not timing guarantees; cut the delivered audio to picture after review.</p>
+      <p>For supplied lyrics, use <code>custom_mode: true</code> and put the intended words in <code>lyrics</code>. Keep arrangement instructions in <code>prompt</code>. Use text you are authorized to transmit, and do not send confidential lyrics or client information: paid tracks are created public and the song record can include the prompt.</p>
+      <p>For an instrumental, omit <code>custom_mode</code>, <code>lyrics</code> and <code>vocal_gender</code>. Use one clear direction rather than mixing instrumental and vocal instructions:</p>
+<pre><code>{
+  "prompt": "Quiet documentary underscore. Felt piano, soft strings, no percussion, sparse texture under spoken narration.",
+  "style": "Ambient",
+  "make_instrumental": true
+}</code></pre>
+      <p>For original generated vocals:</p>
+<pre><code>{
+  "prompt": "Mid-tempo indie folk song with a close vocal, brushed drums and acoustic guitar; restrained verses and a wider final chorus.",
+  "style": "Indie Folk"
+}</code></pre>
+      <p>Use the published request schema for automation. The SDK can send other values in its convenience methods; an argument being transmitted does not mean the server guarantees an exact duration, file size, or arrangement.</p>
+    </section>
+
+    <section>
+      <h2>From payment approval to delivery</h2>
+      <ol>
+        <li>Give each intended purchase its own <code>X-Idempotency-Key</code> and retain the original JSON. A changed prompt or intentional new take is a new purchase, not a retry.</li>
+        <li>Read the current terms from the <a href="/discovery">discovery document</a> and verify the payment challenge before signing. Check network, asset, recipient, amount and resource against your budget and allowlist. Keep the signing key and <code>PAYMENT-SIGNATURE</code> out of URLs, logs and browser code.</li>
+        <li>Use the default asynchronous mode. Save the response, its <code>pollUrl</code> if present, its <code>songId</code> when available, and the locally recorded payment reference. A <code>202</code> confirms acceptance, not audio delivery. Save a valid <code>pollUrl</code> even when <code>songId</code> is absent; never construct a URL ending in <code>null</code>.</li>
+        <li>Poll without payment. Read <code>model_version</code> first. <code>pending</code> means wait even if <code>audio_url</code> returns HTTP 200. <code>failed</code> is terminal. A nonempty version label and a valid media URL give you a candidate for delivery.</li>
+        <li>Download the candidate as media, not the <code>shareUrl</code> listener page or the <code>image_url</code> cover. Check successful HTTP status, audio content type and playable, decodable bytes before marking a job delivered. Store the version, duration and your verified output reference in your own records.</li>
+      </ol>
+      <p>If you already received a job reference, resume the existing poll after a restart. If a signed POST timed out and no response was saved, reconcile the payment reference before sending a newly signed purchase. Treat a submit timeout as an unknown job outcome. Use the original key for a permitted replay within the cache window; reconcile payment separately.</p>
+    </section>
+
+    <section>
+      <h2>Bounded polling in Python</h2>
+      <p>This <code>httpx</code> example takes the saved <code>pollUrl</code> from an accepted request. It performs no paid calls and does not download the file. The three-minute deadline is a client choice, not a service limit. Timeout means the polling worker stopped, not that it canceled the generation.</p>
+<pre><code>import time
+from urllib.parse import urlsplit
+
+import httpx
+
+
+def wait_for_song(poll_url: str, max_wait: float = 180) -&gt; str:
+    url = urlsplit(poll_url)
+    path = url.path.split("/")
+    if (url.scheme != "https" or url.netloc != "app.suedeai.ai"
+            or len(path) != 4 or path[:3] != ["", "api", "songs"]
+            or path[3] in ("", ".", "..") or url.query or url.fragment):
+        raise ValueError("Unexpected song polling URL")
+
+    deadline = time.monotonic() + max_wait
+    delay = 3.0
+    with httpx.Client(follow_redirects=False) as client:
+        while (remaining := deadline - time.monotonic()) &gt; 0:
+            pause = delay
+            try:
+                response = client.get(
+                    poll_url, timeout=min(10.0, remaining)
+                )
+            except httpx.TransportError:
+                pass  # transient network error; retry only the free GET
+            else:
+                if response.status_code == 404:
+                    raise LookupError("Song not found; check the saved reference")
+                if response.status_code in (429, 502, 503, 504):
+                    retry_after = response.headers.get("Retry-After", "")
+                    if retry_after.isascii() and retry_after.isdecimal():
+                        pause = max(pause, int(retry_after))
+                else:
+                    response.raise_for_status()
+                    song = response.json()
+                    version = song.get("model_version")
+                    if version == "failed":
+                        raise RuntimeError("Music generation failed")
+                    if version != "pending":
+                        audio_url = song.get("audio_url")
+                        if isinstance(version, str) and version.strip() and isinstance(audio_url, str):
+                            audio = urlsplit(audio_url)
+                            if audio.scheme == "https" and audio.hostname:
+                                return audio_url
+                        raise ValueError("Song result is missing version or audio URL")
+            time.sleep(max(0, min(pause, deadline - time.monotonic())))
+            delay = min(delay * 1.5, 15.0)
+
+    raise TimeoutError("Still unresolved; save the poll URL and resume later")</code></pre>
+      <p>Before using the returned URL in a server-side downloader, apply your media-host allowlist and check any redirect destination independently. An HTTPS URL alone does not prove that it serves MP3 audio.</p>
+    </section>
+
+    <section>
+      <h2>Test the states without paying</h2>
+      <p>Use local fixtures with placeholder values. These examples illustrate fields the poller should act on, not complete API responses or URLs to fetch.</p>
+<pre><code>{"id":"example-song","model_version":"pending","audio_url":"https://example.invalid/cover.png"}
+{"id":"example-song","model_version":"failed","audio_url":null}
+{"id":"example-song","model_version":"v4.5","audio_url":"https://example.invalid/track.mp3"}</code></pre>
+      <ul>
+        <li>In the first case assert that no download starts, even if the cover URL says <code>200</code>.</li>
+        <li>In the second case assert that the poller stops and does not resubmit.</li>
+        <li>In the third case assert that the downloader receives the media URL, not the public share page. Simulate a response with <code>image/png</code> or HTML and require a delivery error.</li>
+        <li>Also test <code>429</code> with a numeric <code>Retry-After</code>, a transport timeout, a <code>404</code>, and a worker restart using an existing poll URL. Do not attach credentials to any poll request.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Troubleshooting and retry decisions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">What you see</th><th scope="col">Next action</th></tr></thead>
+          <tbody>
+            <tr><td>First POST returns <code>402</code></td><td>Read the challenge. Authorize only after verifying the current terms. A repeated <code>402</code> is a signal to inspect the challenge or payment result, not to sign in a loop.</td></tr>
+            <tr><td><code>400</code>, <code>413</code> or <code>422</code> on POST</td><td>Check the API version, body size and field errors. Fix the request before another authorization; do not retry the same malformed body.</td></tr>
+            <tr><td>Poll returns <code>429</code></td><td>Honor <code>Retry-After</code>, back off and resume the same GET. Avoid one polling loop per UI tab.</td></tr>
+            <tr><td>Poll returns <code>404</code></td><td>Check the original reference and whether the app used the right route. Not the pending signal; do not pay again based on this alone.</td></tr>
+            <tr><td>Accepted, but client deadline passes</td><td>Persist the original handle and resume later. Distinguish local timeout from a server-side <code>failed</code> status.</td></tr>
+            <tr><td>Version label present but audio does not play</td><td>Verify the media response and bytes instead of relying on extension or status alone. Retain the song ID and report a delivery issue without a new purchase.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>For transport and payment recovery rules see <a href="/errors">Errors, rate limits and retries</a>. For signing and budget checks see the <a href="/quickstart">x402 quickstart</a>.</p>
     </section>
 
     <section>

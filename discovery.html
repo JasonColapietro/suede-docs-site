@@ -325,6 +325,17 @@
       <p>Each resource entry also has a <code>lastUpdated</code> timestamp; all three read <code>2026-08-30T16:19:22Z</code> on 2026-10-11. The <a href="/endpoints">endpoint reference</a> turns these entries into per-endpoint pages.</p>
     </section>
 
+    <section id="discovery-contract-check">
+      <h2>Verify one operation without buying a render</h2>
+      <p>Use the manifest to discover payment terms and OpenAPI to check the payload and response shape. For example, this read-only check lists the response codes and request field names for the image POST:</p>
+<pre><code>curl -fsS https://app.suedeai.ai/openapi.json \
+  | jq '.paths["/agent/image"].post
+        | {responses: (.responses | keys),
+           fields: (.requestBody.content["application/json"].schema.properties | keys)}'</code></pre>
+      <p>Compare the result with the manifest entry's <code>resource</code> and method. If the operation disappears, the price changes, or a field your client depends on is no longer advertised, pause that paid workflow and review the contract. Do not switch to a different endpoint or sign an unexpected challenge automatically.</p>
+      <p>MCP tool listing is discovery. A payment pointer is not a generated asset. Keep tool discovery, paid execution and status reads distinct in your application.</p>
+    </section>
+
     <section>
       <h2>MCP server</h2>
       <p>Model Context Protocol clients can list the same catalog from <code>https://app.suedeai.ai/api/mcp</code>, a streamable-HTTP JSON-RPC endpoint. On 2026-10-11 it answered <code>initialize</code> with protocol version <code>2025-06-18</code> and server name <code>suede-agentic-commerce</code>, version <code>1.0.0</code>, and <code>tools/list</code> returned five tools:</p>

@@ -393,6 +393,17 @@ print(state.get("imageUrl"))</code></pre>
       </div>
     </section>
 
+    <section id="sdk-integration-check">
+      <h2>Test the SDK boundary before an upgrade</h2>
+      <ol>
+        <li>Pin the package version your application tested and record it in the release notes. Run <code>python -m pip show suede-ai</code> to check the installed version.</li>
+        <li>Fetch the manifest without submitting a paid job. Compare the methods and body fields you use with the current <a href="https://app.suedeai.ai/openapi.json">OpenAPI</a>. A parameter in a typed SDK method describes what the client sends, not a guarantee of output duration, resolution or framing.</li>
+        <li>Use local fixtures for a successful accept, missing payment option, 422, 429 and a transport timeout. On accept, persist the returned job reference. A timeout from the submit call should not cause your application to invoke the typed method again automatically.</li>
+        <li>Poll the saved job from a read-only worker. Test one fixture with in-progress status and another with completed status but a missing asset URL. Neither is ready for delivery.</li>
+      </ol>
+      <p>Route payment negotiation and API errors differently: <code>PaymentRequired</code> is a subtype of <code>X402Error</code>, so catch it first when you need distinct behavior. Use <a href="/errors#recovery-decisions">the recovery table</a> for HTTP or transport outcomes.</p>
+    </section>
+
     <section>
       <h2>Releases</h2>
       <div class="table-wrap">

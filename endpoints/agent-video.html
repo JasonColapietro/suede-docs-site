@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent Video API: POST /agent/video | Suede AI Docs</title>
-<meta name="description" content="POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.">
+<meta name="description" content="Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.">
 <meta name="keywords" content="ai video generation api, text to video api, x402 video api, video with native audio, Suede AI">
 <link rel="canonical" href="https://docs.suedeai.ai/endpoints/agent-video">
 <meta property="og:title" content="Agent Video API: POST /agent/video | Suede AI Docs">
-<meta property="og:description" content="POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.">
+<meta property="og:description" content="Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.">
 <meta property="og:url" content="https://docs.suedeai.ai/endpoints/agent-video">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Suede AI">
@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@AISUEDE">
 <meta name="twitter:title" content="Agent Video API: POST /agent/video | Suede AI Docs">
-<meta name="twitter:description" content="POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.">
+<meta name="twitter:description" content="Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.">
 <meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
 <meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -203,7 +203,7 @@
       "@id": "https://docs.suedeai.ai/endpoints/agent-video#webpage",
       "url": "https://docs.suedeai.ai/endpoints/agent-video",
       "name": "Agent Video API: POST /agent/video | Suede AI Docs",
-      "description": "POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.",
+      "description": "Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.",
       "inLanguage": "en",
       "isPartOf": {
         "@id": "https://docs.suedeai.ai/#website"
@@ -227,7 +227,7 @@
       "@id": "https://docs.suedeai.ai/endpoints/agent-video#article",
       "url": "https://docs.suedeai.ai/endpoints/agent-video",
       "name": "Agent Video API: POST /agent/video | Suede AI Docs",
-      "description": "POST /agent/video renders an 8-second 720p clip with native audio for $4.99 USDC on Base. Request fields, aspect ratios, the 202 job and polling.",
+      "description": "Generate a short video with native audio for $4.99 USDC on Base. Plan the shot, authorize one render, poll the job, verify the MP4 and prepare it for release.",
       "inLanguage": "en",
       "isPartOf": {
         "@id": "https://docs.suedeai.ai/#website"
@@ -300,7 +300,9 @@
     <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <a href="/endpoints">Endpoints</a> / <span aria-current="page">Agent Video</span></nav>
     <h1>Agent Video: POST /agent/video</h1>
 
-    <p class="lede">Generate an 8-second 720p video clip with native audio from a text prompt. One call costs $4.99 in USDC on Base.</p>
+    <p class="lede">Turn a written shot into a short video with native audio. Budget $4.99 USDC on Base per render, then retrieve the result without another payment. The default target is eight seconds at 720p; inspect the actual clip before using it in an edit.</p>
+
+    <nav aria-label="On this page"><a href="#request-body">Inputs</a> · <a href="#shot-design">Shot design</a> · <a href="#authorize">Payment</a> · <a href="#bounded-poll">Poll a job</a> · <a href="#asset">Download</a> · <a href="#release-check">Review</a></nav>
 
     <section>
       <h2>What it is for</h2>
@@ -315,7 +317,7 @@
             <tr><th scope="row">Endpoint</th><td><code>POST https://app.suedeai.ai/agent/video</code></td></tr>
             <tr><th scope="row">Price</th><td>$4.99, <code>amount</code> <code>4990000</code> USDC base units</td></tr>
             <tr><th scope="row">Payment</th><td>x402 <code>exact</code> on <code>eip155:8453</code> to <code>0x10FF767043A1723E0BB5B9207bC37D3442cC9E4F</code>, or a Skyfire token</td></tr>
-            <tr><th scope="row">Output</th><td>An 8-second 720p clip with native audio</td></tr>
+            <tr><th scope="row">Output</th><td>A short clip with native audio; default target: 8 seconds at 720p</td></tr>
             <tr><th scope="row">Paid response</th><td><code>202 Accepted</code> with <code>jobId</code> and <code>pollUrl</code></td></tr>
             <tr><th scope="row">Poll</th><td><code>GET https://app.suedeai.ai/agent/video/{jobId}</code>, free</td></tr>
             <tr><th scope="row">Identifiers</th><td>OpenAPI <code>operationId</code>, A2A skill and MCP tool: <code>agent_video</code></td></tr>
@@ -324,7 +326,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="request-body">
       <h2>Request body</h2>
       <div class="table-wrap">
         <table>
@@ -332,11 +334,24 @@
           <tbody>
             <tr><td><code>prompt</code></td><td>string</td><td>Yes</td><td>Narrative or visual prompt that drives the video concept.</td></tr>
             <tr><td><code>durationSeconds</code></td><td>integer</td><td>No</td><td>Requested length in seconds. Default <code>8</code>, minimum <code>3</code>, maximum <code>15</code>. The service maps it to a supported render length.</td></tr>
-            <tr><td><code>aspectRatio</code></td><td>string</td><td>No</td><td><code>16:9</code>, <code>9:16</code> or <code>1:1</code>.</td></tr>
-            <tr><td><code>asyncMode</code></td><td>boolean</td><td>No</td><td>Switches asynchronous mode on, never off. Paid calls are already asynchronous.</td></tr>
+            <tr><td><code>aspectRatio</code></td><td>string</td><td>No</td><td><code>16:9</code> (landscape, default), <code>9:16</code> (portrait) or <code>1:1</code> (square).</td></tr>
+            <tr><td><code>asyncMode</code></td><td>boolean</td><td>No</td><td>Default <code>false</code>. Switches asynchronous mode on, never off. Paid calls are already asynchronous.</td></tr>
           </tbody>
         </table>
       </div>
+    </section>
+
+    <section id="shot-design">
+      <h2>Choose the frame before writing the prompt</h2>
+      <p>Start with the editor’s cut, not adjectives. Write one sentence for each of four things: what the viewer sees first, what changes, where the camera ends, and what the viewer hears when the action happens. If the sentence needs “meanwhile” or “cut to,” split it into shots. Each separately generated shot is another paid render.</p>
+      <p>A landscape banner can use horizontal movement and empty space for a headline. Portrait clips have less room beside the subject, so use depth or vertical movement instead. For square placements, center the decisive action and test a square preview. An aspect-ratio request describes the intended frame, not a guarantee that every subject or overlay will fit.</p>
+      <h3>Landscape: show how a pour-over starts</h3>
+<pre><code>{
+  "prompt": "Single locked wide shot across a cafe counter. A glass brewer sits on the right; leave the left third empty for a title. A hand tilts a kettle above the brewer, a thin stream touches the grounds, then the first drop lands in the glass. Quiet room tone, soft pouring, one clear drip. No speech or music.",
+  "aspectRatio": "16:9",
+  "durationSeconds": 8
+}</code></pre>
+      <p>Acceptance check: pause on the first drop. Are both the pour and its destination visible? Can an editor add a headline on the left without covering either? If a headline must be spelled exactly, add it in the editor rather than asking the model to paint the words into the scene.</p>
     </section>
 
     <section>
@@ -394,6 +409,77 @@
         <li><strong>At review:</strong> watch once muted to judge framing and motion. Then listen without captions. Does the crackle begin with the needle, and is there room for the planned voiceover? Scrub the first and last frames if the placement requires a loop.</li>
       </ol>
       <p>If the shot works but the caption covers the label, reposition the caption in the edit. If the needle never enters frame, rewrite that action as the subject of the shot before authorizing another render. Save the chosen clip and note which check failed on any rejected take.</p>
+    </section>
+
+    <section id="authorize">
+      <h2>Keep one authorization attached to one shot</h2>
+      <ol>
+        <li>Save the exact request body. Create a fresh idempotency key for this shot and keep it with the body. The example key above is illustrative, not a key to share across customers or projects.</li>
+        <li>Send the same JSON without a payment signature to receive the challenge. Compare its amount, token, network and recipient to the approved spend. Stop if any differ. A challenge is not a render.</li>
+        <li>Use your payment client to authorize, then submit the same body with the key. Keep payment credentials out of logs. Save the accepted job ID and poll URL before doing other work. Only the creation request needs the payment header; never forward it when retrieving the media.</li>
+        <li>If the connection drops after sending, first recover the saved job or original response. If a replay is necessary, use the same key and identical body within the service’s idempotency cache window. A fresh key, changed prompt or later replay is not a safe way to recover an existing charge.</li>
+      </ol>
+      <p>The four JSON fields in the request table are the public controls. There is no published request field for a custom resolution, frame rate, fixed seed, subtitle file or separate soundtrack. A requested length of 15 seconds is valid input, not a promise of 15 seconds of footage. Plan a longer sequence as independently reviewed shots or extend it in an editor.</p>
+    </section>
+
+    <section id="bounded-poll">
+      <h2>Collect the result without resubmitting the shot</h2>
+      <p>Here is a Python 3 collector for a previously accepted job. Pass the saved absolute <code>pollUrl</code> as its only argument. It makes only free GET requests, waits between checks, honors numeric retry delays, and stops after at most 20 requests. A local stop is not a cancellation. Save the job and resume later instead of paying again.</p><pre><code>import json, sys, time
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import urlopen
+
+url = sys.argv[1]
+u = urlsplit(url)
+if (u.scheme, u.netloc) != ("https", "app.suedeai.ai") or not u.path.startswith("/agent/video/"):
+    sys.exit("Expected the Suede video poll URL from the 202 response.")
+for attempt in range(20):
+    delay = min(5 * (attempt + 1), 30)
+    try:
+        with urlopen(url, timeout=15) as r:
+            job = json.load(r)
+    except HTTPError as e:
+        if e.code != 429 and not 500 &lt;= e.code &lt;= 599:
+            sys.exit(f"Poll HTTP {e.code}; inspect saved job. No new render.")
+        hint = e.headers.get("Retry-After")
+        if hint and (not hint.isdecimal() or int(hint) &gt; 60):
+            sys.exit(f"Resume after Retry-After: {hint}")
+        delay = max(delay, int(hint or 0))
+    except (URLError, TimeoutError):
+        pass  # Retry only this GET.
+    else:
+        state = job.get("status")
+        if state == "completed" and job.get("videoUrl"):
+            print(job["videoUrl"])
+            break
+        if state not in ("queued", "processing"):
+            sys.exit(f"Inspect job: {state!r}; no usable asset or job failed.")
+    if attempt &lt; 19:
+        time.sleep(delay)
+else:
+    sys.exit("Polling paused. Keep the job ID and resume later.")</code></pre>
+      <p>A 200 response only means the status lookup succeeded. A failed job, an unexpected state, malformed JSON or a completed job without media all require inspection, not another paid POST. Keep the last response and the job ID for troubleshooting. For a validation error on creation, check the exact field named in the response before making a corrected request.</p>
+    </section>
+
+    <section id="asset">
+      <h2>Download the MP4, not the share page</h2>
+      <p>Use <code>videoUrl</code> for the media itself. <code>pageUrl</code>, when present, is for a human to open in a browser. Saving that page as <code>.mp4</code> gives an editor HTML rather than footage. Do not reconstruct either link from <code>jobId</code> or <code>videoId</code>.</p>
+      <p>Set <code>VIDEO_URL</code> to the completed job’s media URL. This example follows HTTPS redirects, records the final content type and saves a candidate download. Verify it before assigning an MP4 extension.</p><pre><code>curl --fail --show-error --silent --location --proto '=https' --proto-redir '=https' \
+  --max-time 120 --output take.download --write-out '%{content_type}\n' "$VIDEO_URL"
+ffprobe -v error -show_entries format=format_name,duration:stream=codec_type,width,height \
+  -of json take.download</code></pre>
+      <p>Expect MP4 media (normally <code>video/mp4</code>), a decodable video stream and a plausible duration. If the server reports <code>application/octet-stream</code>, inspect the container rather than assuming it is broken. If it returns HTML, an error or a zero-byte file, stop. Compare frame dimensions with the placement and check for an audio stream if sound is part of the brief. Rename the verified file and store it with the prompt, job ID and review decision.</p>
+    </section>
+
+    <section id="release-check">
+      <h2>Review the deliverable, not just the render status</h2>
+      <ul>
+        <li><strong>First and last frames:</strong> compare the opening with your thumbnail and the ending with the next shot. If a usable opening or hold exists, trim the clip instead of commissioning another one.</li>
+        <li><strong>Movement and continuity:</strong> watch at normal speed, then scrub through hands, reflections, object edges and contact points. A pleasing still does not establish that the motion works.</li>
+        <li><strong>Sound and captions:</strong> play the final edit muted. Is the point still clear? Caption speech and meaningful sound cues such as “[needle crackles]”; review timing and wording manually. If a visual action is essential but not explained aloud, supply a descriptive transcript or audio description appropriate to the placement.</li>
+        <li><strong>Placement:</strong> preview in the actual player at phone size. Check that captions, controls and platform overlays do not cover the subject. Check for distracting flashes and sudden audio jumps. Do not publish automatically just because the job completed.</li>
+      </ul>
+      <p>Keep a short review record: “Pass: first drip visible and audible. Edit: add captions. Hold: mobile title overlaps kettle.” A failed technical download calls for another retrieval of the existing media; a new creative take calls for a changed brief and a new spending decision.</p>
     </section>
 
     <section>
