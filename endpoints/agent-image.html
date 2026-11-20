@@ -402,6 +402,17 @@ def wait_for_image(poll_url: str) -&gt; str | None:
     </section>
 
     <section>
+      <h2>One campaign, two placements: crop or generate again?</h2>
+      <p>Suppose a record shop needs a square release tile and a vertical story. If the customer expects the <em>same</em> photograph in both placements, start with one image. Ask for the record sleeve in the center, with enough background around it for a crop. A second prompt is a new generation, not a resize of the first image.</p>
+      <ol>
+        <li><strong>Brief the composition.</strong> For a square tile, try: “Overhead photograph of a red record sleeve on a cream counter, sleeve centered, blank space above, no lettering.” Add the shop name in your layout after the image is ready so its spelling and placement stay under your control.</li>
+        <li><strong>Test both crops before buying another render.</strong> Place the returned file in the square tile and a 9:16 story mockup. Check whether either crop cuts off the sleeve, hides the title area or leaves a price sticker unreadable at phone size.</li>
+        <li><strong>Make the revision match the problem.</strong> If only the lettering fails, fix the overlay. If the vertical crop removes the subject, request a separate 9:16 composition. Review the current challenge before approving that additional paid call.</li>
+      </ol>
+      <p>For handoff, keep the accepted image, its placement, the request body and the job ID together. Record whether the story is a crop or a separate render. That gives the next designer a specific asset to revise rather than a prompt to guess from.</p>
+    </section>
+
+    <section>
       <h2>Sources</h2>
       <ul>
         <li><a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>: description, price, payment requirement, input schema and example output (resource entry last updated 2026-08-30).</li>
