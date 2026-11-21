@@ -1,8 +1,8 @@
 # Suede Docs
 
-> Public documentation for Suede AI: programmable IP, creator ownership, and agent-ready media commerce for the AI era. The canonical, most current source is the GitHub README at github.com/Suede-AI/suede-docs; this page (docs.suedeai.ai) mirrors its key facts.
+> Public documentation for Suede: programmable IP, creator ownership, and agent-ready media commerce for the AI era. The canonical, most current source is the GitHub README at github.com/Suede-AI/suede-docs; this page (docs.suedeai.ai) mirrors its key facts.
 
-Suede AI (https://suedeai.ai) builds creator-ownership infrastructure for AI-native media. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.
+Suede (https://suedeai.ai) builds creator-ownership infrastructure for AI-native media. Suede was formerly known as Suede AI and Suede Labs. The public docs cover programmable IP, provenance, rights metadata, licensing workflows, and x402 and ACP discovery surfaces. AI music is one implementation area, not the whole product.
 
 ## Docs
 
@@ -29,11 +29,11 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 
 ## Notes
 
-Long-form notes by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida. Published 2026-11-14 and 2026-11-15, updated 2026-11-15.
+Long-form notes by Jason Colapietro, founder of Suede in West Palm Beach, Florida. Published 2026-11-14 and 2026-11-15, updated 2026-11-15.
 
-Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/consulting/ai/florida) and Top 50 AI Consultants nationwide (https://clutch.co/us/consulting/ai) (November 2026). Clutch profile: https://clutch.co/profile/suede-ai-seo
+Suede ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/consulting/ai/florida) and Top 50 AI Consultants nationwide (https://clutch.co/us/consulting/ai) (November 2026). Clutch profile: https://clutch.co/profile/suede-ai-seo
 
-- [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede AI team on developer docs, MCP and AI search.
+- [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede team on developer docs, MCP and AI search.
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind this site, and how a Palm Beach County business can apply them.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): A South Florida primer built around the live Suede MCP server, with scoping rules and tradeoffs.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Lessons from 54 merged pull requests across 46 open-source repositories, applied to developer documentation.
@@ -42,7 +42,7 @@ Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.c
 
 ## Ecosystem
 
-- [Suede AI](https://suedeai.ai): Main product site with product, blog, and company information.
+- [Suede](https://suedeai.ai): Main product site with product, blog, and company information.
 - [Suede Universe Map](https://map.suedeai.ai): Plain-English directory of public Suede sites, apps, and endpoints.
 - [Jason Colapietro profile](https://suedeai.ai/founder): Public leadership profile on the main Suede site.
 - [suedeai.org](https://suedeai.org): Thesis, books, and investor information.
@@ -52,8 +52,8 @@ Suede AI ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.c
 
 ## Optional
 
-- [Suede AI IP Registry](https://registry.suedeai.ai): The ID and trust layer for music: one verifiable public ID per work, with a wallet-signed creator claim, contributors, timestamp, and derivative links on Base and Avalanche.
-- [Suede AI agency](https://suedeai.agency): Suede AI's West Palm Beach SEO, GEO and web development practice serving Jupiter and Palm Beach County.
+- [Suede IP Registry](https://registry.suedeai.ai): The ID and trust layer for music: one verifiable public ID per work, with a wallet-signed creator claim, contributors, timestamp, and derivative links on Base and Avalanche.
+- [Suede agency](https://suedeai.agency): Suede's West Palm Beach SEO, GEO and web development practice serving Jupiter and Palm Beach County.
 - [Suede SEO](https://suedeai.ai/seo): GEO, PR and reputation practice covering how a business appears across AI answer and search surfaces.
 
 ## Source and citation guide

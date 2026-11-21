@@ -148,9 +148,9 @@ function pageFacts(page) {
     ? [...crumbHtml.matchAll(/<a href="([^"]+)">([\s\S]*?)<\/a>|<span aria-current="page">([\s\S]*?)<\/span>/g)].map((m) =>
         m[1] ? { name: plain(m[2]), url: m[1] === "/" ? `${ORIGIN}/` : `${ORIGIN}${m[1]}` } : { name: plain(m[3]), url },
       )
-    : [{ name: "Suede AI Developer Docs", url: `${ORIGIN}/` }, { name: h1, url }];
+    : [{ name: "Suede Developer Docs", url: `${ORIGIN}/` }, { name: h1, url }];
   // The first crumb reads "docs.suedeai.ai"; schema names the site properly.
-  crumbs[0] = { name: "Suede AI Developer Docs", url: `${ORIGIN}/` };
+  crumbs[0] = { name: "Suede Developer Docs", url: `${ORIGIN}/` };
   const published =
     html.match(/Published (\d{4}-\d{2}-\d{2})\./)?.[1] ?? isoFromProse(html.match(/Published ([A-Z][a-z]+ \d{1,2}, \d{4})\./)?.[1]);
   const modified =
@@ -253,7 +253,7 @@ function graphFor(page, facts) {
           item: crumb.url,
         })),
       },
-      { "@type": "WebSite", "@id": WEBSITE_ID, url: `${ORIGIN}/`, name: "Suede AI Developer Docs", publisher: { "@id": ORG_ID } },
+      { "@type": "WebSite", "@id": WEBSITE_ID, url: `${ORIGIN}/`, name: "Suede Developer Docs", publisher: { "@id": ORG_ID } },
       { "@type": "ImageObject", "@id": IMAGE_ID, url: `${ORIGIN}/suede-docs-og.png`, width: 1200, height: 630 },
     ],
   };
@@ -272,11 +272,11 @@ function withJsonLd(html, graph) {
 
 function llmsFull(factsByPage) {
   const intro = [
-    "# Suede AI Developer Docs: full text",
+    "# Suede Developer Docs: full text",
     "",
     "> The complete public text of docs.suedeai.ai, one section per page, for AI assistants and offline readers. The pages themselves are the source of truth; this file is generated from them by scripts/build-docs-seo.mjs. The shorter index is https://docs.suedeai.ai/llms.txt.",
     "",
-    "Publisher: Suede AI (https://suedeai.ai), also known as Suede Labs. Founder: Jason Colapietro (https://suedeai.ai/founder).",
+    "Publisher: Suede (https://suedeai.ai). Founder: Jason Colapietro (https://suedeai.ai/founder).",
     "Prices and request fields on the API pages were checked against the live discovery documents on app.suedeai.ai; those documents (https://app.suedeai.ai/.well-known/x402 and https://app.suedeai.ai/api/v1/catalog) carry the current values.",
   ];
   const sections = PAGES.map((page) => {
