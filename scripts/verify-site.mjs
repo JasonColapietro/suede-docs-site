@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SEO_KEYWORDS } from "./seo-keywords.mjs";
@@ -13,10 +13,10 @@ const llms = readFileSync(join(root, "llms.txt"), "utf8");
 
 const expected = {
   canonical: "https://docs.suedeai.ai/",
-  title: "Suede AI Developer Docs | x402 APIs and Creator IP",
+  title: "Suede Developer Docs | x402 APIs and Creator IP",
   description:
-    "Read Suede AI developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
-  h1: "Suede AI developer docs for programmable IP",
+    "Read Suede developer docs for programmable IP, creator ownership, provenance, licensing, and x402 agent-commerce APIs. Browse the canonical GitHub source.",
+  h1: "Suede developer docs for programmable IP",
   image: "https://docs.suedeai.ai/suede-docs-og.png",
   imagePath: join(root, "suede-docs-og.png"),
 };
@@ -50,7 +50,7 @@ assert.equal(canonical, expected.canonical);
 assert.deepEqual(h1s, [expected.h1], "page must have one intent-matched H1");
 assert.equal(metaContent("robots"), "index, follow");
 
-assert.equal(metaContent("og:title", "property"), "Suede AI Developer Docs: Programmable IP and x402 APIs");
+assert.equal(metaContent("og:title", "property"), "Suede Developer Docs: Programmable IP and x402 APIs");
 assert.equal(metaContent("og:description", "property"), expected.description);
 assert.equal(metaContent("og:url", "property"), expected.canonical);
 assert.equal(metaContent("og:type", "property"), "website");
@@ -59,7 +59,7 @@ assert.equal(metaContent("og:image:width", "property"), "1200");
 assert.equal(metaContent("og:image:height", "property"), "630");
 assert.equal(metaContent("og:image:type", "property"), "image/png");
 assert.equal(metaContent("twitter:card"), "summary_large_image");
-assert.equal(metaContent("twitter:title"), "Suede AI Developer Docs: Programmable IP and x402 APIs");
+assert.equal(metaContent("twitter:title"), "Suede Developer Docs: Programmable IP and x402 APIs");
 assert.equal(metaContent("twitter:image"), expected.image);
 
 assert.ok(existsSync(expected.imagePath), "local social-card PNG is missing");
@@ -324,7 +324,7 @@ for (const page of DOCS_PAGES) {
   assert.ok(sitemap.includes(`<loc>${url}</loc>`), `${page.file} is missing from sitemap.xml`);
   assert.ok(llms.includes(`(${url})`), `${page.file} is missing from llms.txt`);
   assert.ok(SEO_KEYWORDS[page.file], `${page.file} must have a keywords map entry`);
-  assert.match(source, /Built by Suede AI in West Palm Beach, Florida\./, `${page.file} needs the Suede AI footer block`);
+  assert.match(source, /Built by Suede in West Palm Beach, Florida\./, `${page.file} needs the Suede footer block`);
   for (const match of source.matchAll(/href="(\/[^"#]*)"/g)) {
     const target = match[1];
     assert.ok(/\.(ico|png)$/.test(target) || ownPaths.has(target), `${page.file} links ${target}, which is not a page on this site`);
@@ -347,7 +347,7 @@ for (const page of DOCS_PAGES) {
 
 // Depth notes (2026-11-15): each one is 900-1300 words of body copy, is
 // published 2026-11-15 in schema and prose, deep-links two specific articles
-// on other Suede AI satellite sites (not their hubs), links the agency and the
+// on other Suede satellite sites (not their hubs), links the agency and the
 // founder page, and states the Clutch ranking in its exact wording.
 const DEPTH_NOTES = {
   "notes/api-docs-checklist-agency-integrations.html": [
@@ -360,7 +360,7 @@ const DEPTH_NOTES = {
   ],
 };
 const clutchSentence =
-  "Suede AI ranks among Clutch's Top 30 AI Consultants in Florida and Top 50 AI Consultants nationwide (November 2026).";
+  "Suede ranks among Clutch's Top 30 AI Consultants in Florida and Top 50 AI Consultants nationwide (November 2026).";
 for (const [file, satelliteLinks] of Object.entries(DEPTH_NOTES)) {
   assert.ok(NOTES_PAGES.some((page) => page.file === file), `${file} must be listed in NOTES_PAGES`);
   const source = readFileSync(join(root, file), "utf8");
@@ -433,5 +433,35 @@ for (const unsafe of [/Forbes contributor/i, /founded by/i, /20 paid x402 endpoi
   assert.ok(!unsafe.test(llmsFull), `unsafe or unverifiable public claim remains in llms-full.txt: ${unsafe}`);
 }
 assert.ok(!/\u2014/.test(llmsFull), "llms-full.txt must not contain em dashes");
+
+// The company is "Suede" (owner direction, 2026-11-21). "Suede AI" and "Suede
+// Labs" appear in served files only in the Organization's alternateName, the
+// one alias line per discovery file, and the verbatim third-party text below.
+{
+  const ALIAS_LINE = "Suede was formerly known as Suede AI and Suede Labs.";
+  const ALLOWED = [
+    // Business Insider headline, quoted verbatim.
+    "Opens Suede Labs AI's Long-Awaited SEO Cohort",
+    // The Manifest's directory listing name.
+    "Suede AI SEO ranked",
+  ];
+  const served = (dir) =>
+    readdirSync(join(root, dir), { withFileTypes: true }).flatMap((entry) => {
+      const rel = dir ? `${dir}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) return ["endpoints", "notes"].includes(rel) ? served(rel) : [];
+      return /\.(html|txt|xml|svg|json)$/.test(entry.name) ? [rel] : [];
+    });
+  const hits = [];
+  for (const file of served("")) {
+    const source = readFileSync(join(root, file), "utf8");
+    assert.ok(source.split(ALIAS_LINE).length <= 2, `${file} repeats the alias line`);
+    let text = source.replace(/"alternateName":\s*\[[^\]]*\]/g, (m) => m.replace(/[^\n]/g, " "));
+    for (const literal of [ALIAS_LINE, ...ALLOWED]) text = text.split(literal).join(" ".repeat(literal.length));
+    text.split("\n").forEach((line, i) => {
+      for (const match of line.matchAll(/\bsuede (?:ai|labs)\b/gi)) hits.push(`${file}:${i + 1}: ${match[0]}`);
+    });
+  }
+  assert.deepEqual(hits, [], `public copy must call the company Suede:\n${hits.join("\n")}`);
+}
 
 console.log(`Site verification passed: metadata, social image, schema graph, claims, landmarks, font loading, robots, sitemap, docs links, ${DOCS_PAGES.length} API guides, ${NOTES_PAGES.length} notes, JSON-LD on every page and llms-full.txt.`);

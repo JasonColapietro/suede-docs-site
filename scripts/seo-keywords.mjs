@@ -4,9 +4,9 @@
 // scripts/verify-site.mjs fails when an indexable page lacks its tag or the
 // tag drifts from this map. Terms come from what the page covers, checked
 // against the measured keyword research in ~/seo (keywords-report.json,
-// 2026-09-08). Brand terms go last; the company is "Suede AI".
+// 2026-09-08). Brand terms go last; the company is "Suede".
 
-const BRAND = ["Suede AI"];
+const BRAND = ["Suede"];
 
 function withBrand(terms) {
   const seen = new Set();
@@ -20,7 +20,7 @@ function withBrand(terms) {
 
 export const SEO_KEYWORDS = {
   "index.html": withBrand([
-    "Suede AI developer docs",
+    "Suede developer docs",
     "x402 api",
     "x402 agent payments",
     "agent commerce api",
@@ -91,7 +91,7 @@ export const SEO_KEYWORDS = {
   // County angle, so local web-development and AI-search terms sit with the
   // topic terms.
   "notes.html": withBrand([
-    "suede ai notes",
+    "suede notes",
     "developer docs blog",
     "ai search optimization",
     "model context protocol",

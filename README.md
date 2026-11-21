@@ -1,6 +1,6 @@
 # Suede Docs Site
 
-Static documentation index for `docs.suedeai.ai`. The canonical Suede AI developer documentation lives on GitHub at [Suede-AI/suede-docs](https://github.com/Suede-AI/suede-docs) and is mirrored publicly at [JasonColapietro/suede-docs](https://github.com/JasonColapietro/suede-docs).
+Static documentation index for `docs.suedeai.ai`. The canonical Suede developer documentation lives on GitHub at [Suede-AI/suede-docs](https://github.com/Suede-AI/suede-docs) and is mirrored publicly at [JasonColapietro/suede-docs](https://github.com/JasonColapietro/suede-docs).
 
 The site is static HTML with no build step: `index.html` (overview and docs index), the API guides (`quickstart.html`, `endpoints.html`, `endpoints/*.html`, `errors.html`, `python-sdk.html`, `discovery.html`) and `ai-instructions.html`. `vercel.json` sets `cleanUrls`, so `quickstart.html` is served at `/quickstart`, and canonicals use that form. `suede-docs-og.svg` is the editable source for the committed 1200×630 `suede-docs-og.png` social card.
 

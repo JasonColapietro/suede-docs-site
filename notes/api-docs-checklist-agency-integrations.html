@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>API Docs Checklist for South Florida Agency Integrations</title>
 <meta name="description" content="A seven-part API documentation checklist from Jason Colapietro for agencies in West Palm Beach and Jupiter that build and hand off client integrations.">
-<meta name="keywords" content="api documentation checklist, agency integrations, api handoff documentation, openapi, south florida web development, west palm beach api developer, Suede AI">
+<meta name="keywords" content="api documentation checklist, agency integrations, api handoff documentation, openapi, south florida web development, west palm beach api developer, Suede">
 <link rel="canonical" href="https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations">
 <meta property="og:title" content="API Docs Checklist for South Florida Agency Integrations">
 <meta property="og:description" content="A seven-part API documentation checklist from Jason Colapietro for agencies in West Palm Beach and Jupiter that build and hand off client integrations.">
 <meta property="og:url" content="https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="Suede AI">
+<meta property="og:site_name" content="Suede">
 <meta property="og:image" content="https://docs.suedeai.ai/suede-docs-og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta property="og:image:alt" content="Suede Developer Docs for programmable IP and x402 APIs">
 <meta property="article:published_time" content="2026-11-15">
 <meta property="article:author" content="https://suedeai.ai/founder">
 <meta name="robots" content="index, follow">
@@ -26,7 +26,7 @@
 <meta name="twitter:title" content="API Docs Checklist for South Florida Agency Integrations">
 <meta name="twitter:description" content="A seven-part API documentation checklist from Jason Colapietro for agencies in West Palm Beach and Jupiter that build and hand off client integrations.">
 <meta name="twitter:image" content="https://docs.suedeai.ai/suede-docs-og.png">
-<meta name="twitter:image:alt" content="Suede AI Developer Docs for programmable IP and x402 APIs">
+<meta name="twitter:image:alt" content="Suede Developer Docs for programmable IP and x402 APIs">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="400x400" href="/icon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -282,7 +282,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Suede AI Developer Docs",
+          "name": "Suede Developer Docs",
           "item": "https://docs.suedeai.ai/"
         },
         {
@@ -303,7 +303,7 @@
       "@type": "WebSite",
       "@id": "https://docs.suedeai.ai/#website",
       "url": "https://docs.suedeai.ai/",
-      "name": "Suede AI Developer Docs",
+      "name": "Suede Developer Docs",
       "publisher": {
         "@id": "https://suedeai.ai/#organization"
       }
@@ -328,7 +328,7 @@
     <p class="lede">The integration works on launch day. Eight months later the client changes agencies, a new developer opens the repository, and the only documentation is a chat thread from someone who has since left.</p>
 
     <section>
-      <p>This checklist is how Jason Colapietro and the Suede AI team document the APIs we run in production. It is written for agencies in West Palm Beach, Jupiter and the rest of Palm Beach County that build integrations for clients: a booking system feeding a CRM, a payment webhook, an inventory sync between a shop and its website. Each item points to the page on this site where it is already done, so you can look at a finished version before you write your own.</p>
+      <p>This checklist is how Jason Colapietro and the Suede team document the APIs we run in production. It is written for agencies in West Palm Beach, Jupiter and the rest of Palm Beach County that build integrations for clients: a booking system feeding a CRM, a payment webhook, an inventory sync between a shop and its website. Each item points to the page on this site where it is already done, so you can look at a finished version before you write your own.</p>
 
       <h2>Why handoff is the real test in Palm Beach County</h2>
       <p>Many Palm Beach County businesses run on a season. For a restaurant, marina or property manager here, the winter months are when nobody can afford a broken sync. Agencies turn over clients and staff like anywhere else, so an integration only one developer understands is a liability that tends to come due in the busiest month. Good API docs are what let the agency, the client and the next developer keep working when the original author is unavailable.</p>
@@ -376,17 +376,17 @@
 
       <h2>Test the docs the way an agent would</h2>
       <p>Before handoff, give the docs to someone who did not write the integration, or to a coding assistant with no other context, and ask for one successful call and one handled error. Every question they ask is a missing line. Coding assistants are now the first reader for many integrations, and a page an assistant can follow on the first try is a page a junior developer in Jupiter can follow too.</p>
-      <p>This is the same proof-first habit Jason Colapietro applies to agent output across the Suede AI sites. The Claude Code Field Notes piece on <a href="https://claude.suedeai.ai/notes/reviewing-agent-written-code/">why agent-written code needs proof</a> covers the checks to run after a deploy lands, and the Agentix guide on <a href="https://agentix.suedeai.ai/notes/grade-an-ai-agent-before-you-deploy">how to grade an AI agent before you deploy it</a> applies the idea to agents that will be calling your client's API.</p>
+      <p>This is the same proof-first habit Jason Colapietro applies to agent output across the Suede sites. The Claude Code Field Notes piece on <a href="https://claude.suedeai.ai/notes/reviewing-agent-written-code/">why agent-written code needs proof</a> covers the checks to run after a deploy lands, and the Agentix guide on <a href="https://agentix.suedeai.ai/notes/grade-an-ai-agent-before-you-deploy">how to grade an AI agent before you deploy it</a> applies the idea to agents that will be calling your client's API.</p>
 
       <h2>The tradeoffs</h2>
       <p>Captured examples go stale. Every dated response is a promise to recheck it when the API changes, and on this site that means rechecking the guides whenever the catalog moves. The full checklist is too much for a two-endpoint webhook; for a small integration, groups 1, 3 and 7 cover most of the risk. And documentation does not replace monitoring. An alert on the error rate catches a broken sync on a Saturday in February long before anyone reads a page.</p>
 
       <h2>Who wrote this checklist</h2>
-      <p>Jason Colapietro is the founder of Suede AI, the agentic platform company he started in 2024 in West Palm Beach, Florida. The checklist comes from the APIs Suede runs and from outside review. He has had 54 pull requests merged across 46 open-source repositories he does not maintain, including Jest, Backstage and the Polkadot SDK (<a href="https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&amp;type=pullrequests">GitHub search</a>), projects where docs and tests are reviewed as closely as code. Jason holds the Claude Academy badge Building with the Claude API among 21 earned course credentials (<a href="https://suedeai.ai/seo/evidence#training-credentials">credential gallery</a>) and wrote <a href="https://www.amazon.com/dp/B0HHTF3LG1">Codex in Production</a>.</p>
-      <p>Suede AI ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026). Separately, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory and top 25 statewide (<a href="https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida">The Manifest</a>, <a href="https://suedeai.agency/company/recognition">recognition page</a>).</p>
+      <p>Jason Colapietro is the founder of Suede, the agentic platform company he started in 2024 in West Palm Beach, Florida. The checklist comes from the APIs Suede runs and from outside review. He has had 54 pull requests merged across 46 open-source repositories he does not maintain, including Jest, Backstage and the Polkadot SDK (<a href="https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&amp;type=pullrequests">GitHub search</a>), projects where docs and tests are reviewed as closely as code. Jason holds the Claude Academy badge Building with the Claude API among 21 earned course credentials (<a href="https://suedeai.ai/seo/evidence#training-credentials">credential gallery</a>) and wrote <a href="https://www.amazon.com/dp/B0HHTF3LG1">Codex in Production</a>.</p>
+      <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026). Separately, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory and top 25 statewide (<a href="https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida">The Manifest</a>, <a href="https://suedeai.agency/company/recognition">recognition page</a>).</p>
 
       <h2>Your next step</h2>
-      <p>Open the last integration your agency shipped and score it against the seven groups above. Write down the first three gaps. Then book the free <a href="https://suedeai.agency/assessment">Suede AI assessment</a> with our <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development team</a> and bring the list; the Suede Labs team that wrote these guides will help you close the gaps before the season starts. To see who you would be working with, read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a>.</p>
+      <p>Open the last integration your agency shipped and score it against the seven groups above. Write down the first three gaps. Then book the free <a href="https://suedeai.agency/assessment">Suede assessment</a> with our <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development team</a> and bring the list; the Suede team that wrote these guides will help you close the gaps before the season starts. To see who you would be working with, read <a href="https://suedeai.ai/founder">Jason Colapietro's founder profile</a>.</p>
     </section>
 
 
@@ -399,7 +399,7 @@
       </section>
 
       <aside class="author-box" aria-label="About the author">
-        <p><strong>Jason Colapietro</strong>, founder of Suede AI, West Palm Beach, Florida.</p>
+        <p><strong>Jason Colapietro</strong>, founder of Suede, West Palm Beach, Florida.</p>
         <p>Read the <a href="https://suedeai.ai/founder">founder profile on suedeai.ai</a> or visit <a href="https://jasoncolapietro.com/">jasoncolapietro.com</a>.</p>
       </aside>
 
@@ -407,12 +407,12 @@
 </main>
 <footer class="page">
   <nav aria-label="Developer docs"><p>Developer docs: <a href="/">Overview</a> · <a href="/quickstart">Quickstart</a> · <a href="/endpoints">Endpoints</a> · <a href="/endpoints/create-music">Create Music</a> · <a href="/endpoints/agent-video">Agent Video</a> · <a href="/endpoints/agent-image">Agent Image</a> · <a href="/errors">Errors and limits</a> · <a href="/python-sdk">Python SDK</a> · <a href="/discovery">Discovery and MCP</a> · <a href="/ai-instructions">AI Instructions</a> · <a href="/notes">Notes</a></p></nav>
-  <section class="built-by" aria-label="Built by Suede AI">
-    <p><strong>Built by Suede AI in West Palm Beach, Florida.</strong> Suede AI is the agentic platform company Jason Colapietro started in 2024. Its <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development practice</a> works with businesses in Jupiter, Palm Beach Gardens and across Palm Beach County. Company site: <a href="https://suedeai.ai/">suedeai.ai</a>. Founder: <a href="https://suedeai.ai/founder">Jason Colapietro</a> (<a href="https://jasoncolapietro.com/">personal site</a>). Local publishing: <a href="https://jupitersocialfl.com/">Jupiter Social</a>, a Jupiter, FL magazine published with Suede AI.</p>
-    <p>Suede AI ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
-    <p>More from Suede AI: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede AI team</a></p>
+  <section class="built-by" aria-label="Built by Suede">
+    <p><strong>Built by Suede in West Palm Beach, Florida.</strong> Suede is the agentic platform company Jason Colapietro started in 2024. Its <a href="https://suedeai.agency/">West Palm Beach SEO, GEO and web development practice</a> works with businesses in Jupiter, Palm Beach Gardens and across Palm Beach County. Company site: <a href="https://suedeai.ai/">suedeai.ai</a>. Founder: <a href="https://suedeai.ai/founder">Jason Colapietro</a> (<a href="https://jasoncolapietro.com/">personal site</a>). Local publishing: <a href="https://jupitersocialfl.com/">Jupiter Social</a>, a Jupiter, FL magazine published with Suede.</p>
+    <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
+    <p>More from Suede: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede team</a></p>
   </section>
-  <p>Suede AI · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Written by Jason Colapietro for Suede AI. Published 2026-11-15. Page last updated 2026-11-15.</p>
+  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Written by Jason Colapietro for Suede. Published 2026-11-15. Page last updated 2026-11-15.</p>
 </footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body>
