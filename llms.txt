@@ -16,10 +16,10 @@ Suede (https://suedeai.ai) builds creator-ownership infrastructure for AI-native
 
 ## API guides
 
-Checked against the live API on 2026-10-11. Prices and request fields come from the discovery documents on app.suedeai.ai.
+Checked against the live API on 2026-10-11; prices, payment terms, routes and response codes rechecked on 2026-11-25. Prices and request fields come from the discovery documents on app.suedeai.ai. The quickstart, endpoints, errors, Python SDK and discovery guides each end with a short FAQ.
 
 - [x402 quickstart](https://docs.suedeai.ai/quickstart): Pay a Suede endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.
-- [Endpoints](https://docs.suedeai.ai/endpoints): The three pay-per-call endpoints with prices, USDC amounts, shared payment terms, request headers and asynchronous mode.
+- [Endpoints](https://docs.suedeai.ai/endpoints): The three pay-per-call endpoints with prices, USDC amounts, shared payment terms, request headers, asynchronous mode, which endpoint fits which job, the smallest valid request for each, the two poll shapes and batch budgeting.
 - [Create Music](https://docs.suedeai.ai/endpoints/create-music): POST /create-music, a full original song from a text prompt, $0.50 USDC on Base.
 - [Agent Video](https://docs.suedeai.ai/endpoints/agent-video): POST /agent/video, an 8-second 720p clip with native audio, $4.99 USDC on Base.
 - [Agent Image](https://docs.suedeai.ai/endpoints/agent-image): POST /agent/image, one PNG or JPEG, $0.15 USDC on Base.
@@ -29,11 +29,11 @@ Checked against the live API on 2026-10-11. Prices and request fields come from 
 
 ## Notes
 
-Long-form notes by Jason Colapietro, founder of Suede in West Palm Beach, Florida. Published 2026-11-14 and 2026-11-15, updated 2026-11-15.
+Long-form notes by Jason Colapietro, founder of Suede in West Palm Beach, Florida. Published 2026-11-14 and 2026-11-15, updated 2026-11-15; the notes index was updated 2026-11-25.
 
 Suede ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/consulting/ai/florida) and Top 50 AI Consultants nationwide (https://clutch.co/us/consulting/ai) (November 2026). Clutch profile: https://clutch.co/profile/suede-ai-seo
 
-- [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede team on developer docs, MCP and AI search.
+- [Notes index](https://docs.suedeai.ai/notes): All notes from the Suede team on developer docs, MCP and AI search, with a guide to which note to read first for your work.
 - [Writing developer docs that AI assistants quote correctly](https://docs.suedeai.ai/notes/ai-quotable-developer-docs): The source, date and verification rules behind this site, and how a Palm Beach County business can apply them.
 - [Model Context Protocol for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida): A South Florida primer built around the live Suede MCP server, with scoping rules and tradeoffs.
 - [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs): Lessons from 54 merged pull requests across 46 open-source repositories, applied to developer documentation.
@@ -58,4 +58,4 @@ Suede ranks among Clutch's Top 30 AI Consultants in Florida (https://clutch.co/c
 
 ## Source and citation guide
 
-- [AI Instructions](https://docs.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.
+- [AI Instructions](https://docs.suedeai.ai/ai-instructions): Site identity, authoritative sources, key facts with the page that supports each, statements to avoid, and citation guidance.

@@ -220,7 +220,7 @@
       "mainEntity": {
         "@id": "https://docs.suedeai.ai/endpoints#article"
       },
-      "dateModified": "2026-10-11"
+      "dateModified": "2026-11-25"
     },
     {
       "@type": "TechArticle",
@@ -239,7 +239,7 @@
         "@id": "https://suedeai.ai/#organization"
       },
       "datePublished": "2026-10-11",
-      "dateModified": "2026-10-11",
+      "dateModified": "2026-11-25",
       "headline": "Suede x402 API endpoints",
       "image": "https://docs.suedeai.ai/suede-docs-og.png",
       "author": {
@@ -248,6 +248,73 @@
       "mainEntityOfPage": {
         "@id": "https://docs.suedeai.ai/endpoints#webpage"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://docs.suedeai.ai/endpoints#faq",
+      "url": "https://docs.suedeai.ai/endpoints",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/endpoints#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I need a Suede account or an API key to call these endpoints?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The public x402 flow needs no Suede account and no API key. Your wallet signs a USDC payment on Base, and the same HTTP request carries it in the PAYMENT-SIGNATURE header."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need ETH on Base to pay for gas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Under the x402 exact scheme the facilitator submits the USDC transfer and pays the gas. Your signature fixes the amount and the recipient."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I pay without signing a USDC transfer myself?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The PAYMENT-SIGNATURE header also accepts Skyfire pay+jwt and kya-pay+jwt tokens. The product catalog lists Stripe Checkout as a second payment method at the same USD prices. The Python SDK signs the x402 payment for you if you would rather not write signing code."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why did my paid call return 202 instead of the file?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Paid calls are asynchronous by default. A render takes minutes and payment clients time out in about 30 seconds, so the call queues the job and returns a pollUrl. Poll it for free, or add ?async=false to block until the asset is ready."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Am I charged when a request fails?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not for a 422 validation failure, a 5XX server failure, any poll, or a resend with the same idempotency key and body within the cache window. Retry a 5XX with the same X-Idempotency-Key."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are the older /v1 routes still available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "They are not in the live x402 manifest. The Python SDK still ships helpers for some older /v1/* routes, but new integrations should target the three endpoints on this page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where do I check the current price before I sign?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Read app.suedeai.ai/.well-known/x402. Prices are enforced on the server, and the amount in the 402 challenge is the value to sign."
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -294,7 +361,7 @@
     <nav class="mono" aria-label="Breadcrumb"><a href="/">docs.suedeai.ai</a> / <span aria-current="page">Endpoints</span></nav>
     <h1>Suede x402 API endpoints</h1>
 
-    <p class="lede">Three endpoints, one payment rail. Each is a <code>POST</code> to <code>https://app.suedeai.ai</code>, priced per call in USDC on Base, and a paid call returns a job you can poll for free. The figures below come from the live discovery document and OpenAPI spec, checked on 2026-10-11.</p>
+    <p class="lede">Three endpoints, one payment rail. Each is a <code>POST</code> to <code>https://app.suedeai.ai</code>, priced per call in USDC on Base, and a paid call returns a job you can poll for free. The figures below come from the live discovery document and OpenAPI spec. They were first checked on 2026-10-11, and the prices, payment terms, routes and response codes were checked again on 2026-11-25.</p>
 
     <section>
       <h2>The three paid endpoints</h2>
@@ -309,6 +376,42 @@
         </table>
       </div>
       <p><code>amount</code> is the price in USDC base units (6 decimals), exactly as it appears in the 402 challenge and the value you sign. Each endpoint takes a JSON body in which <code>prompt</code> is the only required field.</p>
+    </section>
+
+    <section id="choose">
+      <h2>Which endpoint fits the job</h2>
+      <p>Pick by the asset you need to ship. The uses below are the ones each endpoint's live discovery entry names.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>You need</th><th>Call</th><th>What to put in the prompt</th></tr></thead>
+          <tbody>
+            <tr><td>A soundtrack under video, a podcast or game theme, a release-ready artist track or a demo sketch</td><td><a href="/endpoints/create-music"><code>POST /create-music</code></a></td><td>Genre, mood, instrumentation and tempo. Supply your own lyrics, ask for an instrumental, or pin a style tag.</td></tr>
+            <tr><td>Short-form video, b-roll, a product shot, music-video visuals, a social clip or an ad</td><td><a href="/endpoints/agent-video"><code>POST /agent/video</code></a></td><td>The scene and its sounds. Audio is generated from what the scene describes, so a silent scene renders near-silent.</td></tr>
+            <tr><td>Album or single cover art, a thumbnail, social or campaign graphics, concept art, a storyboard frame or an article illustration</td><td><a href="/endpoints/agent-image"><code>POST /agent/image</code></a></td><td>The picture, plus an <code>aspectRatio</code> that matches the placement.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A finished song from Create Music already comes with cover art in <code>image_url</code>. Call Agent Image when you need artwork in a specific framing, such as a <code>9:16</code> story or a <code>16:9</code> video thumbnail. Each call is its own purchase, so give each one its own <code>X-Idempotency-Key</code>.</p>
+    </section>
+
+    <section id="minimal-requests">
+      <h2>The smallest valid request for each endpoint</h2>
+      <p>Only <code>prompt</code> is required. These bodies are complete:</p>
+<pre><code>POST https://app.suedeai.ai/create-music
+{"prompt": "Upbeat 80s synthwave with driving bass and neon atmosphere"}
+
+POST https://app.suedeai.ai/agent/video
+{"prompt": "Slow push-in on a spinning vinyl record, rain against the window, soft piano and the crackle of the needle"}
+
+POST https://app.suedeai.ai/agent/image
+{"prompt": "Album cover, neon city at night, rain on glass"}</code></pre>
+      <p>The optional fields, with types and limits, are on each endpoint page:</p>
+      <ul>
+        <li><a href="/endpoints/create-music">Create Music</a>: <code>style</code>, <code>custom_mode</code>, <code>lyrics</code>, <code>make_instrumental</code>, <code>vocal_gender</code> and <code>tags</code>.</li>
+        <li><a href="/endpoints/agent-video">Agent Video</a>: <code>durationSeconds</code> (default <code>8</code>, from <code>3</code> to <code>15</code>) and <code>aspectRatio</code> (<code>16:9</code>, <code>9:16</code> or <code>1:1</code>).</li>
+        <li><a href="/endpoints/agent-image">Agent Image</a>: <code>aspectRatio</code> (ten ratios from <code>1:1</code> to <code>21:9</code>) and <code>outputFormat</code> (<code>png</code> or <code>jpeg</code>).</li>
+      </ul>
+      <p>Send the body once without <code>PAYMENT-SIGNATURE</code> to receive the 402 challenge. An unpaid request gets the 402 before the body is validated, so the challenge does not mean the body is valid. Check it against the endpoint page before you sign, because a paid call that fails validation comes back <code>422</code>.</p>
     </section>
 
     <section>
@@ -365,6 +468,7 @@
             <tr><td><code>200</code></td><td>Blocking call finished, with the asset in the body.</td></tr>
             <tr><td><code>400</code></td><td>Bad request, for example an unsupported <code>Suede-API-Version</code>.</td></tr>
             <tr><td><code>402</code></td><td>Payment required, or the payment was not accepted.</td></tr>
+            <tr><td><code>413</code></td><td>Create Music only: the JSON body exceeds the 64 KiB ceiling, or a lower configured upload limit.</td></tr>
             <tr><td><code>422</code></td><td>The body failed validation. A paid request that fails validation is not charged.</td></tr>
             <tr><td><code>429</code></td><td>Rate-limited. Wait for <code>Retry-After</code>.</td></tr>
             <tr><td><code>5XX</code></td><td>Server or upstream failure. Not charged; retry with the same <code>X-Idempotency-Key</code>.</td></tr>
@@ -372,6 +476,56 @@
         </table>
       </div>
       <p>Bodies, headers and retry rules for each code are on the <a href="/errors">errors page</a>.</p>
+    </section>
+
+    <section id="polling">
+      <h2>Collect the result: two poll shapes</h2>
+      <p>Video and image polls follow the same <code>jobId</code> and <code>status</code> pattern. Music returns the song row instead, so a client that handles all three needs two parsers.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Endpoint</th><th>Poll route</th><th>Finished when</th><th>Asset field</th><th>Unknown id</th></tr></thead>
+          <tbody>
+            <tr><td><code>/create-music</code></td><td><code>GET /api/songs/{songId}</code></td><td><code>model_version</code> is no longer <code>pending</code></td><td><code>audio_url</code></td><td><code>404</code></td></tr>
+            <tr><td><code>/agent/video</code></td><td><code>GET /agent/video/{jobId}</code></td><td><code>status</code> is <code>completed</code> or <code>failed</code></td><td><code>videoUrl</code></td><td><code>200</code> with <code>status</code> <code>failed</code></td></tr>
+            <tr><td><code>/agent/image</code></td><td><code>GET /agent/image/{jobId}</code></td><td><code>status</code> is <code>completed</code> or <code>failed</code></td><td><code>imageUrl</code></td><td><code>200</code> with <code>status</code> <code>failed</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>For music, <code>audio_url</code> holds a placeholder cover image until the track is rendered, so read <code>model_version</code> first. A <code>model_version</code> of <code>failed</code> is final. Save the <code>pollUrl</code> from the 202 before you do anything else: a restarted worker should resume that poll, not buy the asset again.</p>
+    </section>
+
+    <section id="budget">
+      <h2>Budget a batch of calls</h2>
+      <p>Each call is priced on its own. Multiply the per-call price by the number of renders you plan to buy:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Batch</th><th>Total</th><th>Total in base units</th></tr></thead>
+          <tbody>
+            <tr><td>10 images</td><td>$1.50</td><td><code>1500000</code></td></tr>
+            <tr><td>10 songs</td><td>$5.00</td><td><code>5000000</code></td></tr>
+            <tr><td>10 video clips</td><td>$49.90</td><td><code>49900000</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Polls, requests that fail validation (<code>422</code>), server failures (<code>5XX</code>) and a resend with the same <code>X-Idempotency-Key</code> and body within the cache window add nothing. A changed prompt or a deliberate second take is a new purchase. For an agent that spends on its own, set a server-side cap and compare each challenge's <code>amount</code> with it before signing, as the <a href="/quickstart">quickstart</a> describes.</p>
+    </section>
+
+    <section class="faq" id="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Do I need a Suede account or an API key to call these endpoints?</h3>
+      <p>No. The public x402 flow needs no Suede account and no API key. Your wallet signs a USDC payment on Base, and the same HTTP request carries it in the <code>PAYMENT-SIGNATURE</code> header.</p>
+      <h3>Do I need ETH on Base to pay for gas?</h3>
+      <p>No. Under the x402 <code>exact</code> scheme the facilitator submits the USDC transfer and pays the gas. Your signature fixes the amount and the recipient.</p>
+      <h3>Can I pay without signing a USDC transfer myself?</h3>
+      <p>The <code>PAYMENT-SIGNATURE</code> header also accepts Skyfire <code>pay+jwt</code> and <code>kya-pay+jwt</code> tokens. The product catalog lists Stripe Checkout as a second payment method at the same USD prices. The <a href="/python-sdk">Python SDK</a> signs the x402 payment for you if you would rather not write signing code.</p>
+      <h3>Why did my paid call return 202 instead of the file?</h3>
+      <p>Paid calls are asynchronous by default. A render takes minutes and payment clients time out in about 30 seconds, so the call queues the job and returns a <code>pollUrl</code>. Poll it for free, or add <code>?async=false</code> to block until the asset is ready.</p>
+      <h3>Am I charged when a request fails?</h3>
+      <p>Not for a <code>422</code> validation failure, a <code>5XX</code> server failure, any poll, or a resend with the same idempotency key and body within the cache window. Retry a <code>5XX</code> with the same <code>X-Idempotency-Key</code>.</p>
+      <h3>Are the older /v1 routes still available?</h3>
+      <p>They are not in the live x402 manifest. The Python SDK still ships helpers for some older <code>/v1/*</code> routes, but new integrations should target the three endpoints on this page.</p>
+      <h3>Where do I check the current price before I sign?</h3>
+      <p>Read <a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a>. Prices are enforced on the server, and the <code>amount</code> in the 402 challenge is the value to sign.</p>
     </section>
 
     <section>
@@ -397,7 +551,7 @@
     <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
     <p>More from Suede: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede team</a></p>
   </section>
-  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11. Page last updated 2026-11-25.</p>
 </footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body>

@@ -220,7 +220,7 @@
       "mainEntity": {
         "@id": "https://docs.suedeai.ai/python-sdk#article"
       },
-      "dateModified": "2026-10-11"
+      "dateModified": "2026-11-25"
     },
     {
       "@type": "TechArticle",
@@ -239,7 +239,7 @@
         "@id": "https://suedeai.ai/#organization"
       },
       "datePublished": "2026-10-11",
-      "dateModified": "2026-10-11",
+      "dateModified": "2026-11-25",
       "headline": "Python SDK: suede-ai",
       "image": "https://docs.suedeai.ai/suede-docs-og.png",
       "author": {
@@ -248,6 +248,57 @@
       "mainEntityOfPage": {
         "@id": "https://docs.suedeai.ai/python-sdk#webpage"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://docs.suedeai.ai/python-sdk#faq",
+      "url": "https://docs.suedeai.ai/python-sdk",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/python-sdk#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I install the Suede Python SDK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run pip install suede-ai on Python 3.10 or later. The package is suede-ai on PyPI and is imported as suede_ai."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the SDK poll for the finished asset?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Each typed method returns the 202 body with a pollUrl, and your code polls it, as in the example above. Polling needs no payment and no wallet key."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I send lyrics or an instrumental flag to Create Music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The typed create_music method does not expose lyrics, custom_mode, make_instrumental, vocal_gender or tags. Send them with request(), which handles the 402 the same way."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the SDK charge my wallet more than once for one call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By default it makes one paid retry after the 402 challenge (max_payment_attempts=1). If the response is still 402 after that, it raises suede_ai.X402Error instead of signing again."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the SDK open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It is released under the MIT license, and the source is in the Suede-AI/suede-sdk-python repository."
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -421,6 +472,20 @@ print(state.get("imageUrl"))</code></pre>
       <p>The package also ships helpers for older <code>/v1/*</code> routes, such as <code>extend</code>, <code>cover</code> and <code>stems_pro</code>. Those routes are not in the live x402 manifest; the three typed methods above cover the current catalog.</p>
     </section>
 
+    <section class="faq" id="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>How do I install the Suede Python SDK?</h3>
+      <p>Run <code>pip install suede-ai</code> on Python 3.10 or later. The package is <code>suede-ai</code> on PyPI and is imported as <code>suede_ai</code>.</p>
+      <h3>Does the SDK poll for the finished asset?</h3>
+      <p>No. Each typed method returns the <code>202</code> body with a <code>pollUrl</code>, and your code polls it, as in the example above. Polling needs no payment and no wallet key.</p>
+      <h3>How do I send lyrics or an instrumental flag to Create Music?</h3>
+      <p>The typed <code>create_music</code> method does not expose <code>lyrics</code>, <code>custom_mode</code>, <code>make_instrumental</code>, <code>vocal_gender</code> or <code>tags</code>. Send them with <code>request()</code>, which handles the 402 the same way.</p>
+      <h3>Can the SDK charge my wallet more than once for one call?</h3>
+      <p>By default it makes one paid retry after the 402 challenge (<code>max_payment_attempts=1</code>). If the response is still 402 after that, it raises <code>suede_ai.X402Error</code> instead of signing again.</p>
+      <h3>Is the SDK open source?</h3>
+      <p>Yes. It is released under the MIT license, and the source is in the <a href="https://github.com/Suede-AI/suede-sdk-python">Suede-AI/suede-sdk-python</a> repository.</p>
+    </section>
+
     <section>
       <h2>Sources</h2>
       <ul>
@@ -443,7 +508,7 @@ print(state.get("imageUrl"))</code></pre>
     <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
     <p>More from Suede: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede team</a></p>
   </section>
-  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11. Page last updated 2026-11-25.</p>
 </footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body>

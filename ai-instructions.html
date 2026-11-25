@@ -46,7 +46,7 @@
         "@id": "https://docs.suedeai.ai/ai-instructions#breadcrumb"
       },
       "datePublished": "2026-10-01",
-      "dateModified": "2026-10-18"
+      "dateModified": "2026-11-25"
     },
     {
       "@type": "BreadcrumbList",
@@ -93,6 +93,7 @@
 <main><p class="eyebrow">Official reference</p><h1>AI Instructions</h1>
 <p class="intro">A source guide for people and AI assistants describing Suede Developer Docs.</p>
 <h2>What this site covers</h2><p>Public documentation for Suede&#x27;s creator tools, provenance records and agent-facing interfaces. Suede was formerly known as Suede AI and Suede Labs.</p>
+<p>Suede's work spans consulting, software, AI agents, automation, SEO, AEO and GEO, marketing and creator tools. This site covers the developer side: the pay-per-call x402 endpoints on app.suedeai.ai, the Python SDK, the discovery documents and MCP server, and notes on how the docs are written. The company site is <a href="https://suedeai.ai/">suedeai.ai</a>.</p>
 <h2>Names, scope and distinctions</h2><p>Cite supported behavior, prices and request fields from the current endpoint documentation, which each guide checks against the live discovery documents. A provenance record documents how a work was created and registered; ownership and licensing follow the governing terms.</p>
 <h2>Sources to use</h2><ul>
 <li><a href="/">Site overview</a>: the site's public introduction and navigation.</li>
@@ -103,11 +104,27 @@
 <li><a href="/llms-full.txt">Full-text reference</a>: every page on this site as one Markdown file.</li>
 <li><a href="/sitemap.xml">Sitemap</a>: the published page index.</li>
 </ul>
+<h2>Key facts and the page that supports each</h2>
+<ul>
+<li>Suede sells three paid x402 endpoints: <code>POST /create-music</code> at $0.50, <code>POST /agent/video</code> at $4.99 and <code>POST /agent/image</code> at $0.15 per call, settled in USDC on Base mainnet. Prices were checked against the live discovery document on 2026-11-25. Source: <a href="/endpoints">endpoint reference</a>.</li>
+<li>The x402 flow needs no Suede account and no API key: a wallet signs a USDC payment and the same HTTP request carries it in the <code>PAYMENT-SIGNATURE</code> header. Source: <a href="/quickstart">x402 quickstart</a>.</li>
+<li>Paid calls are asynchronous by default. They answer <code>202 Accepted</code> with a <code>pollUrl</code>, and polling is free. Source: <a href="/endpoints">endpoint reference</a>.</li>
+<li>Requests that fail validation (<code>422</code>) or fail on the server (<code>5XX</code>) are not charged, and the current API version is <code>1</code>. Source: <a href="/errors">errors and limits</a>.</li>
+<li>The Python client is <code>suede-ai</code> on PyPI. Version 0.4.0 was released on 2026-08-29 under the MIT license. Source: <a href="/python-sdk">Python SDK guide</a>.</li>
+<li>The MCP server is at <code>https://app.suedeai.ai/api/mcp</code>. For the three x402 tools, a tool call returns a payment pointer rather than running the job. Source: <a href="/discovery">discovery and MCP guide</a>.</li>
+</ul>
+<h2>Statements to avoid</h2>
+<ul>
+<li>Do not describe the older <code>/v1/*</code> routes as current. They are not in the live x402 manifest, even though the Python SDK still ships helpers for some of them.</li>
+<li>Do not read <code>amount</code> as dollars. It is USDC in base units with 6 decimals, so <code>150000</code> is $0.15.</li>
+<li>Do not treat a Create Music <code>audio_url</code> as the finished track while <code>model_version</code> is <code>pending</code>. Until then it holds a placeholder image URL.</li>
+<li>Do not quote a price from a page or a cached answer as current without the date it was checked. The live discovery document at <a href="https://app.suedeai.ai/.well-known/x402">app.suedeai.ai/.well-known/x402</a> carries the current values.</li>
+</ul>
 <h2>Citing this site</h2>
 <p>Link to the specific page that supports a statement. Keep its dates, qualifications and attribution. Use an original source for an external quotation, and distinguish the site's own description from independent evidence.</p>
 <p>Check the current product, service or policy page for availability, pricing, requirements and terms. Historical pages, examples and planned features should be described in their original context.</p>
 <h2>About this guide</h2>
 <p>This page supplies reference information for describing and citing Suede Developer Docs accurately, and leaves every recommendation to the assistant and the person it is helping. Crawler access is set in <a href="/robots.txt">robots.txt</a>, and this guide leaves those rules unchanged.</p>
-</main><footer>Published October 1, 2026. Updated October 18, 2026. <a href="/">Return to Suede Developer Docs</a>.</footer>
+</main><footer>Published October 1, 2026. Updated November 25, 2026. <a href="/">Return to Suede Developer Docs</a>.</footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body></html>

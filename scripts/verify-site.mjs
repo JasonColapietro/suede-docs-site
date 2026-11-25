@@ -425,6 +425,19 @@ for (const page of [...DOCS_PAGES, { file: "ai-instructions.html", path: "/ai-in
     assert.ok(!Object.hasOwn(article, "primaryImageOfPage"), `${page.file}: primaryImageOfPage belongs to WebPage`);
   }
   assert.ok(types.includes("BreadcrumbList"), `${page.file} needs a BreadcrumbList`);
+  // A visible FAQ section and the FAQPage node travel together: one question
+  // per <h3>, each with a non-empty answer, and no FAQPage without the section.
+  const faqSection = source.match(/<section class="faq"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  const faqNodes = graph.filter((node) => node["@type"] === "FAQPage");
+  if (faqSection) {
+    const questions = [...faqSection.matchAll(/<h3\b/g)].length;
+    assert.ok(questions >= 3, `${page.file}: the FAQ section needs at least three questions`);
+    assert.equal(faqNodes.length, 1, `${page.file}: a visible FAQ needs exactly one FAQPage node`);
+    assert.equal(faqNodes[0].mainEntity.length, questions, `${page.file}: FAQPage must list every visible question`);
+    assert.ok(faqNodes[0].mainEntity.every((q) => q.name && q.acceptedAnswer?.text), `${page.file}: every FAQ question needs an answer`);
+  } else {
+    assert.equal(faqNodes.length, 0, `${page.file}: FAQPage without a visible FAQ section`);
+  }
   assert.ok(types.includes(page.path === "/notes" ? "CollectionPage" : "WebPage"), `${page.file} needs a WebPage node (CollectionPage for /notes)`);
   assert.ok(!types.includes("Organization") && !types.includes("Person"), `${page.file} must reference the estate entities by @id, not redefine them`);
   assert.ok(llmsFull.includes(`URL: ${ORIGIN}${page.path}`), `${page.file} is missing from llms-full.txt`);

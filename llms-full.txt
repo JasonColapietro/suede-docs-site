@@ -88,7 +88,7 @@ Not what you were looking for? [Go straight to the GitHub repo](https://github.c
 ## x402 Quickstart: Pay a Suede API Call | Suede Docs
 
 URL: https://docs.suedeai.ai/quickstart
-Last updated: 2026-10-11
+Last updated: 2026-11-25
 
 > Pay a Suede endpoint over x402: read the 402 challenge, sign an EIP-3009 USDC authorization on Base, retry with PAYMENT-SIGNATURE, then poll the job.
 
@@ -299,6 +299,28 @@ Only the submit step should be able to sign. Polling and downloading should run 
 
 The same rail works in the other direction. [x402 Agent Builder: Get Paid Per Call](https://suedeai.app/x402-agent-builder): build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.
 
+#### Frequently asked questions
+
+##### What is x402?
+
+x402 is a way to pay for an HTTP request inside the request itself. The server answers an unpaid request with `402 Payment Required` and the payment terms, and the client sends the same request again with a signed payment in the `PAYMENT-SIGNATURE` header. Suede's endpoints use x402 version 2 with the `exact` scheme, settled in USDC on Base mainnet.
+
+##### How much USDC do I need to make a first call?
+
+The lowest-priced call, [Agent Image](https://docs.suedeai.ai/endpoints/agent-image), costs $0.15. Fund the wallet with what you plan to spend and no more, because the key signs real USDC transfers. You need no ETH: the facilitator pays the gas.
+
+##### Can I test the flow without spending anything?
+
+Yes, up to the signature. Fetching the discovery documents and sending the unsigned request in step 2 cost nothing, and the 402 challenge shows the exact terms you would sign. Test job handling with local fixtures for `202`, processing, completed and failed responses before you enable payment.
+
+##### Which libraries can sign the payment?
+
+Any library that signs EIP-712 typed data, such as viem, ethers or eth-account. The [suede-ai Python SDK](https://docs.suedeai.ai/python-sdk) runs steps 2 to 4 for you and returns the 202 body.
+
+##### What should my client do if the paid request times out?
+
+Treat the outcome as unknown and do not sign a second payment for the same intent. Resend the same body with the same `X-Idempotency-Key` within the cache window to get the original response back without a second charge. The [errors page](https://docs.suedeai.ai/errors) lists what to keep for each kind of interruption.
+
 #### Sources
 
 Every value on this page comes from these documents, fetched on 2026-10-11, and from live requests to the endpoints on the same day.
@@ -315,13 +337,13 @@ Every value on this page comes from these documents, fetched on 2026-10-11, and 
 ## Suede x402 API Endpoints and Prices | Suede Docs
 
 URL: https://docs.suedeai.ai/endpoints
-Last updated: 2026-10-11
+Last updated: 2026-11-25
 
 > Three pay-per-call Suede endpoints for music, video and image generation, with prices, USDC amounts on Base, shared headers and poll routes.
 
 ### Suede x402 API endpoints
 
-Three endpoints, one payment rail. Each is a `POST` to `https://app.suedeai.ai`, priced per call in USDC on Base, and a paid call returns a job you can poll for free. The figures below come from the live discovery document and OpenAPI spec, checked on 2026-10-11.
+Three endpoints, one payment rail. Each is a `POST` to `https://app.suedeai.ai`, priced per call in USDC on Base, and a paid call returns a job you can poll for free. The figures below come from the live discovery document and OpenAPI spec. They were first checked on 2026-10-11, and the prices, payment terms, routes and response codes were checked again on 2026-11-25.
 
 #### The three paid endpoints
 
@@ -332,6 +354,41 @@ Three endpoints, one payment rail. Each is a `POST` to `https://app.suedeai.ai`,
 | [`POST /agent/image`](https://docs.suedeai.ai/endpoints/agent-image) | One hosted still image, PNG or JPEG | $0.15 | `150000` | `GET /agent/image/{jobId}` |
 
 `amount` is the price in USDC base units (6 decimals), exactly as it appears in the 402 challenge and the value you sign. Each endpoint takes a JSON body in which `prompt` is the only required field.
+
+#### Which endpoint fits the job
+
+Pick by the asset you need to ship. The uses below are the ones each endpoint's live discovery entry names.
+
+| You need | Call | What to put in the prompt |
+| --- | --- | --- |
+| A soundtrack under video, a podcast or game theme, a release-ready artist track or a demo sketch | [`POST /create-music`](https://docs.suedeai.ai/endpoints/create-music) | Genre, mood, instrumentation and tempo. Supply your own lyrics, ask for an instrumental, or pin a style tag. |
+| Short-form video, b-roll, a product shot, music-video visuals, a social clip or an ad | [`POST /agent/video`](https://docs.suedeai.ai/endpoints/agent-video) | The scene and its sounds. Audio is generated from what the scene describes, so a silent scene renders near-silent. |
+| Album or single cover art, a thumbnail, social or campaign graphics, concept art, a storyboard frame or an article illustration | [`POST /agent/image`](https://docs.suedeai.ai/endpoints/agent-image) | The picture, plus an `aspectRatio` that matches the placement. |
+
+A finished song from Create Music already comes with cover art in `image_url`. Call Agent Image when you need artwork in a specific framing, such as a `9:16` story or a `16:9` video thumbnail. Each call is its own purchase, so give each one its own `X-Idempotency-Key`.
+
+#### The smallest valid request for each endpoint
+
+Only `prompt` is required. These bodies are complete:
+
+```
+POST https://app.suedeai.ai/create-music
+{"prompt": "Upbeat 80s synthwave with driving bass and neon atmosphere"}
+
+POST https://app.suedeai.ai/agent/video
+{"prompt": "Slow push-in on a spinning vinyl record, rain against the window, soft piano and the crackle of the needle"}
+
+POST https://app.suedeai.ai/agent/image
+{"prompt": "Album cover, neon city at night, rain on glass"}
+```
+
+The optional fields, with types and limits, are on each endpoint page:
+
+- [Create Music](https://docs.suedeai.ai/endpoints/create-music): `style`, `custom_mode`, `lyrics`, `make_instrumental`, `vocal_gender` and `tags`.
+- [Agent Video](https://docs.suedeai.ai/endpoints/agent-video): `durationSeconds` (default `8`, from `3` to `15`) and `aspectRatio` (`16:9`, `9:16` or `1:1`).
+- [Agent Image](https://docs.suedeai.ai/endpoints/agent-image): `aspectRatio` (ten ratios from `1:1` to `21:9`) and `outputFormat` (`png` or `jpeg`).
+
+Send the body once without `PAYMENT-SIGNATURE` to receive the 402 challenge. An unpaid request gets the 402 before the body is validated, so the challenge does not mean the body is valid. Check it against the endpoint page before you sign, because a paid call that fails validation comes back `422`.
 
 #### Payment terms shared by all three
 
@@ -373,11 +430,66 @@ All three endpoints answer `202` for a queued job, so a `2xx` other than `202` m
 | `200` | Blocking call finished, with the asset in the body. |
 | `400` | Bad request, for example an unsupported `Suede-API-Version`. |
 | `402` | Payment required, or the payment was not accepted. |
+| `413` | Create Music only: the JSON body exceeds the 64 KiB ceiling, or a lower configured upload limit. |
 | `422` | The body failed validation. A paid request that fails validation is not charged. |
 | `429` | Rate-limited. Wait for `Retry-After`. |
 | `5XX` | Server or upstream failure. Not charged; retry with the same `X-Idempotency-Key`. |
 
 Bodies, headers and retry rules for each code are on the [errors page](https://docs.suedeai.ai/errors).
+
+#### Collect the result: two poll shapes
+
+Video and image polls follow the same `jobId` and `status` pattern. Music returns the song row instead, so a client that handles all three needs two parsers.
+
+| Endpoint | Poll route | Finished when | Asset field | Unknown id |
+| --- | --- | --- | --- | --- |
+| `/create-music` | `GET /api/songs/{songId}` | `model_version` is no longer `pending` | `audio_url` | `404` |
+| `/agent/video` | `GET /agent/video/{jobId}` | `status` is `completed` or `failed` | `videoUrl` | `200` with `status` `failed` |
+| `/agent/image` | `GET /agent/image/{jobId}` | `status` is `completed` or `failed` | `imageUrl` | `200` with `status` `failed` |
+
+For music, `audio_url` holds a placeholder cover image until the track is rendered, so read `model_version` first. A `model_version` of `failed` is final. Save the `pollUrl` from the 202 before you do anything else: a restarted worker should resume that poll, not buy the asset again.
+
+#### Budget a batch of calls
+
+Each call is priced on its own. Multiply the per-call price by the number of renders you plan to buy:
+
+| Batch | Total | Total in base units |
+| --- | --- | --- |
+| 10 images | $1.50 | `1500000` |
+| 10 songs | $5.00 | `5000000` |
+| 10 video clips | $49.90 | `49900000` |
+
+Polls, requests that fail validation (`422`), server failures (`5XX`) and a resend with the same `X-Idempotency-Key` and body within the cache window add nothing. A changed prompt or a deliberate second take is a new purchase. For an agent that spends on its own, set a server-side cap and compare each challenge's `amount` with it before signing, as the [quickstart](https://docs.suedeai.ai/quickstart) describes.
+
+#### Frequently asked questions
+
+##### Do I need a Suede account or an API key to call these endpoints?
+
+No. The public x402 flow needs no Suede account and no API key. Your wallet signs a USDC payment on Base, and the same HTTP request carries it in the `PAYMENT-SIGNATURE` header.
+
+##### Do I need ETH on Base to pay for gas?
+
+No. Under the x402 `exact` scheme the facilitator submits the USDC transfer and pays the gas. Your signature fixes the amount and the recipient.
+
+##### Can I pay without signing a USDC transfer myself?
+
+The `PAYMENT-SIGNATURE` header also accepts Skyfire `pay+jwt` and `kya-pay+jwt` tokens. The product catalog lists Stripe Checkout as a second payment method at the same USD prices. The [Python SDK](https://docs.suedeai.ai/python-sdk) signs the x402 payment for you if you would rather not write signing code.
+
+##### Why did my paid call return 202 instead of the file?
+
+Paid calls are asynchronous by default. A render takes minutes and payment clients time out in about 30 seconds, so the call queues the job and returns a `pollUrl`. Poll it for free, or add `?async=false` to block until the asset is ready.
+
+##### Am I charged when a request fails?
+
+Not for a `422` validation failure, a `5XX` server failure, any poll, or a resend with the same idempotency key and body within the cache window. Retry a `5XX` with the same `X-Idempotency-Key`.
+
+##### Are the older /v1 routes still available?
+
+They are not in the live x402 manifest. The Python SDK still ships helpers for some older `/v1/*` routes, but new integrations should target the three endpoints on this page.
+
+##### Where do I check the current price before I sign?
+
+Read [app.suedeai.ai/.well-known/x402](https://app.suedeai.ai/.well-known/x402). Prices are enforced on the server, and the `amount` in the 402 challenge is the value to sign.
 
 #### Sources
 
@@ -1101,7 +1213,7 @@ If you choose to do one real smoke test, authorize one known-valid request at th
 ## API Errors, Rate Limits and Retries | Suede Docs
 
 URL: https://docs.suedeai.ai/errors
-Last updated: 2026-10-11
+Last updated: 2026-11-25
 
 > Status codes, error bodies, rate-limit headers, idempotency keys and API versioning for Suede x402 endpoints, and which requests are never charged.
 
@@ -1201,6 +1313,32 @@ For a support handoff, include the operation, status code, API version, timestam
 
 Every response carries `Suede-API-Version`. The current version is `1`, and a request without the header is served the current version. Additive changes, such as new optional fields or new endpoints, ship within a version; a breaking change ships as a new version. Before a version or operation is withdrawn, its responses carry a `Deprecation` header (RFC 9745) and a `Sunset` header (RFC 8594) at least 90 days ahead, with a `Link` to the notice.
 
+#### Frequently asked questions
+
+##### Why did an empty or invalid body return 402 instead of 422?
+
+An unpaid request gets the 402 before the body is validated. Validation runs on the paid call, and a paid call that fails validation returns `422` and is not charged. Check your body against the [endpoint reference](https://docs.suedeai.ai/endpoints) before you sign.
+
+##### What does "PAYMENT-SIGNATURE header is required" mean?
+
+The request carried no payment. Read the `accepts` entry in the 402 body or the `PAYMENT-REQUIRED` header, sign it, and send the same request again with `PAYMENT-SIGNATURE`, as in the [quickstart](https://docs.suedeai.ai/quickstart).
+
+##### Does a 200 from a poll mean the asset is ready?
+
+Not on its own. Video and image polls can return `200` with `status` `failed`, and a music row can have an `audio_url` before the track exists. Read `status` or `model_version` before you treat a job as finished.
+
+##### How many requests can I send?
+
+Read the `RateLimit-Policy` and `RateLimit` headers on each response. On 2026-10-11, unpaid requests were limited to 20 per 60-second window. On a `429`, wait the number of seconds in `Retry-After`.
+
+##### Does an idempotency key guarantee I am charged only once?
+
+It prevents a duplicate charge when you resend the same key and body within the cache window. It is not a payment receipt or a permanent exactly-once guarantee, so keep your own record of each payment reference.
+
+##### How much notice comes before a version or endpoint is withdrawn?
+
+At least 90 days. Responses carry a `Deprecation` header and a `Sunset` header, with a `Link` to the notice, before the version or operation is withdrawn.
+
 #### Sources
 
 - [app.suedeai.ai/openapi.json](https://app.suedeai.ai/openapi.json): response codes, the `Error` and `ValidationIssue` schemas, rate-limit headers, idempotency and `info.x-api-versioning`.
@@ -1212,7 +1350,7 @@ Every response carries `Suede-API-Version`. The current version is `1`, and a re
 ## Python SDK for x402 Calls: suede-ai | Suede Docs
 
 URL: https://docs.suedeai.ai/python-sdk
-Last updated: 2026-10-11
+Last updated: 2026-11-25
 
 > Install suede-ai from PyPI to call Suede x402 endpoints from Python. It signs the USDC payment on Base and retries for you. Methods, options, polling.
 
@@ -1326,6 +1464,28 @@ Route payment negotiation and API errors differently: `PaymentRequired` is a sub
 
 The package also ships helpers for older `/v1/*` routes, such as `extend`, `cover` and `stems_pro`. Those routes are not in the live x402 manifest; the three typed methods above cover the current catalog.
 
+#### Frequently asked questions
+
+##### How do I install the Suede Python SDK?
+
+Run `pip install suede-ai` on Python 3.10 or later. The package is `suede-ai` on PyPI and is imported as `suede_ai`.
+
+##### Does the SDK poll for the finished asset?
+
+No. Each typed method returns the `202` body with a `pollUrl`, and your code polls it, as in the example above. Polling needs no payment and no wallet key.
+
+##### How do I send lyrics or an instrumental flag to Create Music?
+
+The typed `create_music` method does not expose `lyrics`, `custom_mode`, `make_instrumental`, `vocal_gender` or `tags`. Send them with `request()`, which handles the 402 the same way.
+
+##### Can the SDK charge my wallet more than once for one call?
+
+By default it makes one paid retry after the 402 challenge (`max_payment_attempts=1`). If the response is still 402 after that, it raises `suede_ai.X402Error` instead of signing again.
+
+##### Is the SDK open source?
+
+Yes. It is released under the MIT license, and the source is in the [Suede-AI/suede-sdk-python](https://github.com/Suede-AI/suede-sdk-python) repository.
+
 #### Sources
 
 - [suede-ai on PyPI](https://pypi.org/project/suede-ai/): version, release dates, Python requirement, dependencies and license.
@@ -1337,7 +1497,7 @@ The package also ships helpers for older `/v1/*` routes, such as `extend`, `cove
 ## x402 Discovery Documents and MCP Server | Suede Docs
 
 URL: https://docs.suedeai.ai/discovery
-Last updated: 2026-10-11
+Last updated: 2026-11-25
 
 > The machine-readable Suede discovery documents: x402 manifest, OpenAPI 3.1, product catalog, A2A agent card, Agentic Commerce manifest and MCP server.
 
@@ -1438,6 +1598,28 @@ The same discovery formats work for any x402 seller. Three Suede tools help on t
 - [Suede ACP/x402 Performance Engine](https://perform.suedeai.ai). Score your ACP/x402 readiness in 60 seconds. Free, no account required.
 - [Agentix: x402 AI Agent Earnings Tracker for USDC on Base](https://agentix.suedeai.ai). The portfolio tracker for the x402 agents you've launched: total USDC earned on Base, calls, per-agent performance, status, and trend.
 
+#### Frequently asked questions
+
+##### Which document should an agent read first?
+
+Read `/.well-known/x402` for prices, the `amount` to sign and each resource's input schema. Read `/openapi.json` for request fields, response codes and poll routes. Both are free GET requests.
+
+##### Do the discovery documents need authentication?
+
+No. Each one is a public GET on app.suedeai.ai, and the AI plugin manifest declares auth type `none`. Payment is only needed on the three paid POST endpoints.
+
+##### Does calling a Suede MCP tool charge my wallet?
+
+No. For the three x402 tools, `tools/call` returns a payment pointer that says where and how much to pay. Your client then pays the HTTP endpoint, as in the [quickstart](https://docs.suedeai.ai/quickstart).
+
+##### Are the operation names the same in every format?
+
+Yes. `create_music`, `agent_video` and `agent_image` are the catalog product ids, the A2A skill ids, the MCP tool names and the OpenAPI operationIds.
+
+##### How do I notice when a price or field changes?
+
+Compare each resource's `lastUpdated` timestamp and `accepts` entry with the values your client approved. If an operation disappears, a price changes or a field you depend on is no longer advertised, pause that paid workflow and review it before signing.
+
 #### Sources
 
 Each document above, fetched on 2026-10-11, plus live `initialize`, `tools/list` and `tools/call` requests to the MCP server on the same day.
@@ -1447,7 +1629,7 @@ Each document above, fetched on 2026-10-11, plus live `initialize`, `tools/list`
 ## AI Instructions | Suede Developer Docs
 
 URL: https://docs.suedeai.ai/ai-instructions
-Last updated: 2026-10-18
+Last updated: 2026-11-25
 
 > Official source and citation guide for Suede Developer Docs: what the site covers, which pages to cite for x402 API facts, and how to quote prices and dates.
 
@@ -1460,6 +1642,8 @@ A source guide for people and AI assistants describing Suede Developer Docs.
 #### What this site covers
 
 Public documentation for Suede's creator tools, provenance records and agent-facing interfaces. Suede was formerly known as Suede AI and Suede Labs.
+
+Suede's work spans consulting, software, AI agents, automation, SEO, AEO and GEO, marketing and creator tools. This site covers the developer side: the pay-per-call x402 endpoints on app.suedeai.ai, the Python SDK, the discovery documents and MCP server, and notes on how the docs are written. The company site is [suedeai.ai](https://suedeai.ai/).
 
 #### Names, scope and distinctions
 
@@ -1474,6 +1658,22 @@ Cite supported behavior, prices and request fields from the current endpoint doc
 - [Machine-readable reference](https://docs.suedeai.ai/llms.txt): a text guide to the site's topics and source pages.
 - [Full-text reference](https://docs.suedeai.ai/llms-full.txt): every page on this site as one Markdown file.
 - [Sitemap](https://docs.suedeai.ai/sitemap.xml): the published page index.
+
+#### Key facts and the page that supports each
+
+- Suede sells three paid x402 endpoints: `POST /create-music` at $0.50, `POST /agent/video` at $4.99 and `POST /agent/image` at $0.15 per call, settled in USDC on Base mainnet. Prices were checked against the live discovery document on 2026-11-25. Source: [endpoint reference](https://docs.suedeai.ai/endpoints).
+- The x402 flow needs no Suede account and no API key: a wallet signs a USDC payment and the same HTTP request carries it in the `PAYMENT-SIGNATURE` header. Source: [x402 quickstart](https://docs.suedeai.ai/quickstart).
+- Paid calls are asynchronous by default. They answer `202 Accepted` with a `pollUrl`, and polling is free. Source: [endpoint reference](https://docs.suedeai.ai/endpoints).
+- Requests that fail validation (`422`) or fail on the server (`5XX`) are not charged, and the current API version is `1`. Source: [errors and limits](https://docs.suedeai.ai/errors).
+- The Python client is `suede-ai` on PyPI. Version 0.4.0 was released on 2026-08-29 under the MIT license. Source: [Python SDK guide](https://docs.suedeai.ai/python-sdk).
+- The MCP server is at `https://app.suedeai.ai/api/mcp`. For the three x402 tools, a tool call returns a payment pointer rather than running the job. Source: [discovery and MCP guide](https://docs.suedeai.ai/discovery).
+
+#### Statements to avoid
+
+- Do not describe the older `/v1/*` routes as current. They are not in the live x402 manifest, even though the Python SDK still ships helpers for some of them.
+- Do not read `amount` as dollars. It is USDC in base units with 6 decimals, so `150000` is $0.15.
+- Do not treat a Create Music `audio_url` as the finished track while `model_version` is `pending`. Until then it holds a placeholder image URL.
+- Do not quote a price from a page or a cached answer as current without the date it was checked. The live discovery document at [app.suedeai.ai/.well-known/x402](https://app.suedeai.ai/.well-known/x402) carries the current values.
 
 #### Citing this site
 
@@ -1490,7 +1690,7 @@ This page supplies reference information for describing and citing Suede Develop
 ## Notes from Suede in West Palm Beach, Florida | Suede Docs
 
 URL: https://docs.suedeai.ai/notes
-Last updated: 2026-11-15
+Last updated: 2026-11-25
 
 > Notes from Jason Colapietro and Suede in West Palm Beach, Florida on AI-quotable developer docs, MCP for agencies and lessons from open source.
 
@@ -1505,6 +1705,21 @@ Longer write-ups from Jason Colapietro and the Suede team in West Palm Beach, Fl
 - [From open source to docs: lessons from 54 merged pull requests across 46 repositories](https://docs.suedeai.ai/notes/open-source-to-docs): Five habits from contributing to Jest, Adobe React Spectrum, Backstage and the Polkadot SDK, and how each one shows up in Suede's developer docs.
 - [An API documentation checklist for agency-built integrations in South Florida](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations): Seven groups of checks, each shown on a live page of this site, for agencies in West Palm Beach and Jupiter that hand client integrations to the next developer.
 - [Writing llms.txt that answer engines actually use: a worked example from Suede's docs](https://docs.suedeai.ai/notes/llms-txt-worked-example): The llms.txt on this site, section by section, with the tests that guard it and three ways to tell whether anything reads yours.
+
+#### Start with the note that fits your work
+
+| If you | Read first | Then |
+| --- | --- | --- |
+| Write or maintain developer docs and want assistants to quote them correctly | [AI-quotable developer docs](https://docs.suedeai.ai/notes/ai-quotable-developer-docs) | [The llms.txt worked example](https://docs.suedeai.ai/notes/llms-txt-worked-example) |
+| Run an agency and a client wants their AI assistant to read their own data | [MCP for agencies](https://docs.suedeai.ai/notes/mcp-for-agencies-south-florida) | [The API documentation checklist](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations) |
+| Hand a client integration to the next developer | [The API documentation checklist](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations) | [AI-quotable developer docs](https://docs.suedeai.ai/notes/ai-quotable-developer-docs) |
+| Contribute to open source, or hire developers who do | [From open source to docs](https://docs.suedeai.ai/notes/open-source-to-docs) | [The API documentation checklist](https://docs.suedeai.ai/notes/api-docs-checklist-agency-integrations) |
+
+#### How the notes relate to the API guides
+
+The API guides document what the endpoints on app.suedeai.ai do: the [x402 quickstart](https://docs.suedeai.ai/quickstart), the [endpoint reference](https://docs.suedeai.ai/endpoints), the [errors and limits page](https://docs.suedeai.ai/errors), the [Python SDK](https://docs.suedeai.ai/python-sdk) and the [discovery documents and MCP server](https://docs.suedeai.ai/discovery). The notes explain the method behind those pages and how to apply it elsewhere.
+
+Each note points at live pages on this site as its examples, so you can check every rule against a working page. The note on llms.txt walks through this site's own [llms.txt](https://docs.suedeai.ai/llms.txt), the MCP primer inspects the same server the discovery guide documents, and the checklist shows each check on a page you can open.
 
 #### Who writes these notes
 

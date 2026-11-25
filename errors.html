@@ -220,7 +220,7 @@
       "mainEntity": {
         "@id": "https://docs.suedeai.ai/errors#article"
       },
-      "dateModified": "2026-10-11"
+      "dateModified": "2026-11-25"
     },
     {
       "@type": "TechArticle",
@@ -239,7 +239,7 @@
         "@id": "https://suedeai.ai/#organization"
       },
       "datePublished": "2026-10-11",
-      "dateModified": "2026-10-11",
+      "dateModified": "2026-11-25",
       "headline": "Errors, rate limits and retries",
       "image": "https://docs.suedeai.ai/suede-docs-og.png",
       "author": {
@@ -248,6 +248,65 @@
       "mainEntityOfPage": {
         "@id": "https://docs.suedeai.ai/errors#webpage"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://docs.suedeai.ai/errors#faq",
+      "url": "https://docs.suedeai.ai/errors",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/errors#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why did an empty or invalid body return 402 instead of 422?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An unpaid request gets the 402 before the body is validated. Validation runs on the paid call, and a paid call that fails validation returns 422 and is not charged. Check your body against the endpoint reference before you sign."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does \"PAYMENT-SIGNATURE header is required\" mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The request carried no payment. Read the accepts entry in the 402 body or the PAYMENT-REQUIRED header, sign it, and send the same request again with PAYMENT-SIGNATURE, as in the quickstart."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a 200 from a poll mean the asset is ready?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not on its own. Video and image polls can return 200 with status failed, and a music row can have an audio_url before the track exists. Read status or model_version before you treat a job as finished."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many requests can I send?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Read the RateLimit-Policy and RateLimit headers on each response. On 2026-10-11, unpaid requests were limited to 20 per 60-second window. On a 429, wait the number of seconds in Retry-After."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does an idempotency key guarantee I am charged only once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It prevents a duplicate charge when you resend the same key and body within the cache window. It is not a payment receipt or a permanent exactly-once guarantee, so keep your own record of each payment reference."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much notice comes before a version or endpoint is withdrawn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At least 90 days. Responses carry a Deprecation header and a Sunset header, with a Link to the notice, before the version or operation is withdrawn."
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -400,6 +459,22 @@
       <p>Every response carries <code>Suede-API-Version</code>. The current version is <code>1</code>, and a request without the header is served the current version. Additive changes, such as new optional fields or new endpoints, ship within a version; a breaking change ships as a new version. Before a version or operation is withdrawn, its responses carry a <code>Deprecation</code> header (RFC 9745) and a <code>Sunset</code> header (RFC 8594) at least 90 days ahead, with a <code>Link</code> to the notice.</p>
     </section>
 
+    <section class="faq" id="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Why did an empty or invalid body return 402 instead of 422?</h3>
+      <p>An unpaid request gets the 402 before the body is validated. Validation runs on the paid call, and a paid call that fails validation returns <code>422</code> and is not charged. Check your body against the <a href="/endpoints">endpoint reference</a> before you sign.</p>
+      <h3>What does "PAYMENT-SIGNATURE header is required" mean?</h3>
+      <p>The request carried no payment. Read the <code>accepts</code> entry in the 402 body or the <code>PAYMENT-REQUIRED</code> header, sign it, and send the same request again with <code>PAYMENT-SIGNATURE</code>, as in the <a href="/quickstart">quickstart</a>.</p>
+      <h3>Does a 200 from a poll mean the asset is ready?</h3>
+      <p>Not on its own. Video and image polls can return <code>200</code> with <code>status</code> <code>failed</code>, and a music row can have an <code>audio_url</code> before the track exists. Read <code>status</code> or <code>model_version</code> before you treat a job as finished.</p>
+      <h3>How many requests can I send?</h3>
+      <p>Read the <code>RateLimit-Policy</code> and <code>RateLimit</code> headers on each response. On 2026-10-11, unpaid requests were limited to 20 per 60-second window. On a <code>429</code>, wait the number of seconds in <code>Retry-After</code>.</p>
+      <h3>Does an idempotency key guarantee I am charged only once?</h3>
+      <p>It prevents a duplicate charge when you resend the same key and body within the cache window. It is not a payment receipt or a permanent exactly-once guarantee, so keep your own record of each payment reference.</p>
+      <h3>How much notice comes before a version or endpoint is withdrawn?</h3>
+      <p>At least 90 days. Responses carry a <code>Deprecation</code> header and a <code>Sunset</code> header, with a <code>Link</code> to the notice, before the version or operation is withdrawn.</p>
+    </section>
+
     <section>
       <h2>Sources</h2>
       <ul>
@@ -422,7 +497,7 @@
     <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
     <p>More from Suede: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede team</a></p>
   </section>
-  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11. Page last updated 2026-11-25.</p>
 </footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body>
