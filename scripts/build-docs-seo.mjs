@@ -153,11 +153,28 @@ function pageFacts(page) {
   crumbs[0] = { name: "Suede Developer Docs", url: `${ORIGIN}/` };
   const published =
     html.match(/Published (\d{4}-\d{2}-\d{2})\./)?.[1] ?? isoFromProse(html.match(/Published ([A-Z][a-z]+ \d{1,2}, \d{4})\./)?.[1]);
+  // "Page last updated" wins when present: a guide can gain prose (an FAQ, a
+  // worked example) after its last live check, and the page date must say so.
   const modified =
-    html.match(/(?:Checked against the live API on|Page last updated) (\d{4}-\d{2}-\d{2})\./)?.[1] ??
+    html.match(/Page last updated (\d{4}-\d{2}-\d{2})\./)?.[1] ??
+    html.match(/Checked against the live API on (\d{4}-\d{2}-\d{2})\./)?.[1] ??
     isoFromProse(html.match(/Updated ([A-Z][a-z]+ \d{1,2}, \d{4})\./)?.[1]) ??
     published;
-  return { html, url, title, description, h1, crumbs, published, modified };
+  return { html, url, title, description, h1, crumbs, published, modified, faq: faqFrom(html) };
+}
+
+/**
+ * The visible FAQ: each <h3> question and the <p> answers under it, inside the
+ * one <section class="faq">. The FAQPage node is built from this text only, so
+ * the schema cannot claim a question the page does not show.
+ */
+export function faqFrom(html) {
+  const section = html.match(/<section class="faq"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  if (!section) return [];
+  return [...section.matchAll(/<h3\b[^>]*>([\s\S]*?)<\/h3>([\s\S]*?)(?=<h3\b|$)/g)].map((m) => ({
+    question: plain(m[1]),
+    answer: [...m[2].matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map((p) => plain(p[1])).join(" "),
+  }));
 }
 
 function isoFromProse(text) {
@@ -237,6 +254,20 @@ function graphFor(page, facts) {
       breadcrumb: { "@id": `${facts.url}#breadcrumb` },
       mainEntity: { "@id": `${facts.url}#article` },
       ...(facts.modified ? { dateModified: facts.modified } : {}),
+    });
+  }
+  if (facts.faq.length > 0) {
+    nodes.push({
+      "@type": "FAQPage",
+      "@id": `${facts.url}#faq`,
+      url: facts.url,
+      inLanguage: "en",
+      isPartOf: { "@id": `${facts.url}#webpage` },
+      mainEntity: facts.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
     });
   }
   return {

@@ -220,7 +220,7 @@
       "mainEntity": {
         "@id": "https://docs.suedeai.ai/quickstart#article"
       },
-      "dateModified": "2026-10-11"
+      "dateModified": "2026-11-25"
     },
     {
       "@type": "TechArticle",
@@ -239,7 +239,7 @@
         "@id": "https://suedeai.ai/#organization"
       },
       "datePublished": "2026-10-11",
-      "dateModified": "2026-10-11",
+      "dateModified": "2026-11-25",
       "headline": "Pay a Suede x402 endpoint in five steps",
       "image": "https://docs.suedeai.ai/suede-docs-og.png",
       "author": {
@@ -248,6 +248,57 @@
       "mainEntityOfPage": {
         "@id": "https://docs.suedeai.ai/quickstart#webpage"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://docs.suedeai.ai/quickstart#faq",
+      "url": "https://docs.suedeai.ai/quickstart",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://docs.suedeai.ai/quickstart#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is x402?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "x402 is a way to pay for an HTTP request inside the request itself. The server answers an unpaid request with 402 Payment Required and the payment terms, and the client sends the same request again with a signed payment in the PAYMENT-SIGNATURE header. Suede's endpoints use x402 version 2 with the exact scheme, settled in USDC on Base mainnet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much USDC do I need to make a first call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The lowest-priced call, Agent Image, costs $0.15. Fund the wallet with what you plan to spend and no more, because the key signs real USDC transfers. You need no ETH: the facilitator pays the gas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I test the flow without spending anything?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, up to the signature. Fetching the discovery documents and sending the unsigned request in step 2 cost nothing, and the 402 challenge shows the exact terms you would sign. Test job handling with local fixtures for 202, processing, completed and failed responses before you enable payment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which libraries can sign the payment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Any library that signs EIP-712 typed data, such as viem, ethers or eth-account. The suede-ai Python SDK runs steps 2 to 4 for you and returns the 202 body."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should my client do if the paid request times out?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Treat the outcome as unknown and do not sign a second payment for the same intent. Resend the same body with the same X-Idempotency-Key within the cache window to get the original response back without a second charge. The errors page lists what to keep for each kind of interruption."
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -472,6 +523,20 @@ with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
       <p>The same rail works in the other direction. <a href="https://suedeai.app/x402-agent-builder">x402 Agent Builder: Get Paid Per Call</a>: build an AI agent on a visual canvas, set a price per call, and get paid in USDC on Base through x402 once you enable payments. Dry runs need no wallet.</p>
     </section>
 
+    <section class="faq" id="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>What is x402?</h3>
+      <p>x402 is a way to pay for an HTTP request inside the request itself. The server answers an unpaid request with <code>402 Payment Required</code> and the payment terms, and the client sends the same request again with a signed payment in the <code>PAYMENT-SIGNATURE</code> header. Suede's endpoints use x402 version 2 with the <code>exact</code> scheme, settled in USDC on Base mainnet.</p>
+      <h3>How much USDC do I need to make a first call?</h3>
+      <p>The lowest-priced call, <a href="/endpoints/agent-image">Agent Image</a>, costs $0.15. Fund the wallet with what you plan to spend and no more, because the key signs real USDC transfers. You need no ETH: the facilitator pays the gas.</p>
+      <h3>Can I test the flow without spending anything?</h3>
+      <p>Yes, up to the signature. Fetching the discovery documents and sending the unsigned request in step 2 cost nothing, and the 402 challenge shows the exact terms you would sign. Test job handling with local fixtures for <code>202</code>, processing, completed and failed responses before you enable payment.</p>
+      <h3>Which libraries can sign the payment?</h3>
+      <p>Any library that signs EIP-712 typed data, such as viem, ethers or eth-account. The <a href="/python-sdk">suede-ai Python SDK</a> runs steps 2 to 4 for you and returns the 202 body.</p>
+      <h3>What should my client do if the paid request times out?</h3>
+      <p>Treat the outcome as unknown and do not sign a second payment for the same intent. Resend the same body with the same <code>X-Idempotency-Key</code> within the cache window to get the original response back without a second charge. The <a href="/errors">errors page</a> lists what to keep for each kind of interruption.</p>
+    </section>
+
     <section>
       <h2>Sources</h2>
       <p>Every value on this page comes from these documents, fetched on 2026-10-11, and from live requests to the endpoints on the same day.</p>
@@ -498,7 +563,7 @@ with SuedeClient(wallet_private_key=PRIVATE_KEY) as suede:
     <p>Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).</p>
     <p>More from Suede: <a href="https://agentix.suedeai.ai/">Agentix</a> · <a href="https://optimize.suedeai.ai/">Suede Scan AI readiness check</a> · <a href="https://signal.suedeai.ai/">Suede Signal</a> · <a href="https://podcast.suedeai.ai/">Suede podcast</a> · <a href="/notes">Notes from the Suede team</a></p>
   </section>
-  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11.</p>
+  <p>Suede · <a href="https://suedeai.ai">suedeai.ai</a> · <a href="https://suedeai.ai/privacy">Privacy</a> · <a href="https://suedeai.ai/contact">Contact</a> · Documentation maintained by Suede. Published 2026-10-11. Checked against the live API on 2026-10-11. Page last updated 2026-11-25.</p>
 </footer>
   <script src="https://suedeai.ai/agent-view.js" defer></script>
 </body>
